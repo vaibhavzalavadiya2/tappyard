@@ -1,69 +1,142 @@
-import Image from "next/image";
+import type { Metadata } from 'next';
+import HomeClient from '@/components/tappyard/HomeClient';
+import { GAMES_CATALOGUE } from '@/data/games';
 
-export default function Home() {
+const SITE_URL = 'https://tappyard.com';
+
+export const metadata: Metadata = {
+  title: 'TAPPYARD — Free Online Games | Play Browser Games No Download',
+  description:
+    'Play free online games instantly in your web browser. Enjoy Jump Jelly Jump! 3D runner, 2048 Neon Fusion, Block Grid Zen, and Cyber Dash with no downloads or installs on mobile, tablet, and PC.',
+  keywords: [
+    'free online games',
+    'play games online',
+    'browser games no download',
+    'unblocked games',
+    'free games to play now',
+    'instant play web games',
+    '2048 online',
+    'block puzzle online',
+    '3D runner game',
+    'reflex games',
+    'HTML5 games',
+    'casual games mobile',
+    'TAPPYARD',
+  ],
+  alternates: {
+    canonical: SITE_URL,
+  },
+  openGraph: {
+    title: 'TAPPYARD — Free Online Games | Play Browser Games (No Download)',
+    description:
+      'Play free 3D arcade runners, 2048 number puzzles, 10x10 block grid zen, and rhythm reflex games instantly in your browser. No downloads, mobile-ready.',
+    url: SITE_URL,
+    images: [
+      {
+        url: '/og/tappyard-og.png',
+        width: 1200,
+        height: 630,
+        alt: 'TAPPYARD — Free Online Games Platform',
+      },
+    ],
+  },
+};
+
+// JSON-LD: ItemList of games for rich search results
+const gamesJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'ItemList',
+  name: 'TAPPYARD Free Online Games Collection',
+  description: 'Free instant browser games — arcade runners, puzzles, casual, and relaxing games without downloads.',
+  numberOfItems: GAMES_CATALOGUE.length,
+  itemListElement: GAMES_CATALOGUE.map((game, index) => ({
+    '@type': 'ListItem',
+    position: index + 1,
+    item: {
+      '@type': 'VideoGame',
+      name: game.title,
+      description: game.description,
+      url: `${SITE_URL}${game.route}`,
+      genre: game.category,
+      gamePlatform: ['Web Browser', 'Mobile Browser', 'Desktop Browser'],
+      applicationCategory: 'Game',
+      operatingSystem: 'Any',
+      offers: {
+        '@type': 'Offer',
+        price: '0',
+        priceCurrency: 'USD',
+        availability: 'https://schema.org/InStock',
+      },
+      aggregateRating: {
+        '@type': 'AggregateRating',
+        ratingValue: game.rating,
+        bestRating: 5,
+        ratingCount: parseInt(game.playsCount.replace(/[^0-9]/g, '')) || 100,
+      },
+    },
+  })),
+};
+
+// JSON-LD: FAQPage for rich search results & People Also Ask carousels
+const faqJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: [
+    {
+      '@type': 'Question',
+      name: 'Are all games on TAPPYARD completely free to play?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'Yes! Every game on TAPPYARD is 100% free to play directly in your web browser. There are no paywalls, hidden in-app purchases, or subscription fees.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'Do I need to download or install any files to play?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'No download, install, or registration is required. All games run instantly using modern HTML5, Canvas, and WebGL technology in Google Chrome, Safari, Firefox, Edge, and mobile browsers.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'Can I play TAPPYARD games on mobile phones and tablets?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'Yes. All TAPPYARD games are built mobile-first with responsive touch controls, full-screen support, and zero horizontal lag for iPhone, iPad, Android phones, and tablets.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'What types of games are available on TAPPYARD?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'TAPPYARD features original hit games across multiple genres: Jump Jelly Jump! (3D arcade speed runner), 2048 Neon Fusion (sliding number tile puzzle), Block Grid Zen (relaxing 10x10 spatial puzzle), and Cyber Dash (1-tap reflex flight runner).',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'Are TAPPYARD games unblocked at school and work?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'Yes, TAPPYARD games run safely over standard secure HTTPS in your browser with zero executable downloads, making them ideal for quick casual gaming breaks on any network.',
+      },
+    },
+  ],
+};
+
+export default function TapYardHome() {
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert h-5 w-[100px]"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the{" "}
-            <code className="rounded bg-black/[.06] px-1.5 py-0.5 font-mono text-[0.9em] dark:bg-white/[.08]">
-              page.tsx
-            </code>{" "}
-            file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert h-[14px] w-4"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={14}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
-    </div>
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(gamesJsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
+      />
+      <HomeClient />
+    </>
   );
 }
