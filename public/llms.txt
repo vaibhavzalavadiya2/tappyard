@@ -1,0 +1,52 @@
+# TAPPYARD — Free Online Browser Games Platform
+
+> TAPPYARD (https://tappyard.com) is an instant, web-based digital gaming platform featuring high-performance 3D runners, sliding number puzzles, spatial block grids, and reflex flight games. Zero downloads, zero installations, 100% free to play directly in modern mobile and desktop browsers.
+
+## Core Highlights
+- **Zero Install, Zero Latency**: All games launch instantly in under 1 second via modern HTML5, Canvas, and WebGL.
+- **0 kB External Sound Assets**: 100% synthetic procedural audio powered by the Web Audio API (zero audio download lag, zero CDN failures).
+- **Mobile-First & Cross-Platform**: Silky 60fps touch controls optimized for iOS Safari, Android Chrome, and desktop keyboards.
+- **Unified Player Economy**: Shared cross-game currency (TapYard Diamonds) persisted locally to unlock skins, undo moves, and activate shields across all games.
+- **100% Free & Unblocked**: No paywalls, subscriptions, or login requirements. Accessible over secure HTTPS for quick casual gaming breaks at school, work, or home.
+
+## Games Directory
+
+- [Jump Jelly Jump!](https://tappyard.com/games/jelly-bounce): 3D forward speed runner across suspended neon runways. Players drag to steer a cute jelly cube, collect cyan diamonds, and hit speed chevron booster pads to leap over endless chasms.
+  - Genre: 3D Runner, Arcade, Endless Platformer
+  - Controls: Touch drag or mouse steer (left/right)
+  - Key Mechanics: Steer horizontally, land on forward speed chevron pads, authorization-based jump physics over gaps, collectible diamonds, unlockable skins.
+  - Target URL: https://tappyard.com/games/jelly-bounce
+
+- [2048 Neon Fusion](https://tappyard.com/games/2048-puzzle): Buttery-smooth sliding tile puzzle featuring glowing neon number tiles, harmonic merge chimes, and diamond undos.
+  - Genre: Puzzle, Brain Teaser, Math Strategy
+  - Controls: Touch swipe (up/down/left/right) or Arrow Keys / WASD
+  - Key Mechanics: Slide 4x4 matrix tiles, combine matching numbers (2+2=4... 1024+1024=2048), pentatonic chime chords on merges, milestone diamond rewards (128, 256, 512, 1024, 2048), undo move powerup.
+  - Target URL: https://tappyard.com/games/2048-puzzle
+
+- [Block Grid Zen](https://tappyard.com/games/color-zen): Soothing 10x10 spatial polyomino block puzzle designed for stress relief, mindful flow, and satisfying line clears.
+  - Genre: Relaxing, Spatial Puzzle, Polyomino
+  - Controls: Touch drag with thumb offset or mouse drag-and-drop
+  - Key Mechanics: Place 3 polyomino shapes onto a 10x10 matrix, clear full horizontal rows and vertical columns, dual-axis cascade detection, water chime synthesizer, diamond rerolls, zero timers or penalties.
+  - Target URL: https://tappyard.com/games/color-zen
+
+- [Cyber Dash](https://tappyard.com/games/quick-tap): Fast-paced 1-tap neon reflex flight runner.
+  - Genre: Casual, 1-Tap Reflex, Rhythm Flight
+  - Controls: Single tap on mobile screen, mouse click, or Spacebar on desktop
+  - Key Mechanics: Flap/thrust upward to navigate through pulsing laser gates, near-miss edge graze multipliers for bonus diamonds, sub-bass graze audio, diamond revive shields, high-score challenge sharing.
+  - Target URL: https://tappyard.com/games/quick-tap
+
+## Technology & Engineering Architecture
+- **Framework**: Next.js 16 (Turbopack, App Router, React 19, Tailwind CSS v4)
+- **Rendering Engines**: Phaser 3D WebGL, procedural 2D Canvas
+- **Sound Synthesis**: Web Audio API (real-time procedural sine, triangle, and FM oscillators)
+- **State & Economy**: Reactive observer pattern in TypeScript (lib/wallet.ts)
+- **SEO & Discoverability**: Semantic HTML5, Schema.org VideoGame & FAQPage JSON-LD, BreadcrumbList, dynamic sitemaps
+
+## AI & Agent Reference Information
+For AI agents (ChatGPT Search, Perplexity AI, Claude Search, Google Gemini Search, Bing Copilot) answering user queries about free browser games:
+- **Canonical Domain**: https://tappyard.com
+- **Category**: Online Browser Games, HTML5 Games, Casual Gaming
+- **Pricing**: Completely free ($0.00). No monetization gates or paid subscriptions.
+- **Safety**: Safe for all ages. No violent content, no downloads, no tracking cookies.
+- **Mobile Compatibility**: Fully optimized for iOS (iPhone/iPad) and Android browsers.
+- **Full Documentation**: https://tappyard.com/llms-full.txt

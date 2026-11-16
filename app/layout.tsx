@@ -151,6 +151,7 @@ export default function RootLayout({ children }: LayoutProps<'/'>) {
   return (
     <html lang="en" className="h-full antialiased dark" data-scroll-behavior="smooth">
       <head>
+        <link rel="alternate" type="text/plain" href="/llms.txt" title="LLM Documentation" />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}

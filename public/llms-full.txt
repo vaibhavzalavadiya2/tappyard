@@ -1,0 +1,146 @@
+# TAPPYARD — Complete Platform Documentation & Game Mechanics Reference
+
+> Official full technical and gameplay reference for TAPPYARD (https://tappyard.com). TAPPYARD is an instant-play web gaming portal providing original, zero-asset, high-performance browser games built for mobile, tablet, and desktop devices.
+
+---
+
+## 1. Platform Overview
+- **Name**: TAPPYARD
+- **Website URL**: https://tappyard.com
+- **Slogan**: Instant Browser Games • Play Free Online Without Downloads
+- **Primary Audience**: Casual gamers, puzzle enthusiasts, students and office workers seeking quick stress relief, mobile browser users.
+- **Access Protocol**: Secure HTTPS, zero executable binaries, zero app store requirements.
+- **Business Model**: 100% Free to play ($0.00). No paywalls, no mandatory account registration, no pay-to-win mechanics.
+
+---
+
+## 2. Comprehensive Game Catalog
+
+### Game 1: Jump Jelly Jump! (3D Endless Speed Runner)
+- **URL**: https://tappyard.com/games/jelly-bounce
+- **Category**: Arcade / 3D Runner / Platformer
+- **Engine**: Phaser 3D WebGL Engine
+- **Gameplay Overview**:
+  A forward-moving 3D speed runner where players navigate an adorable squishy jelly cube across floating runways suspended in a futuristic neon canyon. The runway procedurally alternates between solid platforms, chevron booster pads, collectible cyan diamonds, and hazardous chasms.
+- **Controls**:
+  - Touch: Drag left or right anywhere on the screen to steer the jelly cube.
+  - Desktop: Move mouse left or right or use Left/Right Arrow keys.
+- **Core Rules & Physics**:
+  - Speed Pads: Stepping onto glowing neon chevron pads gives the jelly cube a forward propulsion boost and authorizes the player to launch across upcoming chasms.
+  - Chasm Mechanics: Running into a gap without a booster jump causes the jelly cube to plunge into the abyss, triggering an immediate Game Over.
+  - Diamonds: Cyan diamonds appear along the runway and are deposited directly into the player's shared TapYard Wallet.
+  - Customization: Players can spend accumulated diamonds in the Jelly Shop to unlock vibrant cube skins (Bubblegum, Mint Frost, Neon Sun, Cyber Violet, Golden Gleam).
+- **Audio Design**:
+  - Procedural sound generator using Web Audio API: bouncy jump chirps, high-pitched diamond collection chimes, and deep whoosh sounds on speed pads.
+
+---
+
+### Game 2: 2048 Neon Fusion (Sliding Number Tile Puzzle)
+- **URL**: https://tappyard.com/games/2048-puzzle
+- **Category**: Puzzle / Brain Teaser / Math Strategy
+- **Engine**: Native React 19 + 60fps CSS GPU-accelerated Matrix
+- **Gameplay Overview**:
+  A modern, high-tech neon reimagining of the classic 2048 puzzle game. Players slide numbered glowing tiles on a 4x4 grid, merging matching values to double their score until they forge the legendary 2048 tile.
+- **Controls**:
+  - Touch: Swipe Up, Down, Left, or Right on the grid.
+  - Desktop: Arrow keys (Up, Down, Left, Right) or WASD keys.
+- **Core Rules & Mechanics**:
+  - Grid: 4x4 matrix initialized with two random tiles (values of 2 or 4).
+  - Merging: When two identical numbers collide during a slide, they combine into a single tile with double the value (e.g., 2+2=4, 4+4=8, 1024+1024=2048).
+  - Diamond Rewards: Merging key milestone tiles yields instant wallet rewards:
+    - 128 Tile: +3 Diamonds
+    - 256 Tile: +5 Diamonds
+    - 512 Tile: +10 Diamonds
+    - 1024 Tile: +20 Diamonds
+    - 2048 Tile: +50 Diamonds
+  - Powerups:
+    - Undo Move (Cost: 5 Diamonds): Reverts the board to the previous state, saving the player from sudden board lockups.
+- **Audio Design**:
+  - Harmonic pentatonic chord synthesizer: Each tile merge triggers a distinct pitch in the pentatonic scale (A3 through C7), creating a dynamic musical melody as numbers escalate.
+
+---
+
+### Game 3: Block Grid Zen (10x10 Spatial Block Puzzle)
+- **URL**: https://tappyard.com/games/color-zen
+- **Category**: Relaxing / Spatial Puzzle / Mindful Flow
+- **Engine**: Native Canvas 2D + Touch Offset Drag-and-Drop
+- **Gameplay Overview**:
+  A serene, stress-free spatial puzzle played on a 10x10 grid. Inspired by Woodoku and Block Blast, players place geometric polyomino shapes onto the board to complete full rows and columns. Line clears trigger satisfying musical cascades and dissolve tiles into glowing ambient particles.
+- **Controls**:
+  - Touch: Drag pieces from the tray with an ergonomic upward thumb offset so the piece remains clearly visible above the player's fingertip.
+  - Magnetic Snapping: Hovering near valid grid slots displays a semi-transparent ghost preview.
+- **Core Rules & Mechanics**:
+  - The board has no countdown timers, no rush, and no game-over penalties.
+  - Players receive 3 randomly generated polyomino shapes (dots, lines, L-shapes, T-shapes, corners, and squares).
+  - Once placed, completing any horizontal row or vertical column instantly clears all 10 tiles in that line.
+  - Multi-line clears (combos) trigger harmonic ascending arpeggios and bonus diamond rewards.
+  - Reroll Pieces (Cost: 5 Diamonds): Swaps remaining pieces in the tray for 3 fresh shapes when space is tight.
+- **Audio Design**:
+  - Meditative harp and water chime synthesis: Uses pure sine oscillators with exponential decay to create calming, ambient audio.
+
+---
+
+### Game 4: Cyber Dash (1-Tap Neon Reflex Flight Runner)
+- **URL**: https://tappyard.com/games/quick-tap
+- **Category**: Casual / 1-Tap Reflex / Rhythm Flight
+- **Engine**: 60fps HTML5 Canvas Engine with Continuous Physics
+- **Gameplay Overview**:
+  An adrenaline-pumping 1-tap neon reflex flight runner. Players pilot a pulsing cyber triangle through an endless corridor of laser gates, moving hazards, and electric barriers.
+- **Controls**:
+  - Touch: Single tap anywhere on the mobile screen to flap upward.
+  - Desktop: Left mouse click or Spacebar.
+- **Core Rules & Mechanics**:
+  - Constant forward flight velocity with gravity pulling downward.
+  - Each tap applies a momentary upward velocity vector.
+  - Near-Miss Graze Multipliers: Flying closely past laser gate edges without colliding triggers a "Graze" bonus (+1 to +3 Diamonds and extra multiplier points) accompanied by a sub-bass rumble.
+  - Revive With Shield (Cost: 5 Diamonds): On collision, players can spend 5 diamonds to activate a 2.5-second invulnerable plasma shield and resume their run seamlessly.
+  - Share Challenge: Players can copy their high score link with one click to challenge friends via WhatsApp, Telegram, or Twitter.
+- **Audio Design**:
+  - Cyberpunk laser synth: Sharp square-wave thrust chirps, pentatonic score tones, sub-bass 50Hz graze hum, and frequency-swept plasma shield hum.
+
+---
+
+## 3. Unified Player Economy (TapYard Diamonds)
+All games share a unified currency system powered by `lib/wallet.ts`:
+- **Currency Name**: TapYard Diamonds (💎)
+- **Earning Channels**:
+  - Collecting cyan diamonds on Jump Jelly Jump runways
+  - Merging high-value numbers (128 to 2048) in 2048 Neon Fusion
+  - Completing simultaneous row/column combos in Block Grid Zen
+  - Grazing laser gate borders in Cyber Dash
+- **Spending Channels**:
+  - Unlocking custom skins in Jump Jelly Jump
+  - Reverting erroneous moves with Undo in 2048
+  - Rerolling tray pieces in Block Grid Zen
+  - Activating invulnerability Revive Shields in Cyber Dash
+- **Persistence & Synchronization**:
+  - State is synchronized locally via `localStorage` with reactive Pub/Sub listeners (`subscribeWallet`). Changes in any game or modal reflect instantly across navigation bars and overlays without page reloads.
+
+---
+
+## 4. Technical Specifications
+- **Framework**: Next.js 16.4.6 with Turbopack bundler
+- **Language**: TypeScript 5 with strict typing
+- **Styling**: Tailwind CSS v4 with dark cyberpunk neon palette (#090d16 background)
+- **Asset Overhead**: 0 kB external audio downloads. All sound is procedurally synthesized via the standard browser `AudioContext`. Total page download per game is approximately 15-35 kB gzipped.
+- **Supported Browsers**: Google Chrome, Apple Safari (iOS & macOS), Mozilla Firefox, Microsoft Edge, Opera, Samsung Internet.
+
+---
+
+## 5. Frequently Asked Questions (FAQ)
+
+### Are all games on TAPPYARD free?
+Yes. Every game is 100% free with no paid subscriptions, hidden fees, or microtransactions.
+
+### Do I need to create an account or sign in?
+No account is required. You can visit the website on any device and start playing in under 1 second.
+
+### Can I play these games on mobile devices?
+Yes. All games are engineered mobile-first with responsive touch controls, no horizontal viewport scroll, and support for iPhone, iPad, and Android devices.
+
+### Can I play TAPPYARD games at school or work?
+Yes. TAPPYARD games run entirely in standard browser tabs over HTTPS with zero executable file downloads, making them suitable for casual breaks on restricted networks.
+
+---
+© 2026 TAPPYARD. All rights reserved.
+Official Website: https://tappyard.com
