@@ -1,10 +1,11 @@
 import Link from 'next/link';
-import { Gamepad2, Sparkles } from 'lucide-react';
+import { Sparkles } from 'lucide-react';
+import BrandIcon from './BrandIcon';
 
 export default function Footer() {
   return (
-    <footer className="mt-auto border-t border-slate-800/80 bg-[#070b13] py-8 sm:py-12 px-4 sm:px-6 lg:px-8 text-slate-400">
-      <div className="max-w-7xl mx-auto flex flex-col gap-8">
+    <footer className="mt-auto border-t border-slate-800/80 bg-[#070b13] py-8 sm:py-12 px-4 sm:px-6 lg:px-10 text-slate-400">
+      <div className="max-w-[1720px] mx-auto flex flex-col gap-8">
         
         {/* Top: Brand & Game Directory */}
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 sm:gap-8 pb-6 border-b border-slate-800/60">
@@ -12,8 +13,8 @@ export default function Footer() {
           {/* Col 1: Brand & Value Prop */}
           <div className="flex flex-col gap-3">
             <div className="flex items-center gap-2.5">
-              <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-pink-500 to-indigo-600 flex items-center justify-center text-white shadow-md">
-                <Gamepad2 className="w-4 h-4 text-white" />
+              <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-pink-500 to-indigo-600 flex items-center justify-center p-1 shadow-md">
+                <BrandIcon className="w-full h-full" />
               </div>
               <span className="font-black text-white text-lg tracking-tight">
                 TAP<span className="text-transparent bg-clip-text bg-gradient-to-r from-pink-400 to-purple-400">YARD</span>

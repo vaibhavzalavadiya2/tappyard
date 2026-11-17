@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from 'next';
+import { GoogleAnalytics } from '@next/third-parties/google';
 import './globals.css';
 
 const SITE_URL = 'https://tappyard.com';
@@ -56,6 +57,23 @@ export const metadata: Metadata = {
   applicationName: 'TAPPYARD',
   generator: 'Next.js',
   referrer: 'origin-when-cross-origin',
+
+  icons: {
+    icon: [
+      { url: '/favicon.svg', type: 'image/svg+xml' },
+      { url: '/icons/favicon-32x32.png', sizes: '32x32', type: 'image/png' },
+      { url: '/icons/favicon-16x16.png', sizes: '16x16', type: 'image/png' },
+      { url: '/favicon.ico', sizes: 'any' },
+    ],
+    apple: [
+      { url: '/icons/apple-touch-icon.png', sizes: '180x180', type: 'image/png' },
+      { url: '/apple-touch-icon.png', sizes: '180x180', type: 'image/png' },
+    ],
+    shortcut: '/favicon.svg',
+    other: [
+      { rel: 'mask-icon', url: '/favicon.svg', color: '#D946EF' },
+    ],
+  },
 
   formatDetection: {
     email: false,
@@ -160,6 +178,7 @@ export default function RootLayout({ children }: LayoutProps<'/'>) {
       <body className="min-h-full bg-[#090d16] text-slate-100 antialiased selection:bg-pink-500 selection:text-white flex flex-col overscroll-none">
         {children}
       </body>
+      <GoogleAnalytics gaId="G-H7EQCRZ477" />
     </html>
   );
 }

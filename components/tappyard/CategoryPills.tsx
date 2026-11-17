@@ -3,10 +3,10 @@
 import type { GameCategory } from '@/data/games';
 import {
   LayoutGrid,
-  Gamepad2,
-  Puzzle,
+  Zap,
+  Brain,
   Sparkles,
-  Coffee,
+  Flame,
   type LucideIcon,
 } from 'lucide-react';
 
@@ -23,51 +23,83 @@ export default function CategoryPills({
   onSelect,
   gameCounts,
 }: CategoryPillsProps) {
-  const getCategoryIcon = (cat: GameCategory | 'All'): LucideIcon => {
+  const getCategoryMeta = (
+    cat: GameCategory | 'All'
+  ): { label: string; mood: string; Icon: LucideIcon; accent: string } => {
     switch (cat) {
       case 'All':
-        return LayoutGrid;
+        return {
+          label: 'All Games',
+          mood: 'Explore Everything',
+          Icon: LayoutGrid,
+          accent: 'from-pink-500/20 to-purple-500/20 text-pink-400',
+        };
       case 'Arcade':
-        return Gamepad2;
+        return {
+          label: 'Adrenaline Rush',
+          mood: '3D Speed Runners',
+          Icon: Zap,
+          accent: 'from-cyan-500/20 to-blue-500/20 text-cyan-400',
+        };
       case 'Puzzle':
-        return Puzzle;
+        return {
+          label: 'Train Your Brain',
+          mood: 'Neon Sliding Tiles',
+          Icon: Brain,
+          accent: 'from-amber-500/20 to-orange-500/20 text-amber-400',
+        };
       case 'Relaxing':
-        return Sparkles;
+        return {
+          label: 'Just Relax & Zen',
+          mood: 'Soothing Block Grid',
+          Icon: Sparkles,
+          accent: 'from-teal-500/20 to-emerald-500/20 text-teal-400',
+        };
       case 'Casual':
-        return Coffee;
+        return {
+          label: '1-Tap Reflex',
+          mood: 'Cyber Flight Runner',
+          Icon: Flame,
+          accent: 'from-purple-500/20 to-fuchsia-500/20 text-purple-400',
+        };
       default:
-        return Gamepad2;
+        return {
+          label: cat,
+          mood: 'Browser Games',
+          Icon: LayoutGrid,
+          accent: 'from-pink-500/20 to-purple-500/20 text-pink-400',
+        };
     }
   };
 
   return (
-    <div className="flex items-center gap-2 overflow-x-auto pb-1 pt-0.5 no-scrollbar -mx-3 px-3 sm:mx-0 sm:px-0 select-none">
+    <div className="flex items-center gap-2 sm:gap-2.5 overflow-x-auto pb-2 pt-1 no-scrollbar -mx-3 px-3 sm:mx-0 sm:px-0 select-none">
       {categories.map((cat) => {
         const isSelected = selectedCategory === cat;
         const count = gameCounts[cat] || 0;
-        const IconComponent = getCategoryIcon(cat);
+        const { label, Icon, accent } = getCategoryMeta(cat);
 
         return (
           <button
             key={cat}
             onClick={() => onSelect(cat)}
-            className={`inline-flex items-center gap-2 h-10 sm:h-11 px-3.5 sm:px-4 rounded-xl sm:rounded-2xl text-xs sm:text-sm font-black whitespace-nowrap transition-all duration-200 active:scale-95 cursor-pointer ${
+            className={`inline-flex items-center gap-2 h-10 sm:h-11 px-3 sm:px-4 rounded-xl sm:rounded-2xl text-xs sm:text-sm font-black whitespace-nowrap transition-all duration-200 active:scale-95 cursor-pointer ${
               isSelected
                 ? 'bg-gradient-to-r from-pink-500 via-purple-600 to-indigo-600 text-white shadow-[0_0_20px_rgba(236,72,153,0.35)] scale-102 ring-2 ring-pink-400/40'
-                : 'bg-slate-900/90 text-slate-300 hover:bg-slate-800 hover:text-white border border-slate-800/80 hover:border-slate-700'
+                : `bg-slate-900/90 text-slate-300 hover:bg-slate-800 hover:text-white border border-slate-800/80 hover:border-slate-700 bg-gradient-to-r ${accent}`
             }`}
           >
-            <IconComponent
+            <Icon
               className={`w-4 h-4 transition-transform duration-200 ${
-                isSelected ? 'text-white scale-110' : 'text-slate-400'
+                isSelected ? 'text-white scale-110' : 'text-current'
               }`}
             />
-            <span>{cat}</span>
+            <span>{label}</span>
             <span
-              className={`text-[10px] px-2 py-0.5 rounded-full font-bold transition-colors ${
+              className={`text-[10px] px-1.5 sm:px-2 py-0.5 rounded-full font-bold transition-colors ${
                 isSelected
                   ? 'bg-white/25 text-white'
-                  : 'bg-slate-800/90 text-slate-400'
+                  : 'bg-slate-800/90 text-slate-300'
               }`}
             >
               {count}

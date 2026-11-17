@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="220" height="64" viewBox="0 0 220 64">
+  <defs>
+    <linearGradient id="brand" x1="9" y1="7" x2="55" y2="57" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#D946EF"/>
+      <stop offset="0.52" stop-color="#6D28D9"/>
+      <stop offset="1" stop-color="#06D6E8"/>
+    </linearGradient>
+    <linearGradient id="textGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#F472B6"/>
+      <stop offset="50%" stop-color="#C084FC"/>
+      <stop offset="100%" stop-color="#818CF8"/>
+    </linearGradient>
+  </defs>
+  <!-- Icon Mark -->
+  <path fill="url(#brand)" fill-rule="evenodd" d="
+    M 21.2 5.6
+    C 17.7 3.5 13.2 6.1 13.2 10.2
+    L 13.2 53.8
+    C 13.2 58.2 18 60.8 21.8 58.5
+    L 55.3 37.1
+    C 59.1 34.7 59.1 29.3 55.3 26.9
+    Z
+    M 22.4 17.1
+    L 42.8 32
+    L 22.4 46.9
+    Z"/>
+  <!-- Brand Typography -->
+  <text x="66" y="38" font-family="system-ui, -apple-system, sans-serif" font-weight="900" font-size="28" letter-spacing="-1" fill="#FFFFFF">
+    TAP<tspan fill="url(#textGrad)">YARD</tspan>
+  </text>
+  <text x="68" y="52" font-family="system-ui, -apple-system, sans-serif" font-weight="700" font-size="8" letter-spacing="2.5" fill="#94A3B8">
+    INSTANT BROWSER GAMES
+  </text>
+</svg>

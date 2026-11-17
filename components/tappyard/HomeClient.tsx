@@ -3,6 +3,7 @@
 import { useState, useMemo } from 'react';
 import Link from 'next/link';
 import Navbar from '@/components/tappyard/Navbar';
+import HotGamesRow from '@/components/tappyard/HotGamesRow';
 import HeroFeatured from '@/components/tappyard/HeroFeatured';
 import CategoryPills from '@/components/tappyard/CategoryPills';
 import GameCard from '@/components/tappyard/GameCard';
@@ -24,11 +25,13 @@ import {
   HelpCircle,
   CheckCircle2,
   Flame,
+  ArrowRight,
 } from 'lucide-react';
 
 export default function HomeClient() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<GameCategory | 'All'>('All');
+  const [mobileDrawerOpen, setMobileDrawerOpen] = useState(false);
 
   // Filtered games
   const filteredGames = useMemo(() => {
@@ -52,20 +55,52 @@ export default function HomeClient() {
         onSearchChange={setSearchQuery}
         selectedCategory={selectedCategory}
         onCategorySelect={setSelectedCategory}
+        mobileMenuOpen={mobileDrawerOpen}
+        onToggleMobileMenu={() => setMobileDrawerOpen(!mobileDrawerOpen)}
       />
 
-      {/* Main Content Area */}
-      <main className="flex-1 max-w-7xl w-full mx-auto px-3.5 sm:px-6 lg:px-8 py-3 sm:py-6 flex flex-col gap-4 sm:gap-8">
+      {/* Main Content Area: Full-width container */}
+      <main className="flex-1 max-w-[1720px] w-full mx-auto px-4 sm:px-6 lg:px-10 2xl:px-12 py-3 sm:py-6 flex flex-col gap-5 sm:gap-8">
         
         {/* Semantic H1 for SEO */}
         <h1 className="sr-only">
           Free Online Games — Play Instant Browser Games No Download | TAPPYARD
         </h1>
 
-        {/* Featured Banner (only show when not actively searching) */}
+        {/* Hot Games Circular Stories Row (now.gg style) */}
+        {!searchQuery && <HotGamesRow />}
+
+        {/* Featured Multi-Game Carousel Banner (only show when not actively searching) */}
         {!searchQuery && selectedCategory === 'All' && <HeroFeatured />}
 
-        {/* Recently Played */}
+        {/* CrazyGames-style Instant Play Value Banner */}
+        <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-purple-900/60 via-indigo-900/40 to-pink-900/40 border border-purple-500/30 p-3 sm:p-4 flex flex-col sm:flex-row items-center justify-between gap-3 shadow-lg">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-pink-500 to-purple-600 flex items-center justify-center text-white shrink-0 shadow-md">
+              <Zap className="w-5 h-5 animate-pulse" />
+            </div>
+            <div>
+              <span className="text-xs sm:text-sm font-black text-white flex items-center gap-1.5">
+                <span>PLAY INSTANTLY</span>
+                <span className="text-[10px] text-pink-300 font-bold bg-pink-500/20 px-2 py-0.5 rounded-full border border-pink-500/40">
+                  NO DOWNLOADS
+                </span>
+              </span>
+              <p className="text-[11px] sm:text-xs text-slate-300 mt-0.5">
+                100% native HTML5 & WebGL browser games. Silky 60fps on mobile & PC.
+              </p>
+            </div>
+          </div>
+          <Link
+            href="/games/jelly-bounce"
+            className="flex items-center justify-center gap-1.5 h-9 px-4 rounded-xl text-xs font-black text-white bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-400 hover:to-purple-500 shadow-md shadow-pink-500/20 active:scale-95 transition-all shrink-0 w-full sm:w-auto"
+          >
+            <span>Play Jelly 3D</span>
+            <ArrowRight className="w-3.5 h-3.5" />
+          </Link>
+        </div>
+
+        {/* Recently Played ("Jump Back In") */}
         {!searchQuery && <RecentlyPlayed />}
 
         {/* Games Catalogue Section */}
@@ -75,19 +110,19 @@ export default function HomeClient() {
               <div className="flex items-center gap-2">
                 <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider bg-pink-500/15 text-pink-400 border border-pink-500/30">
                   <Flame className="w-3 h-3 text-pink-400" />
-                  Trending Games
+                  Popular Games
                 </span>
               </div>
               <h2 className="text-xl sm:text-3xl font-black text-white tracking-tight flex items-center gap-2 mt-1">
                 <Gamepad2 className="w-6 h-6 sm:w-7 sm:h-7 text-pink-500" />
-                <span>Game Catalogue</span>
+                <span>Top Games Today</span>
               </h2>
               <p className="text-xs sm:text-sm text-slate-400 mt-0.5">
-                Instant casual, arcade, and relaxing browser games. No installs, 100% free.
+                Instant casual, arcade, and relaxing browser games. 100% free, tap to play.
               </p>
             </div>
 
-            {/* Category Filter Pills */}
+            {/* CrazyGames-Style Mood & Category Filter Chips */}
             <CategoryPills
               categories={['All', ...GAME_CATEGORIES]}
               selectedCategory={selectedCategory}
@@ -120,14 +155,14 @@ export default function HomeClient() {
             </div>
           )}
 
-          {/* Games Grid */}
+          {/* Games Grid: 2 columns on mobile, 3 on tablet, 4 on desktop (now.gg & CrazyGames style) */}
           {filteredGames.length > 0 ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
+            <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-6">
               {filteredGames.map((game, idx) => (
                 <div
                   key={game.id}
                   className="animate-fadeInUp"
-                  style={{ animationDelay: `${idx * 80}ms` }}
+                  style={{ animationDelay: `${idx * 70}ms` }}
                 >
                   <GameCard game={game} />
                 </div>
@@ -156,7 +191,7 @@ export default function HomeClient() {
         </section>
 
         {/* SEO Information & FAQ Section for Search Engines & Users */}
-        <section className="mt-8 pt-8 border-t border-slate-800/80 flex flex-col gap-6 text-slate-400 text-xs sm:text-sm leading-relaxed">
+        <section id="faq" className="mt-8 pt-8 border-t border-slate-800/80 flex flex-col gap-6 text-slate-400 text-xs sm:text-sm leading-relaxed scroll-mt-20">
           
           {/* Key Value Pillars */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6">
@@ -197,7 +232,7 @@ export default function HomeClient() {
             </div>
           </div>
 
-          {/* About TAPPYARD Content Module with High-Intent Keyword Links */}
+          {/* About TAPPYARD Content Module */}
           <div className="p-6 sm:p-7 rounded-2xl bg-slate-900/30 border border-slate-800/70 flex flex-col gap-3">
             <h2 className="text-base sm:text-xl font-black text-white">
               Play Free Online Browser Games on TAPPYARD
@@ -309,6 +344,7 @@ export default function HomeClient() {
       <MobileBottomNav
         selectedCategory={selectedCategory}
         onCategorySelect={setSelectedCategory}
+        onOpenMenu={() => setMobileDrawerOpen(true)}
       />
     </div>
   );

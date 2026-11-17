@@ -16,6 +16,8 @@ import {
   ChevronLeft,
   ChevronRight,
   Sparkles,
+  Flame,
+  ShieldCheck,
 } from 'lucide-react';
 
 export default function HeroFeatured() {
@@ -77,54 +79,58 @@ export default function HeroFeatured() {
   const activeSideHex = '#' + activeSkin.sideColor.toString(16).padStart(6, '0');
   const activeEyeHex = '#' + activeSkin.eyeColor.toString(16).padStart(6, '0');
 
-  // Dynamic accent gradients based on current game
-  const getAccentGradient = (id: string) => {
+  // Dynamic theme styling per game
+  const getTheme = (id: string) => {
     switch (id) {
       case 'jelly-bounce':
         return {
-          bg: 'from-[#061824] via-[#0b2737] to-[#081820]',
+          bg: 'from-[#061824] via-[#0a2333] to-[#041018]',
           border: 'border-cyan-500/40',
-          glow1: 'bg-cyan-500/20',
-          glow2: 'bg-pink-500/15',
-          btn: 'bg-gradient-to-r from-cyan-400 via-blue-500 to-indigo-600 shadow-cyan-500/30 hover:shadow-cyan-500/50',
+          glow1: 'bg-cyan-500/25',
+          glow2: 'bg-blue-600/20',
+          btn: 'bg-gradient-to-r from-cyan-400 via-blue-500 to-indigo-600 shadow-cyan-500/40 hover:shadow-cyan-500/60',
           badge: 'bg-cyan-500/20 text-cyan-300 border-cyan-500/40',
-          dot: 'bg-cyan-400 shadow-[0_0_8px_#00f0ff]',
+          tag: 'FLAGSHIP 3D SPEED RUNNER',
+          pillActive: 'bg-cyan-500/30 text-cyan-200 border-cyan-400/50 shadow-[0_0_12px_rgba(0,240,255,0.4)]',
         };
       case '2048-puzzle':
         return {
-          bg: 'from-[#1c1204] via-[#2a1b08] to-[#140c02]',
+          bg: 'from-[#201303] via-[#2c1a06] to-[#120a02]',
           border: 'border-amber-500/40',
-          glow1: 'bg-amber-500/20',
-          glow2: 'bg-orange-500/15',
-          btn: 'bg-gradient-to-r from-amber-400 via-orange-500 to-red-500 shadow-amber-500/30 hover:shadow-amber-500/50',
+          glow1: 'bg-amber-500/25',
+          glow2: 'bg-orange-600/20',
+          btn: 'bg-gradient-to-r from-amber-400 via-orange-500 to-red-500 shadow-amber-500/40 hover:shadow-amber-500/60',
           badge: 'bg-amber-500/20 text-amber-300 border-amber-500/40',
-          dot: 'bg-amber-400 shadow-[0_0_8px_#f59e0b]',
+          tag: 'BRAIN & MATH SLIDING TILES',
+          pillActive: 'bg-amber-500/30 text-amber-200 border-amber-400/50 shadow-[0_0_12px_rgba(245,158,11,0.4)]',
         };
       case 'color-zen':
         return {
-          bg: 'from-[#031818] via-[#072a29] to-[#041616]',
+          bg: 'from-[#031818] via-[#072a29] to-[#021313]',
           border: 'border-teal-500/40',
-          glow1: 'bg-teal-500/20',
-          glow2: 'bg-emerald-500/15',
-          btn: 'bg-gradient-to-r from-teal-400 via-emerald-500 to-cyan-600 shadow-teal-500/30 hover:shadow-teal-500/50',
+          glow1: 'bg-teal-500/25',
+          glow2: 'bg-emerald-600/20',
+          btn: 'bg-gradient-to-r from-teal-400 via-emerald-500 to-cyan-600 shadow-teal-500/40 hover:shadow-teal-500/60',
           badge: 'bg-teal-500/20 text-teal-300 border-teal-500/40',
-          dot: 'bg-teal-400 shadow-[0_0_8px_#14b8a6]',
+          tag: 'RELAXING 10x10 SPATIAL ZEN',
+          pillActive: 'bg-teal-500/30 text-teal-200 border-teal-400/50 shadow-[0_0_12px_rgba(20,184,166,0.4)]',
         };
       case 'quick-tap':
       default:
         return {
-          bg: 'from-[#170524] via-[#25093a] to-[#12041d]',
+          bg: 'from-[#190628] via-[#270a3c] to-[#11031c]',
           border: 'border-purple-500/40',
-          glow1: 'bg-purple-500/20',
-          glow2: 'bg-fuchsia-500/15',
-          btn: 'bg-gradient-to-r from-purple-500 via-fuchsia-500 to-pink-500 shadow-purple-500/30 hover:shadow-purple-500/50',
+          glow1: 'bg-purple-500/25',
+          glow2: 'bg-fuchsia-600/20',
+          btn: 'bg-gradient-to-r from-purple-500 via-fuchsia-500 to-pink-500 shadow-purple-500/40 hover:shadow-purple-500/60',
           badge: 'bg-purple-500/20 text-purple-300 border-purple-500/40',
-          dot: 'bg-purple-400 shadow-[0_0_8px_#a855f7]',
+          tag: '1-TAP NEON REFLEX RUNNER',
+          pillActive: 'bg-purple-500/30 text-purple-200 border-purple-400/50 shadow-[0_0_12px_rgba(168,85,247,0.4)]',
         };
     }
   };
 
-  const theme = getAccentGradient(currentGame.id);
+  const theme = getTheme(currentGame.id);
 
   return (
     <div
@@ -132,29 +138,32 @@ export default function HeroFeatured() {
       onMouseLeave={() => setIsPaused(false)}
       onTouchStart={handleTouchStart}
       onTouchEnd={handleTouchEnd}
-      className={`relative overflow-hidden rounded-2xl sm:rounded-3xl bg-gradient-to-br ${theme.bg} border ${theme.border} shadow-2xl p-4 sm:p-6 lg:p-8 transition-all duration-700`}
+      className={`relative overflow-hidden rounded-3xl bg-gradient-to-br ${theme.bg} border ${theme.border} shadow-2xl p-4 sm:p-6 lg:p-8 xl:p-10 transition-all duration-700 w-full`}
     >
-      {/* Background ambient glow spheres */}
+      {/* Dynamic Background Light Spheres */}
       <div
-        className={`absolute -top-24 -left-24 w-72 h-72 sm:w-96 sm:h-96 rounded-full ${theme.glow1} blur-3xl pointer-events-none transition-colors duration-700`}
+        className={`absolute -top-32 -left-32 w-80 h-80 sm:w-[420px] sm:h-[420px] rounded-full ${theme.glow1} blur-3xl pointer-events-none transition-colors duration-700`}
       />
       <div
-        className={`absolute -bottom-24 -right-24 w-72 h-72 sm:w-96 sm:h-96 rounded-full ${theme.glow2} blur-3xl pointer-events-none transition-colors duration-700`}
+        className={`absolute -bottom-32 -right-32 w-80 h-80 sm:w-[420px] sm:h-[420px] rounded-full ${theme.glow2} blur-3xl pointer-events-none transition-colors duration-700`}
       />
+
+      {/* Cyber Grid Texture Overlay */}
+      <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff05_1px,transparent_1px),linear-gradient(to_bottom,#ffffff05_1px,transparent_1px)] bg-[size:32px_32px] pointer-events-none" />
 
       {/* Slide Navigation Arrows (Desktop) */}
       <button
         onClick={prevSlide}
-        className="hidden lg:flex absolute left-3 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full bg-slate-900/80 hover:bg-slate-800 border border-slate-700/60 items-center justify-center text-slate-300 hover:text-white transition-all shadow-lg hover:scale-105 active:scale-95 cursor-pointer backdrop-blur-md"
-        aria-label="Previous featured game"
+        className="hidden lg:flex absolute left-4 top-1/2 -translate-y-1/2 z-20 w-11 h-11 rounded-2xl bg-black/60 hover:bg-black/85 border border-white/20 items-center justify-center text-white transition-all shadow-xl hover:scale-110 active:scale-95 cursor-pointer backdrop-blur-md"
+        aria-label="Previous game"
       >
         <ChevronLeft className="w-5 h-5" />
       </button>
 
       <button
         onClick={nextSlide}
-        className="hidden lg:flex absolute right-3 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full bg-slate-900/80 hover:bg-slate-800 border border-slate-700/60 items-center justify-center text-slate-300 hover:text-white transition-all shadow-lg hover:scale-105 active:scale-95 cursor-pointer backdrop-blur-md"
-        aria-label="Next featured game"
+        className="hidden lg:flex absolute right-4 top-1/2 -translate-y-1/2 z-20 w-11 h-11 rounded-2xl bg-black/60 hover:bg-black/85 border border-white/20 items-center justify-center text-white transition-all shadow-xl hover:scale-110 active:scale-95 cursor-pointer backdrop-blur-md"
+        aria-label="Next game"
       >
         <ChevronRight className="w-5 h-5" />
       </button>
@@ -168,9 +177,9 @@ export default function HeroFeatured() {
               className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-black tracking-wide border uppercase ${theme.badge}`}
             >
               <span className="w-1.5 h-1.5 rounded-full bg-current animate-ping" />
-              {currentGame.badge || 'FEATURED'}
+              {theme.tag}
             </span>
-            <span className="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-slate-800 text-slate-300 border border-slate-700">
+            <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-slate-800 text-slate-300 border border-slate-700">
               {currentGame.category}
             </span>
           </div>
@@ -194,7 +203,7 @@ export default function HeroFeatured() {
           {/* Compact animated thumbnail */}
           <Link
             href={currentGame.route}
-            className="w-18 h-18 sm:w-22 sm:h-22 shrink-0 rounded-2xl overflow-hidden border border-white/20 shadow-lg active:scale-95 transition-transform relative bg-slate-950"
+            className="w-20 h-20 sm:w-24 sm:h-24 shrink-0 rounded-2xl overflow-hidden border border-white/25 shadow-xl active:scale-95 transition-transform relative bg-slate-950"
             aria-label={`Play ${currentGame.title}`}
           >
             {currentGame.id === 'jelly-bounce' ? (
@@ -216,7 +225,7 @@ export default function HeroFeatured() {
           </Link>
         </div>
 
-        {/* Compact Stats for Jelly Bounce */}
+        {/* Stats Pill (Jelly Jump) */}
         {currentGame.id === 'jelly-bounce' && progress && progress.bestDistance > 0 && (
           <div className="flex items-center justify-around py-1.5 px-2.5 rounded-xl bg-slate-900/80 border border-cyan-500/30 text-[11px] text-slate-300">
             <div className="flex items-center gap-1">
@@ -254,7 +263,7 @@ export default function HeroFeatured() {
               key={game.id}
               onClick={() => setCurrentIndex(idx)}
               className={`h-2 rounded-full transition-all duration-300 cursor-pointer ${
-                idx === currentIndex ? `w-6 ${theme.dot}` : 'w-2 bg-slate-700 hover:bg-slate-500'
+                idx === currentIndex ? 'w-6 bg-white shadow-[0_0_8px_#ffffff]' : 'w-2 bg-slate-700 hover:bg-slate-500'
               }`}
               aria-label={`Show ${game.title}`}
             />
@@ -262,38 +271,57 @@ export default function HeroFeatured() {
         </div>
       </div>
 
-      {/* --- DESKTOP VIEW (lg+) --- */}
-      <div className="hidden lg:grid lg:grid-cols-12 gap-8 items-center relative z-10 px-8">
-        {/* Left Column: Game Info & Play CTA */}
+      {/* --- DESKTOP EXPANSIVE CINEMATIC VIEW (lg+) --- */}
+      <div className="hidden lg:grid lg:grid-cols-12 gap-8 xl:gap-12 items-center relative z-10 px-8 py-2">
+        {/* Left Column: Game Title, High-Impact Badges & Action CTAs */}
         <div className="lg:col-span-7 flex flex-col items-start gap-4">
+          {/* Top Status & Intent Badges */}
           <div className="flex flex-wrap items-center gap-2">
             <span
-              className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold border uppercase ${theme.badge}`}
+              className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-black border uppercase tracking-wider ${theme.badge}`}
             >
-              <span className="w-1.5 h-1.5 rounded-full bg-current animate-ping" />
-              {currentGame.badge || 'FEATURED'}
+              <Flame className="w-3.5 h-3.5 text-current animate-pulse" />
+              {theme.tag}
             </span>
-            <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-slate-800 text-slate-300 border border-slate-700">
+            <span className="px-3 py-1 rounded-full text-xs font-bold bg-slate-900/90 text-slate-200 border border-slate-700">
               {currentGame.category}
             </span>
-            <span className="text-xs text-amber-400 font-bold flex items-center gap-1">
-              <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-400" />
+            <span className="text-xs text-amber-400 font-black flex items-center gap-1 bg-black/40 px-3 py-1 rounded-full border border-amber-400/30 backdrop-blur-md">
+              <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-400 drop-shadow-[0_0_4px_rgba(251,191,36,0.8)]" />
               <span>{currentGame.rating.toFixed(1)}</span>
               <span className="text-slate-400 font-normal">({currentGame.playsCount} plays)</span>
             </span>
           </div>
 
-          <h2 className="text-4xl lg:text-5xl font-black tracking-tight text-white leading-tight">
+          {/* Large Hero Title */}
+          <h2 className="text-4xl xl:text-5xl 2xl:text-6xl font-black tracking-tight text-white leading-[1.1] drop-shadow-lg">
             {currentGame.title}
           </h2>
 
-          <p className="text-slate-300 text-sm md:text-base leading-relaxed max-w-xl">
+          {/* Description */}
+          <p className="text-slate-200 text-sm xl:text-base leading-relaxed max-w-2xl font-medium">
             {currentGame.description}
           </p>
 
-          {/* Jelly Jump specific stats */}
+          {/* Key Value Micro-Pills */}
+          <div className="flex items-center gap-2.5 text-xs text-slate-300 flex-wrap">
+            <span className="flex items-center gap-1 bg-white/10 px-3 py-1 rounded-lg border border-white/15">
+              <Zap className="w-3.5 h-3.5 text-amber-400" />
+              Instant 60fps WebGL
+            </span>
+            <span className="flex items-center gap-1 bg-white/10 px-3 py-1 rounded-lg border border-white/15">
+              <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
+              100% Free & Unblocked
+            </span>
+            <span className="flex items-center gap-1 bg-white/10 px-3 py-1 rounded-lg border border-white/15">
+              <Sparkles className="w-3.5 h-3.5 text-pink-400" />
+              Zero App Store Installs
+            </span>
+          </div>
+
+          {/* Jelly Jump specific personal stats */}
           {currentGame.id === 'jelly-bounce' && progress && progress.bestDistance > 0 && (
-            <div className="flex items-center gap-4 p-3 rounded-2xl bg-slate-900/80 border border-cyan-500/30 text-xs text-slate-300">
+            <div className="flex items-center gap-4 p-3.5 rounded-2xl bg-black/40 border border-cyan-500/30 text-xs text-slate-200 backdrop-blur-md">
               <div className="flex items-center gap-2.5">
                 <div className="w-8 h-8 rounded-xl bg-amber-500/15 border border-amber-500/30 flex items-center justify-center">
                   <Trophy className="w-4 h-4 text-amber-400" />
@@ -307,7 +335,7 @@ export default function HeroFeatured() {
                   </span>
                 </div>
               </div>
-              <div className="w-px h-6 bg-slate-800" />
+              <div className="w-px h-6 bg-slate-700" />
               <div className="flex items-center gap-2.5">
                 <div className="w-8 h-8 rounded-xl bg-cyan-500/15 border border-cyan-500/30 flex items-center justify-center">
                   <Gem className="w-4 h-4 text-cyan-400" />
@@ -321,7 +349,7 @@ export default function HeroFeatured() {
                   </span>
                 </div>
               </div>
-              <div className="w-px h-6 bg-slate-800" />
+              <div className="w-px h-6 bg-slate-700" />
               <div className="flex items-center gap-2.5">
                 <div className="w-8 h-8 rounded-xl bg-pink-500/15 border border-pink-500/30 flex items-center justify-center">
                   <Zap className="w-4 h-4 text-pink-400 fill-pink-400" />
@@ -338,27 +366,27 @@ export default function HeroFeatured() {
             </div>
           )}
 
-          {/* Action Button & Carousel Tabs */}
-          <div className="flex items-center gap-4 pt-1 flex-wrap">
+          {/* Action Row: Big PLAY NOW CTA + Direct Carousel Tabs */}
+          <div className="flex items-center gap-4 pt-2 flex-wrap">
             <Link
               href={currentGame.route}
-              className={`group relative inline-flex items-center justify-center gap-3 h-14 px-8 rounded-2xl font-black text-white text-base shadow-xl transition-all duration-200 hover:scale-105 active:scale-95 cursor-pointer border border-white/20 ${theme.btn}`}
+              className={`group relative inline-flex items-center justify-center gap-3 h-14 px-8 rounded-2xl font-black text-white text-base shadow-2xl transition-all duration-200 hover:scale-105 active:scale-95 cursor-pointer border border-white/30 ${theme.btn}`}
             >
               <Play className="w-5 h-5 fill-white group-hover:scale-110 transition-transform" />
               <span>PLAY NOW</span>
-              <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+              <ArrowRight className="w-4 h-4 group-hover:translate-x-1.5 transition-transform" />
             </Link>
 
             {/* Quick Game Switcher Tabs */}
-            <div className="flex items-center gap-2 bg-slate-900/60 p-1.5 rounded-2xl border border-slate-800/80 backdrop-blur-md">
+            <div className="flex items-center gap-1.5 bg-black/50 p-1.5 rounded-2xl border border-white/10 backdrop-blur-md">
               {featuredGames.map((game, idx) => (
                 <button
                   key={game.id}
                   onClick={() => setCurrentIndex(idx)}
-                  className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+                  className={`px-3.5 py-2 rounded-xl text-xs font-black transition-all cursor-pointer ${
                     idx === currentIndex
-                      ? 'bg-white/15 text-white shadow-sm ring-1 ring-white/20'
-                      : 'text-slate-400 hover:text-white hover:bg-white/5'
+                      ? theme.pillActive
+                      : 'text-slate-400 hover:text-white hover:bg-white/10'
                   }`}
                 >
                   {game.title.split(' ')[0]}
@@ -368,19 +396,23 @@ export default function HeroFeatured() {
           </div>
         </div>
 
-        {/* Right Column: Interactive Showcase Card */}
-        <div className="lg:col-span-5 flex justify-center">
+        {/* Right Column: Holographic 3D Interactive Stage */}
+        <div className="lg:col-span-5 flex justify-center w-full">
           <Link
             href={currentGame.route}
-            className="group relative w-72 h-72 lg:w-80 lg:h-80 rounded-3xl overflow-hidden border border-white/15 p-6 flex flex-col items-center justify-center shadow-2xl backdrop-blur-md transition-all duration-300 hover:scale-105 hover:border-white/30 cursor-pointer bg-slate-950/80"
+            className="group relative w-full max-w-[420px] aspect-square rounded-3xl overflow-hidden border border-white/20 p-6 flex flex-col items-center justify-center shadow-2xl backdrop-blur-md transition-all duration-300 hover:scale-105 hover:border-white/40 cursor-pointer bg-slate-950/70"
+            aria-label={`Play ${currentGame.title}`}
           >
+            {/* Ambient Lighting reflections */}
+            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-white/10 pointer-events-none z-[1]" />
+
             {currentGame.id === 'jelly-bounce' ? (
-              <div className="relative w-full h-full flex flex-col items-center justify-center">
-                <div className="absolute bottom-10 w-48 h-6 rounded-full bg-cyan-950/60 shadow-lg border-t border-cyan-400/40" />
+              <div className="relative w-full h-full flex flex-col items-center justify-center z-[2]">
+                <div className="absolute bottom-6 w-52 h-6 rounded-full bg-cyan-950/80 shadow-lg border-t border-cyan-400/50" />
                 <div className="absolute top-2 right-4 text-cyan-300 text-sm font-black animate-pulse drop-shadow-[0_0_8px_rgba(0,240,255,0.8)]">
                   <Gem className="w-5 h-5 text-cyan-300 fill-cyan-400/30" />
                 </div>
-                <div className="relative w-40 h-40 group-hover:scale-110 group-hover:-translate-y-2 transition-all duration-300 drop-shadow-[0_12px_24px_rgba(0,240,255,0.3)]">
+                <div className="relative w-44 h-44 group-hover:scale-110 group-hover:-translate-y-2 transition-all duration-300 drop-shadow-[0_16px_32px_rgba(0,240,255,0.35)]">
                   <svg viewBox="0 0 80 80" className="w-full h-full">
                     <polygon points="40,14 66,24 40,34 14,24" fill={activeTopHex} />
                     <polygon points="14,24 40,34 40,64 14,54" fill={activeFaceHex} />
@@ -392,13 +424,14 @@ export default function HeroFeatured() {
                 </div>
               </div>
             ) : (
-              <div className="w-full h-full rounded-2xl overflow-hidden group-hover:scale-105 transition-transform duration-300">
+              <div className="w-full h-full rounded-2xl overflow-hidden group-hover:scale-105 transition-transform duration-300 z-[2]">
                 <GameThumbnail id={currentGame.thumbnail} title={currentGame.title} />
               </div>
             )}
 
-            <div className="absolute bottom-4 text-xs font-bold text-white bg-slate-900/90 px-4 py-1.5 rounded-full border border-white/20 group-hover:bg-pink-500 group-hover:border-pink-400 transition-colors flex items-center gap-1.5 shadow-lg">
-              <span>Click to Play</span>
+            {/* Launch Pill Overlay */}
+            <div className="absolute bottom-4 z-10 text-xs font-black text-white bg-slate-900/90 px-4 py-2 rounded-full border border-white/20 group-hover:bg-pink-500 group-hover:border-pink-400 transition-colors flex items-center gap-1.5 shadow-xl">
+              <span>Instant Launch</span>
               <ArrowRight className="w-3.5 h-3.5" />
             </div>
           </Link>

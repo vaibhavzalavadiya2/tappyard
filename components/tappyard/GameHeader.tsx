@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { useState, useEffect, useCallback, type ReactNode } from 'react';
 import { ArrowLeft, Maximize2, Minimize2, Gem } from 'lucide-react';
 import { getWalletDiamonds, subscribeWallet } from '@/lib/wallet';
+import BrandIcon from './BrandIcon';
 
 interface GameHeaderProps {
   title: string;
@@ -154,6 +155,7 @@ export default function GameHeader({
           className="group/back inline-flex items-center gap-1.5 h-8 sm:h-9 px-2.5 sm:px-3.5 rounded-full text-xs font-bold text-slate-200 bg-slate-900/90 hover:bg-slate-800 border border-slate-800 hover:border-pink-500/50 transition-all active:scale-95 shadow-xs cursor-pointer"
         >
           <ArrowLeft className="w-3.5 h-3.5 text-slate-400 group-hover/back:text-pink-400 group-hover/back:-translate-x-0.5 transition-transform" />
+          <BrandIcon className="w-3.5 h-3.5 shrink-0" />
           <span className="hidden xs:inline text-slate-400 font-normal">Back to</span>
           <span className="text-white font-black tracking-tight">
             TAP<span className="text-transparent bg-clip-text bg-gradient-to-r from-pink-400 to-purple-400">YARD</span>
