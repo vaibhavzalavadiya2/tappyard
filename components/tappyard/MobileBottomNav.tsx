@@ -17,12 +17,12 @@ export default function MobileBottomNav({
     { label: 'All', cat: 'All' as const, Icon: LayoutGrid },
     { label: 'Arcade', cat: 'Arcade' as const, Icon: Gamepad2 },
     { label: 'Puzzle', cat: 'Puzzle' as const, Icon: Puzzle },
-    { label: 'Relaxing', cat: 'Relaxing' as const, Icon: Sparkles },
+    { label: 'Zen', cat: 'Relaxing' as const, Icon: Sparkles },
   ];
 
   return (
-    <nav className="md:hidden fixed bottom-0 inset-x-0 z-40 bg-[#090d16]/95 backdrop-blur-xl border-t border-slate-800/90 safe-bottom">
-      <div className="flex items-center justify-around px-2 py-1.5 h-14">
+    <nav className="md:hidden fixed bottom-0 inset-x-0 z-40 bg-[#090d16]/90 backdrop-blur-2xl border-t border-slate-800/90 safe-bottom relative before:absolute before:top-0 before:inset-x-0 before:h-[1px] before:bg-gradient-to-r before:from-transparent before:via-pink-500/40 before:to-transparent shadow-[0_-4px_20px_rgba(0,0,0,0.5)]">
+      <div className="flex items-center justify-around px-2 h-16">
         {navItems.map((item) => {
           const isActive = selectedCategory === item.cat;
           const Icon = item.Icon;
@@ -34,32 +34,35 @@ export default function MobileBottomNav({
                 const el = document.getElementById('catalogue');
                 if (el) el.scrollIntoView({ behavior: 'smooth' });
               }}
-              className={`flex flex-col items-center justify-center flex-1 py-1 rounded-xl transition-all cursor-pointer ${
-                isActive ? 'text-pink-400 font-bold' : 'text-slate-400 hover:text-slate-200'
+              className={`relative flex flex-col items-center justify-center flex-1 py-1.5 rounded-xl transition-all active:scale-90 cursor-pointer min-h-[48px] ${
+                isActive ? 'text-pink-400 font-black' : 'text-slate-400 hover:text-slate-200'
               }`}
             >
               <Icon
-                className={`w-5 h-5 transition-transform ${
-                  isActive ? 'scale-110 stroke-[2.5]' : 'stroke-[1.8]'
+                className={`w-5 h-5 transition-transform duration-200 ${
+                  isActive ? 'scale-115 stroke-[2.5] text-pink-400 drop-shadow-[0_0_8px_rgba(236,72,153,0.6)]' : 'stroke-[1.8]'
                 }`}
               />
-              <span className="text-[10px] tracking-tight mt-0.5">
+              <span className="text-[10px] tracking-tight mt-1">
                 {item.label}
               </span>
+              {isActive && (
+                <span className="absolute bottom-1 w-1.5 h-1.5 rounded-full bg-pink-400 shadow-[0_0_6px_#f472b6]" />
+              )}
             </button>
           );
         })}
 
-        {/* Quick Launch Flagship Jump Jelly Jump */}
+        {/* Floating Quick Launch Flagship Jump Jelly Jump Button */}
         <Link
           href="/games/jelly-bounce"
-          className="flex flex-col items-center justify-center flex-1 py-1 text-cyan-300 hover:text-white transition-all cursor-pointer group"
+          className="flex flex-col items-center justify-center flex-1 py-1 text-cyan-300 hover:text-white transition-all cursor-pointer group active:scale-90 min-h-[48px] -translate-y-1.5"
           aria-label="Play Jump Jelly Jump!"
         >
-          <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-cyan-500 to-blue-600 flex items-center justify-center shadow-md shadow-cyan-500/30 group-active:scale-90 transition-transform">
-            <Gem className="w-4 h-4 text-white" />
+          <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-cyan-400 via-blue-500 to-indigo-600 flex items-center justify-center shadow-lg shadow-cyan-500/40 border border-cyan-300/40 group-active:scale-95 transition-transform ring-2 ring-cyan-400/20">
+            <Gem className="w-5 h-5 text-white animate-pulse" />
           </div>
-          <span className="text-[10px] font-bold tracking-tight text-cyan-400 mt-0.5">
+          <span className="text-[10px] font-black tracking-tight text-cyan-400 mt-0.5">
             Jelly 3D
           </span>
         </Link>

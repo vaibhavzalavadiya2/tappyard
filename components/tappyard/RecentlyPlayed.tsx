@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { GAMES_CATALOGUE, type GameItem } from '@/data/games';
 import GameThumbnail from './GameThumbnail';
-import { Clock, Play } from 'lucide-react';
+import { Clock, Play, ArrowRight } from 'lucide-react';
 
 export default function RecentlyPlayed() {
   const [recentGames, setRecentGames] = useState<GameItem[]>([]);
@@ -38,39 +38,49 @@ export default function RecentlyPlayed() {
   if (recentGames.length === 0) return null;
 
   return (
-    <section className="flex flex-col gap-2.5">
+    <section className="flex flex-col gap-3 py-1">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <Clock className="w-4 h-4 sm:w-5 sm:h-5 text-pink-400" />
+          <div className="w-6 h-6 rounded-lg bg-pink-500/15 border border-pink-500/30 flex items-center justify-center">
+            <Clock className="w-3.5 h-3.5 text-pink-400" />
+          </div>
           <h2 className="text-base sm:text-lg font-black text-white tracking-tight">
             Jump Back In
           </h2>
           <span className="text-xs text-slate-400 font-medium hidden xs:inline">
-            Recently Played
+            • Continue Playing
           </span>
         </div>
       </div>
 
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-2.5 sm:gap-4">
-        {recentGames.map((game) => (
+      {/* Horizontal smooth scrolling carousel strip (Poki style) */}
+      <div className="flex gap-3 overflow-x-auto pb-2 no-scrollbar snap-x snap-mandatory -mx-3 px-3 sm:mx-0 sm:px-0">
+        {recentGames.map((game, index) => (
           <Link
             key={game.id}
             href={game.route}
-            className="group relative flex flex-col rounded-2xl bg-slate-900 border border-slate-800 p-2.5 hover:border-pink-500/50 hover:bg-slate-850 transition-all hover:-translate-y-0.5 shadow-md"
+            className="group relative flex-none w-36 sm:w-44 rounded-2xl bg-slate-900/90 border border-slate-800 p-2.5 hover:border-pink-500/50 hover:shadow-[0_0_20px_rgba(236,72,153,0.2)] transition-all duration-300 hover:-translate-y-1 snap-start active:scale-95 cursor-pointer"
+            style={{ animationDelay: `${index * 50}ms` }}
           >
             <div className="relative aspect-square w-full rounded-xl overflow-hidden mb-2 bg-slate-950">
               <GameThumbnail id={game.thumbnail} title={game.title} />
-              <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                <span className="w-8 h-8 rounded-full bg-pink-500 text-white flex items-center justify-center shadow-lg">
+              
+              {/* Play button hover overlay */}
+              <div className="absolute inset-0 bg-slate-950/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center backdrop-blur-xs">
+                <span className="w-10 h-10 rounded-full bg-pink-500 text-white flex items-center justify-center shadow-lg shadow-pink-500/50 transform group-hover:scale-110 transition-transform">
                   <Play className="w-4 h-4 fill-white ml-0.5" />
                 </span>
               </div>
             </div>
-            <div className="text-xs font-bold text-white truncate group-hover:text-pink-300">
+
+            <div className="text-xs font-black text-white truncate group-hover:text-pink-300 transition-colors">
               {game.title}
             </div>
-            <div className="text-[10px] text-slate-400 truncate">
-              {game.category}
+            <div className="flex items-center justify-between text-[10px] text-slate-400 mt-0.5">
+              <span>{game.category}</span>
+              <span className="flex items-center gap-0.5 text-pink-400 font-semibold group-hover:translate-x-0.5 transition-transform">
+                Play <ArrowRight className="w-2.5 h-2.5" />
+              </span>
             </div>
           </Link>
         ))}

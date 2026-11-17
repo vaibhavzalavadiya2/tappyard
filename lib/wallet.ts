@@ -12,6 +12,8 @@ export function getWalletDiamonds(): number {
   return progress.totalDiamonds || 0;
 }
 
+export const getDiamondBalance = getWalletDiamonds;
+
 export function addWalletDiamonds(amount: number): number {
   if (typeof window === 'undefined' || amount <= 0) return getWalletDiamonds();
   const progress = loadProgress();

@@ -2,7 +2,8 @@
 
 import Link from 'next/link';
 import { useState, useEffect, useCallback, type ReactNode } from 'react';
-import { ArrowLeft, Maximize2, Minimize2 } from 'lucide-react';
+import { ArrowLeft, Maximize2, Minimize2, Gem } from 'lucide-react';
+import { getWalletDiamonds, subscribeWallet } from '@/lib/wallet';
 
 interface GameHeaderProps {
   title: string;
@@ -19,6 +20,16 @@ export default function GameHeader({
 }: GameHeaderProps) {
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [supportsFullscreen, setSupportsFullscreen] = useState(true);
+  const [diamonds, setDiamonds] = useState<number | null>(null);
+
+  useEffect(() => {
+    try {
+      const unsub = subscribeWallet((d) => setDiamonds(d));
+      return () => unsub();
+    } catch {
+      // ignore
+    }
+  }, []);
 
   useEffect(() => {
     if (typeof document === 'undefined') return;
@@ -135,27 +146,27 @@ export default function GameHeader({
   }, [handleFullscreen]);
 
   return (
-    <header className="h-11 sm:h-14 bg-[#090d16] border-b border-slate-800/80 px-3 sm:px-4 flex items-center justify-between z-30 shrink-0 select-none safe-top">
+    <header className="h-12 sm:h-14 bg-[#090d16]/85 backdrop-blur-xl border-b border-slate-800/80 px-3 sm:px-4 flex items-center justify-between z-30 shrink-0 select-none safe-top relative after:absolute after:bottom-0 after:inset-x-0 after:h-[1px] after:bg-gradient-to-r after:from-transparent after:via-pink-500/30 after:to-transparent">
       {/* Left: Back to TAPPYARD */}
       <div className="flex items-center gap-2 sm:gap-3">
         <Link
           href="/"
-          className="inline-flex items-center gap-1.5 h-8 sm:h-9 px-2.5 sm:px-3.5 rounded-full text-xs font-bold text-slate-200 bg-slate-900 hover:bg-slate-800 border border-slate-800 hover:border-pink-500/50 transition-all active:scale-95 shadow-xs cursor-pointer"
+          className="group/back inline-flex items-center gap-1.5 h-8 sm:h-9 px-2.5 sm:px-3.5 rounded-full text-xs font-bold text-slate-200 bg-slate-900/90 hover:bg-slate-800 border border-slate-800 hover:border-pink-500/50 transition-all active:scale-95 shadow-xs cursor-pointer"
         >
-          <ArrowLeft className="w-3.5 h-3.5" />
-          <span className="hidden xs:inline text-slate-400">Back</span>
-          <span className="text-white font-black">
+          <ArrowLeft className="w-3.5 h-3.5 text-slate-400 group-hover/back:text-pink-400 group-hover/back:-translate-x-0.5 transition-transform" />
+          <span className="hidden xs:inline text-slate-400 font-normal">Back to</span>
+          <span className="text-white font-black tracking-tight">
             TAP<span className="text-transparent bg-clip-text bg-gradient-to-r from-pink-400 to-purple-400">YARD</span>
           </span>
         </Link>
 
         {/* Game Title info */}
-        <div className="flex items-center gap-1.5 pl-2 border-l border-slate-800">
+        <div className="flex items-center gap-2 pl-2 border-l border-slate-800">
           {icon && <span className="text-sm">{icon}</span>}
-          <span className="text-xs sm:text-sm font-bold text-white truncate max-w-[130px] sm:max-w-none">
+          <span className="text-xs sm:text-sm font-black text-white truncate max-w-[130px] sm:max-w-none">
             {title}
           </span>
-          <span className="hidden sm:inline-block text-[10px] font-semibold text-purple-300 bg-purple-500/10 px-2 py-0.5 rounded-full border border-purple-500/20">
+          <span className="hidden sm:inline-block text-[10px] font-bold text-purple-300 bg-purple-500/10 px-2 py-0.5 rounded-full border border-purple-500/20">
             {category}
           </span>
         </div>
@@ -163,11 +174,20 @@ export default function GameHeader({
 
       {/* Right Controls */}
       <div className="flex items-center gap-2">
+        {/* Diamond Counter */}
+        {diamonds !== null && diamonds > 0 && (
+          <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-cyan-950/40 border border-cyan-500/30 text-cyan-300 text-xs font-black shadow-xs">
+            <Gem className="w-3.5 h-3.5 text-cyan-400 animate-pulse" />
+            <span>{diamonds}</span>
+          </div>
+        )}
+
+        {/* Fullscreen Button */}
         {supportsFullscreen && (
           <button
             onClick={handleFullscreen}
-            className="h-8 sm:h-9 px-2.5 sm:px-3 rounded-xl text-xs font-semibold text-slate-300 hover:text-white bg-slate-900 border border-slate-800 hover:border-slate-700 transition-colors flex items-center gap-1.5 cursor-pointer active:scale-95"
-            title="Toggle Fullscreen"
+            className="h-8 sm:h-9 px-2.5 sm:px-3 rounded-xl text-xs font-bold text-slate-300 hover:text-white bg-slate-900/90 border border-slate-800 hover:border-slate-700 transition-colors flex items-center gap-1.5 cursor-pointer active:scale-95"
+            title="Toggle Fullscreen (F)"
             aria-label="Toggle Fullscreen"
           >
             {isFullscreen ? (
@@ -178,6 +198,9 @@ export default function GameHeader({
             <span className="hidden md:inline">
               {isFullscreen ? 'Exit Fullscreen' : 'Fullscreen'}
             </span>
+            <kbd className="hidden lg:inline-block text-[9px] px-1.5 py-0.2 rounded bg-slate-800 text-slate-400 border border-slate-700">
+              F
+            </kbd>
           </button>
         )}
       </div>
