@@ -100,7 +100,7 @@ export function getGamesByCategory(category: GameCategory | 'All'): GameItem[] {
 
 export function searchGames(query: string, category: GameCategory | 'All' = 'All'): GameItem[] {
   const q = query.trim().toLowerCase();
-  let list = getGamesByCategory(category);
+  const list = getGamesByCategory(category);
 
   if (!q) return list;
 

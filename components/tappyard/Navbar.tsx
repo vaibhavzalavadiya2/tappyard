@@ -67,10 +67,10 @@ export default function Navbar({
                 </div>
               </div>
               <div className="flex flex-col">
-                <span className="text-xl sm:text-2xl font-black tracking-tight text-white flex items-center gap-1">
-                  TAP<span className="text-transparent bg-clip-text bg-gradient-to-r from-pink-400 via-purple-400 to-indigo-400">YARD</span>
+                <span className="typo-logo text-xl sm:text-2xl text-white flex items-center gap-0.5">
+                  TAPP<span className="text-transparent bg-clip-text bg-gradient-to-r from-pink-400 via-purple-400 to-indigo-400">YARD</span>
                 </span>
-                <span className="text-[10px] font-semibold tracking-widest text-slate-400 uppercase -mt-1 hidden sm:block">
+                <span className="typo-label text-[10px] tracking-widest text-slate-400 uppercase -mt-1 hidden sm:block">
                   Instant Browser Games
                 </span>
               </div>
@@ -106,7 +106,7 @@ export default function Navbar({
               {diamonds !== null && (
                 <button
                   onClick={() => setAccountModalOpen(true)}
-                  className="flex items-center gap-1.5 px-3.5 py-2 rounded-full bg-cyan-950/40 hover:bg-cyan-900/50 border border-cyan-500/30 hover:border-cyan-400/60 text-cyan-300 text-xs font-black shadow-xs transition-all active:scale-95 cursor-pointer"
+                  className="typo-button flex items-center gap-1.5 px-3.5 py-2 rounded-full bg-cyan-950/40 hover:bg-cyan-900/50 border border-cyan-500/30 hover:border-cyan-400/60 text-cyan-300 text-xs tabular-nums shadow-xs transition-all active:scale-95 cursor-pointer"
                   title="View Diamonds Wallet"
                 >
                   <Gem className="w-3.5 h-3.5 text-cyan-400 animate-pulse" />
@@ -118,14 +118,14 @@ export default function Navbar({
               {/* Account / Login Pill Button (CrazyGames & now.gg style) */}
               <button
                 onClick={() => setAccountModalOpen(true)}
-                className="flex items-center gap-2.5 px-4 py-2 rounded-full text-xs font-black text-white bg-slate-900/90 hover:bg-slate-850 border border-slate-700/80 hover:border-pink-500/60 shadow-md hover:shadow-[0_0_20px_rgba(236,72,153,0.3)] hover:scale-105 active:scale-95 transition-all cursor-pointer group"
+                className="typo-button flex items-center gap-2.5 px-4 py-2 rounded-full text-xs text-white bg-slate-900/90 hover:bg-slate-850 border border-slate-700/80 hover:border-pink-500/60 shadow-md hover:shadow-[0_0_20px_rgba(236,72,153,0.3)] hover:scale-105 active:scale-95 transition-all cursor-pointer group"
                 aria-label="Open Account & Profile"
               >
-                <div className="w-6 h-6 rounded-full bg-gradient-to-tr from-pink-500 to-purple-600 flex items-center justify-center text-white text-[10px] font-bold shadow-sm">
+                <div className="w-6 h-6 rounded-full bg-gradient-to-tr from-pink-500 to-purple-600 flex items-center justify-center text-white text-[10px] font-semibold shadow-sm">
                   <User className="w-3.5 h-3.5 text-white" />
                 </div>
                 <span className="group-hover:text-pink-300 transition-colors">
-                  {playerName !== 'Guest' ? playerName : 'Log In / Account'}
+                  {playerName !== 'Guest' ? playerName : 'Player Profile'}
                 </span>
               </button>
             </div>
@@ -139,7 +139,7 @@ export default function Navbar({
               >
                 <Gem className="w-3.5 h-3.5 text-cyan-400" />
                 {diamonds !== null && (
-                  <span className="text-xs font-black">{diamonds}</span>
+                  <span className="typo-button text-xs tabular-nums">{diamonds}</span>
                 )}
               </button>
 

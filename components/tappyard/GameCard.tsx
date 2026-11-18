@@ -11,6 +11,23 @@ interface GameCardProps {
 }
 
 export default function GameCard({ game, onPlay }: GameCardProps) {
+  const getDescriptiveTitle = (id: string, defaultTitle: string) => {
+    switch (id) {
+      case 'jelly-bounce':
+        return 'Jump Jelly Jump! - 3D endless runner';
+      case '2048-puzzle':
+        return '2048 Neon Fusion - 2048 number puzzle';
+      case 'color-zen':
+        return 'Block Grid Zen - 10x10 block puzzle';
+      case 'quick-tap':
+        return 'Cyber Dash - 1-tap reflex flyer';
+      default:
+        return defaultTitle;
+    }
+  };
+
+  const descriptiveTitle = getDescriptiveTitle(game.id, game.title);
+
   const recordPlay = () => {
     try {
       const stored =
@@ -47,7 +64,7 @@ export default function GameCard({ game, onPlay }: GameCardProps) {
       href={game.route}
       onClick={recordPlay}
       className="group/card flex flex-col cursor-pointer select-none"
-      aria-label={`Play ${game.title}`}
+      aria-label={`Play ${descriptiveTitle}`}
     >
       {/* Squircle Game Thumbnail (now.gg / iOS App Store style) */}
       <div
@@ -61,14 +78,14 @@ export default function GameCard({ game, onPlay }: GameCardProps) {
         <div className="absolute inset-x-0 bottom-0 h-14 bg-gradient-to-t from-slate-950/90 via-slate-950/40 to-transparent pointer-events-none z-[1]" />
 
         {/* Rating badge (top-left, now.gg style) */}
-        <div className="absolute top-2.5 left-2.5 z-10 flex items-center gap-1 px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-full text-[10px] sm:text-[11px] font-black bg-slate-950/85 text-amber-300 border border-amber-400/30 backdrop-blur-md shadow-md">
+        <div className="typo-button absolute top-2.5 left-2.5 z-10 flex items-center gap-1 px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-full text-[10px] sm:text-[11px] tabular-nums bg-slate-950/85 text-amber-300 border border-amber-400/30 backdrop-blur-md shadow-md">
           <Star className="w-2.5 h-2.5 sm:w-3 sm:h-3 fill-amber-400 text-amber-400 drop-shadow-[0_0_4px_rgba(251,191,36,0.8)]" />
           <span>{game.rating.toFixed(1)}</span>
         </div>
 
         {/* Original Badge (top-right, CrazyGames style) */}
         <div className="absolute top-2.5 right-2.5 z-10">
-          <span className="px-2 py-0.5 rounded-full text-[8px] sm:text-[9px] font-black tracking-wider uppercase border border-pink-500/40 bg-pink-500/25 text-pink-300 backdrop-blur-md">
+          <span className="typo-label px-2 py-0.5 rounded-full text-[8px] sm:text-[9px] tracking-wider uppercase border border-pink-500/40 bg-pink-500/25 text-pink-300 backdrop-blur-md">
             ORIGINAL
           </span>
         </div>
@@ -90,12 +107,12 @@ export default function GameCard({ game, onPlay }: GameCardProps) {
 
       {/* Typography Under Squircle (Clean, zero clutter, high readability) */}
       <div className="pt-2 px-1 flex flex-col gap-0.5">
-        <h3 className="text-xs sm:text-base font-black text-white group-hover/card:text-pink-300 transition-colors line-clamp-1 tracking-tight">
-          {game.title}
+        <h3 className="typo-game-title text-xs sm:text-base text-white group-hover/card:text-pink-300 transition-colors line-clamp-1">
+          {descriptiveTitle}
         </h3>
         <div className="flex items-center justify-between text-[10px] sm:text-xs text-slate-400">
-          <span className="font-semibold text-purple-300/90">{game.category}</span>
-          <span className="text-[10px] text-slate-500 font-medium">{game.playsCount} plays</span>
+          <span className="typo-label tracking-normal text-purple-300/90">{game.category}</span>
+          <span className="typo-meta text-[10px] text-slate-500 tabular-nums">{game.playsCount} plays</span>
         </div>
       </div>
     </Link>

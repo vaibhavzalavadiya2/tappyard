@@ -14,7 +14,7 @@ export default function RecentlyPlayed() {
       const stored =
         localStorage.getItem('tappyard_recent_games') ||
         localStorage.getItem('playhub_recent_games');
-      let ids: string[] = stored ? JSON.parse(stored) : [];
+      const ids: string[] = stored ? JSON.parse(stored) : [];
 
       // If user has previous Jelly Bounce progress, ensure it shows in recently played
       if (
@@ -44,10 +44,10 @@ export default function RecentlyPlayed() {
           <div className="w-6 h-6 rounded-lg bg-pink-500/15 border border-pink-500/30 flex items-center justify-center">
             <Clock className="w-3.5 h-3.5 text-pink-400" />
           </div>
-          <h2 className="text-base sm:text-lg font-black text-white tracking-tight">
+          <h2 className="typo-section-heading text-base sm:text-lg text-white">
             Jump Back In
           </h2>
-          <span className="text-xs text-slate-400 font-medium hidden xs:inline">
+          <span className="typo-meta text-xs text-slate-400 hidden xs:inline">
             • Continue Playing
           </span>
         </div>
@@ -73,12 +73,12 @@ export default function RecentlyPlayed() {
               </div>
             </div>
 
-            <div className="text-xs font-black text-white truncate group-hover:text-pink-300 transition-colors">
+            <div className="typo-game-title text-xs text-white truncate group-hover:text-pink-300 transition-colors">
               {game.title}
             </div>
-            <div className="flex items-center justify-between text-[10px] text-slate-400 mt-0.5">
+            <div className="typo-meta flex items-center justify-between text-[10px] text-slate-400 mt-0.5">
               <span>{game.category}</span>
-              <span className="flex items-center gap-0.5 text-pink-400 font-semibold group-hover:translate-x-0.5 transition-transform">
+              <span className="typo-label tracking-normal flex items-center gap-0.5 text-pink-400 group-hover:translate-x-0.5 transition-transform">
                 Play <ArrowRight className="w-2.5 h-2.5" />
               </span>
             </div>

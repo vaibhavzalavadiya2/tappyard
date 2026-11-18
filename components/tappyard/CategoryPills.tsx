@@ -83,9 +83,9 @@ export default function CategoryPills({
           <button
             key={cat}
             onClick={() => onSelect(cat)}
-            className={`inline-flex items-center gap-2 h-10 sm:h-11 px-3 sm:px-4 rounded-xl sm:rounded-2xl text-xs sm:text-sm font-black whitespace-nowrap transition-all duration-200 active:scale-95 cursor-pointer ${
+            className={`typo-nav inline-flex items-center gap-2 h-10 sm:h-11 px-3 sm:px-4 rounded-xl sm:rounded-2xl text-xs sm:text-sm whitespace-nowrap transition-all duration-200 active:scale-95 cursor-pointer ${
               isSelected
-                ? 'bg-gradient-to-r from-pink-500 via-purple-600 to-indigo-600 text-white shadow-[0_0_20px_rgba(236,72,153,0.35)] scale-102 ring-2 ring-pink-400/40'
+                ? 'font-semibold bg-gradient-to-r from-pink-500 via-purple-600 to-indigo-600 text-white shadow-[0_0_20px_rgba(236,72,153,0.35)] scale-102 ring-2 ring-pink-400/40'
                 : `bg-slate-900/90 text-slate-300 hover:bg-slate-800 hover:text-white border border-slate-800/80 hover:border-slate-700 bg-gradient-to-r ${accent}`
             }`}
           >
@@ -96,7 +96,7 @@ export default function CategoryPills({
             />
             <span>{label}</span>
             <span
-              className={`text-[10px] px-1.5 sm:px-2 py-0.5 rounded-full font-bold transition-colors ${
+              className={`typo-label text-[10px] tracking-normal tabular-nums px-1.5 sm:px-2 py-0.5 rounded-full transition-colors ${
                 isSelected
                   ? 'bg-white/25 text-white'
                   : 'bg-slate-800/90 text-slate-300'

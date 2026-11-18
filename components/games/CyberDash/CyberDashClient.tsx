@@ -194,9 +194,9 @@ export default function CyberDashClient() {
 
   // Share score
   const handleShare = useCallback(() => {
-    const text = `⚡ I scored ${score} in Cyber Dash on TapYard! Can you beat my high score? Play free: https://tappyard.com/games/quick-tap`;
+    const text = `⚡ I scored ${score} in Cyber Dash on TAPPYARD! Can you beat my high score? Play free: https://tappyard.com/games/quick-tap`;
     if (typeof navigator !== 'undefined' && navigator.share) {
-      navigator.share({ title: 'Cyber Dash | TapYard', text, url: 'https://tappyard.com/games/quick-tap' }).catch(() => {});
+      navigator.share({ title: 'Cyber Dash | TAPPYARD', text, url: 'https://tappyard.com/games/quick-tap' }).catch(() => {});
     } else if (typeof navigator !== 'undefined' && navigator.clipboard?.writeText) {
       navigator.clipboard.writeText(text).then(() => {
         showNotice('Challenge link copied to clipboard!');
@@ -598,11 +598,7 @@ export default function CyberDashClient() {
   }, [gameState]);
 
   return (
-    <div
-      className="fixed inset-0 flex flex-col bg-[#040e14] text-white select-none overflow-hidden safe-bottom"
-      style={{ touchAction: 'none' }}
-      onClick={handleFlap}
-    >
+    <section className="w-full flex flex-col bg-[#040e14] text-white select-none">
       {/* 1. Header Bar */}
       <header
         className="h-14 sm:h-16 px-3 sm:px-6 bg-[#081720]/95 backdrop-blur-md border-b border-cyan-500/20 flex items-center justify-between shrink-0 z-20"
@@ -611,18 +607,18 @@ export default function CyberDashClient() {
         <div className="flex items-center gap-2 sm:gap-4">
           <Link
             href="/"
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-cyan-950/40 hover:bg-cyan-900/60 border border-cyan-500/30 text-cyan-300 font-bold text-xs transition-all active:scale-95 cursor-pointer"
+            className="typo-nav flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-cyan-950/40 hover:bg-cyan-900/60 border border-cyan-500/30 text-cyan-300 text-xs transition-all active:scale-95 cursor-pointer"
           >
             <ArrowLeft className="w-3.5 h-3.5" />
-            <span className="hidden sm:inline">TapYard</span>
+            <span className="hidden sm:inline">TAPPYARD</span>
           </Link>
 
           <div className="flex items-center gap-2">
-            <h1 className="text-base sm:text-lg font-black tracking-wide text-white flex items-center gap-2">
+            <h1 className="typo-game-title text-base sm:text-lg text-white flex items-center gap-2">
               <span className="w-2.5 h-2.5 rounded-full bg-cyan-400 animate-pulse shadow-[0_0_8px_#00f0ff]" />
               Cyber Dash
             </h1>
-            <span className="hidden md:inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider bg-purple-500/20 text-purple-300 border border-purple-500/30">
+            <span className="typo-label hidden md:inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] uppercase tracking-wider bg-purple-500/20 text-purple-300 border border-purple-500/30">
               <Zap className="w-3 h-3" />
               Casual
             </span>
@@ -631,7 +627,7 @@ export default function CyberDashClient() {
 
         <div className="flex items-center gap-2 sm:gap-3">
           {/* Diamonds Wallet */}
-          <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#0a1e27] border border-cyan-500/30 text-cyan-300 font-black text-xs shadow-inner">
+          <div className="typo-button flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#0a1e27] border border-cyan-500/30 text-cyan-300 text-xs tabular-nums shadow-inner">
             <Gem className="w-3.5 h-3.5 text-cyan-400" />
             <span>{diamonds}</span>
           </div>
@@ -679,8 +675,18 @@ export default function CyberDashClient() {
       )}
 
       {/* 2. Main Full-Screen Canvas */}
-      <main className="relative flex-1 w-full h-full overflow-hidden">
-        <canvas ref={canvasRef} className="w-full h-full block" />
+      <main id="game-stage" className="relative w-full h-[calc(100dvh-3.5rem)] sm:h-[calc(100dvh-4rem)] overflow-hidden cursor-pointer" onClick={handleFlap}>
+        <canvas ref={canvasRef} className="w-full h-full block" style={{ touchAction: 'none' }} />
+
+        {/* Mobile: unobtrusive link to scroll to below-fold content */}
+        <a
+          href="#game-details"
+          onClick={(e) => e.stopPropagation()}
+          className="md:hidden absolute bottom-2 right-3 z-30 flex items-center gap-1 px-2.5 py-1 rounded-full bg-slate-900/80 hover:bg-slate-800 text-[10px] text-cyan-300 border border-cyan-500/30 backdrop-blur-md shadow-md active:scale-95 transition-all"
+        >
+          <span>How to play & tips</span>
+          <span>↓</span>
+        </a>
       </main>
 
       {/* 3. Idle / Start Overlay */}
@@ -695,7 +701,7 @@ export default function CyberDashClient() {
               <span className="text-[11px] font-black tracking-widest text-cyan-400 uppercase">1-Tap Reflex Rush</span>
               <h2 className="text-2xl font-black text-white mt-0.5">Cyber Dash</h2>
               <p className="text-xs text-slate-300 mt-1 leading-relaxed">
-                Tap anywhere to flutter. Graze close to laser gates for <strong className="text-amber-300">bonus diamonds</strong>!
+                Tap anywhere to fly. Dodge the laser gates and graze them for bonus diamonds.
               </p>
             </div>
 
@@ -771,6 +777,6 @@ export default function CyberDashClient() {
           </div>
         </div>
       )}
-    </div>
+    </section>
   );
 }

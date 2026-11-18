@@ -17,7 +17,6 @@ import {
   ArrowRight,
   Zap,
   HelpCircle,
-  ExternalLink,
 } from 'lucide-react';
 import BrandIcon from './BrandIcon';
 
@@ -102,8 +101,8 @@ export default function MobileDrawer({
               </div>
             </div>
             <div className="flex flex-col">
-              <span className="text-lg font-black tracking-tight text-white flex items-center gap-0.5">
-                TAP<span className="text-transparent bg-clip-text bg-gradient-to-r from-pink-400 to-purple-400">YARD</span>
+              <span className="typo-logo text-lg text-white flex items-center gap-0.5">
+                TAPP<span className="text-transparent bg-clip-text bg-gradient-to-r from-pink-400 to-purple-400">YARD</span>
               </span>
             </div>
           </Link>
@@ -128,15 +127,15 @@ export default function MobileDrawer({
                   <Gem className="w-4 h-4 text-cyan-300 animate-pulse" />
                 </div>
                 <div>
-                  <span className="text-[10px] text-slate-400 uppercase font-bold tracking-wider block">
-                    TapYard Diamonds
+                  <span className="typo-label text-[10px] text-slate-400 uppercase tracking-wider block">
+                    TAPPYARD Diamonds
                   </span>
-                  <span className="text-sm font-black text-white">
-                    {diamonds} <span className="text-cyan-400 text-xs font-bold">💎</span>
+                  <span className="font-display text-sm font-bold tabular-nums text-white">
+                    {diamonds} <span className="text-cyan-400 text-xs font-medium">💎</span>
                   </span>
                 </div>
               </div>
-              <span className="text-[10px] font-bold text-cyan-300 bg-cyan-950/80 px-2.5 py-1 rounded-full border border-cyan-500/30">
+              <span className="typo-label text-[10px] tracking-normal text-cyan-300 bg-cyan-950/80 px-2.5 py-1 rounded-full border border-cyan-500/30">
                 Active
               </span>
             </div>
@@ -144,7 +143,7 @@ export default function MobileDrawer({
 
           {/* Category Filter Navigation */}
           <div>
-            <span className="text-[10px] font-black uppercase tracking-wider text-slate-400 px-1 mb-2 block">
+            <span className="typo-section-heading text-[10px] uppercase tracking-wider text-slate-400 px-1 mb-2 block">
               Browse Categories
             </span>
             <div className="space-y-1">
@@ -159,9 +158,9 @@ export default function MobileDrawer({
                       const el = document.getElementById('catalogue');
                       if (el) el.scrollIntoView({ behavior: 'smooth' });
                     }}
-                    className={`flex items-center justify-between w-full px-3.5 py-2.5 rounded-xl text-xs font-bold transition-all active:scale-98 cursor-pointer ${
+                    className={`typo-nav flex items-center justify-between w-full px-3.5 py-2.5 rounded-xl text-xs transition-all active:scale-98 cursor-pointer ${
                       isSelected
-                        ? 'bg-gradient-to-r from-pink-500 to-purple-600 text-white shadow-md shadow-pink-500/25 ring-1 ring-pink-400/40'
+                        ? 'font-semibold bg-gradient-to-r from-pink-500 to-purple-600 text-white shadow-md shadow-pink-500/25 ring-1 ring-pink-400/40'
                         : 'bg-slate-900/60 text-slate-300 hover:bg-slate-800/80 border border-slate-800/60'
                     }`}
                   >
@@ -180,7 +179,7 @@ export default function MobileDrawer({
 
           {/* Quick Games Directory */}
           <div>
-            <span className="text-[10px] font-black uppercase tracking-wider text-slate-400 px-1 mb-2 block">
+            <span className="typo-section-heading text-[10px] uppercase tracking-wider text-slate-400 px-1 mb-2 block">
               Instant Native Games
             </span>
             <div className="space-y-2">
@@ -195,10 +194,10 @@ export default function MobileDrawer({
                     <GameThumbnail id={game.thumbnail} title={game.title} />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <h4 className="text-xs font-bold text-white truncate group-hover:text-pink-300 transition-colors">
+                    <h4 className="typo-game-title text-xs text-white truncate group-hover:text-pink-300 transition-colors">
                       {game.title}
                     </h4>
-                    <span className="text-[10px] text-slate-400 block mt-0.5">
+                    <span className="typo-meta text-[10px] text-slate-400 block mt-0.5 tabular-nums">
                       {game.category} • ★ {game.rating.toFixed(1)}
                     </span>
                   </div>
@@ -212,18 +211,18 @@ export default function MobileDrawer({
 
           {/* Useful Quick Links */}
           <div className="pt-2 border-t border-slate-800/70 space-y-1">
-            <a
+            <Link
               href="/#faq"
               onClick={onClose}
-              className="flex items-center justify-between px-3 py-2 text-xs font-semibold text-slate-400 hover:text-white hover:bg-slate-900/50 rounded-lg transition-colors"
+              className="typo-nav flex items-center justify-between px-3 py-2 text-xs text-slate-400 hover:text-white hover:bg-slate-900/50 rounded-lg transition-colors"
             >
               <div className="flex items-center gap-2">
                 <HelpCircle className="w-3.5 h-3.5 text-pink-400" />
                 <span>Frequently Asked Questions</span>
               </div>
               <ArrowRight className="w-3 h-3 text-slate-500" />
-            </a>
-            <div className="flex items-center gap-2 px-3 py-2 text-[11px] text-cyan-400 font-bold">
+            </Link>
+            <div className="typo-label tracking-normal flex items-center gap-2 px-3 py-2 text-[11px] text-cyan-400">
               <Zap className="w-3.5 h-3.5" />
               <span>Zero Downloads • 100% Free • Unblocked</span>
             </div>
@@ -235,12 +234,12 @@ export default function MobileDrawer({
           <Link
             href="/games/jelly-bounce"
             onClick={onClose}
-            className="flex items-center justify-center gap-2 w-full py-3 rounded-xl font-black text-xs text-white bg-gradient-to-r from-cyan-400 via-blue-500 to-indigo-600 shadow-lg shadow-cyan-500/25 active:scale-95 transition-all"
+            className="typo-button flex items-center justify-center gap-2 w-full py-3 rounded-xl text-xs tracking-wide text-white bg-gradient-to-r from-cyan-400 via-blue-500 to-indigo-600 shadow-lg shadow-cyan-500/25 active:scale-95 transition-all"
           >
             <Gem className="w-4 h-4 text-white animate-pulse" />
             <span>PLAY JUMP JELLY JUMP! (3D)</span>
           </Link>
-          <p className="text-[10px] text-center text-slate-500 mt-2 font-medium">
+          <p className="typo-meta text-[10px] text-center text-slate-500 mt-2">
             TAPPYARD v2.0 • WebGL & HTML5 Instant Play
           </p>
         </div>

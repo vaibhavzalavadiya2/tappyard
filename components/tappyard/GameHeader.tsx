@@ -152,23 +152,23 @@ export default function GameHeader({
       <div className="flex items-center gap-2 sm:gap-3">
         <Link
           href="/"
-          className="group/back inline-flex items-center gap-1.5 h-8 sm:h-9 px-2.5 sm:px-3.5 rounded-full text-xs font-bold text-slate-200 bg-slate-900/90 hover:bg-slate-800 border border-slate-800 hover:border-pink-500/50 transition-all active:scale-95 shadow-xs cursor-pointer"
+          className="typo-nav group/back inline-flex items-center gap-1.5 h-8 sm:h-9 px-2.5 sm:px-3.5 rounded-full text-xs text-slate-200 bg-slate-900/90 hover:bg-slate-800 border border-slate-800 hover:border-pink-500/50 transition-all active:scale-95 shadow-xs cursor-pointer"
         >
           <ArrowLeft className="w-3.5 h-3.5 text-slate-400 group-hover/back:text-pink-400 group-hover/back:-translate-x-0.5 transition-transform" />
           <BrandIcon className="w-3.5 h-3.5 shrink-0" />
           <span className="hidden xs:inline text-slate-400 font-normal">Back to</span>
-          <span className="text-white font-black tracking-tight">
-            TAP<span className="text-transparent bg-clip-text bg-gradient-to-r from-pink-400 to-purple-400">YARD</span>
+          <span className="typo-logo text-white">
+            TAPP<span className="text-transparent bg-clip-text bg-gradient-to-r from-pink-400 to-purple-400">YARD</span>
           </span>
         </Link>
 
-        {/* Game Title info */}
+        {/* Game Title info: page's single H1 with identical styling */}
         <div className="flex items-center gap-2 pl-2 border-l border-slate-800">
           {icon && <span className="text-sm">{icon}</span>}
-          <span className="text-xs sm:text-sm font-black text-white truncate max-w-[130px] sm:max-w-none">
+          <h1 className="typo-game-title text-xs sm:text-sm text-white truncate max-w-[130px] sm:max-w-none inline m-0 p-0 font-semibold">
             {title}
-          </span>
-          <span className="hidden sm:inline-block text-[10px] font-bold text-purple-300 bg-purple-500/10 px-2 py-0.5 rounded-full border border-purple-500/20">
+          </h1>
+          <span className="typo-label tracking-normal hidden sm:inline-block text-[10px] text-purple-300 bg-purple-500/10 px-2 py-0.5 rounded-full border border-purple-500/20">
             {category}
           </span>
         </div>
@@ -178,7 +178,7 @@ export default function GameHeader({
       <div className="flex items-center gap-2">
         {/* Diamond Counter */}
         {diamonds !== null && diamonds > 0 && (
-          <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-cyan-950/40 border border-cyan-500/30 text-cyan-300 text-xs font-black shadow-xs">
+          <div className="typo-button flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-cyan-950/40 border border-cyan-500/30 text-cyan-300 text-xs tabular-nums shadow-xs">
             <Gem className="w-3.5 h-3.5 text-cyan-400 animate-pulse" />
             <span>{diamonds}</span>
           </div>
@@ -188,7 +188,7 @@ export default function GameHeader({
         {supportsFullscreen && (
           <button
             onClick={handleFullscreen}
-            className="h-8 sm:h-9 px-2.5 sm:px-3 rounded-xl text-xs font-bold text-slate-300 hover:text-white bg-slate-900/90 border border-slate-800 hover:border-slate-700 transition-colors flex items-center gap-1.5 cursor-pointer active:scale-95"
+            className="typo-button h-8 sm:h-9 px-2.5 sm:px-3 rounded-xl text-xs text-slate-300 hover:text-white bg-slate-900/90 border border-slate-800 hover:border-slate-700 transition-colors flex items-center gap-1.5 cursor-pointer active:scale-95"
             title="Toggle Fullscreen (F)"
             aria-label="Toggle Fullscreen"
           >

@@ -23,7 +23,6 @@ import {
   Smartphone,
   Sparkles,
   HelpCircle,
-  CheckCircle2,
   Flame,
   ArrowRight,
 } from 'lucide-react';
@@ -60,46 +59,13 @@ export default function HomeClient() {
       />
 
       {/* Main Content Area: Full-width container */}
-      <main className="flex-1 max-w-[1720px] w-full mx-auto px-4 sm:px-6 lg:px-10 2xl:px-12 py-3 sm:py-6 flex flex-col gap-5 sm:gap-8">
-        
-        {/* Semantic H1 for SEO */}
-        <h1 className="sr-only">
-          Free Online Games — Play Instant Browser Games No Download | TAPPYARD
-        </h1>
+      <main className="flex-1 max-w-[1720px] w-full mx-auto px-4 sm:px-6 lg:px-10 2xl:px-12 py-3 sm:py-6 flex flex-col gap-6 sm:gap-10">
 
         {/* Hot Games Circular Stories Row (now.gg style) */}
         {!searchQuery && <HotGamesRow />}
 
         {/* Featured Multi-Game Carousel Banner (only show when not actively searching) */}
         {!searchQuery && selectedCategory === 'All' && <HeroFeatured />}
-
-        {/* CrazyGames-style Instant Play Value Banner */}
-        <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-purple-900/60 via-indigo-900/40 to-pink-900/40 border border-purple-500/30 p-3 sm:p-4 flex flex-col sm:flex-row items-center justify-between gap-3 shadow-lg">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-pink-500 to-purple-600 flex items-center justify-center text-white shrink-0 shadow-md">
-              <Zap className="w-5 h-5 animate-pulse" />
-            </div>
-            <div>
-              <span className="text-xs sm:text-sm font-black text-white flex items-center gap-1.5">
-                <span>PLAY INSTANTLY</span>
-                <span className="text-[10px] text-pink-300 font-bold bg-pink-500/20 px-2 py-0.5 rounded-full border border-pink-500/40">
-                  NO DOWNLOADS
-                </span>
-              </span>
-              <p className="text-[11px] sm:text-xs text-slate-300 mt-0.5">
-                100% native HTML5 & WebGL browser games. Silky 60fps on mobile & PC.
-              </p>
-            </div>
-          </div>
-          <Link
-            href="/games/jelly-bounce"
-            className="flex items-center justify-center gap-1.5 h-9 px-4 rounded-xl text-xs font-black text-white bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-400 hover:to-purple-500 shadow-md shadow-pink-500/20 active:scale-95 transition-all shrink-0 w-full sm:w-auto"
-          >
-            <span>Play Jelly 3D</span>
-            <ArrowRight className="w-3.5 h-3.5" />
-          </Link>
-        </div>
-
         {/* Recently Played ("Jump Back In") */}
         {!searchQuery && <RecentlyPlayed />}
 
@@ -108,16 +74,16 @@ export default function HomeClient() {
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4">
             <div>
               <div className="flex items-center gap-2">
-                <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider bg-pink-500/15 text-pink-400 border border-pink-500/30">
+                <span className="typo-label inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] uppercase tracking-wider bg-pink-500/15 text-pink-400 border border-pink-500/30">
                   <Flame className="w-3 h-3 text-pink-400" />
                   Popular Games
                 </span>
               </div>
-              <h2 className="text-xl sm:text-3xl font-black text-white tracking-tight flex items-center gap-2 mt-1">
+              <h2 className="typo-section-heading text-xl sm:text-3xl text-white flex items-center gap-2 mt-1">
                 <Gamepad2 className="w-6 h-6 sm:w-7 sm:h-7 text-pink-500" />
                 <span>Top Games Today</span>
               </h2>
-              <p className="text-xs sm:text-sm text-slate-400 mt-0.5">
+              <p className="typo-body text-xs sm:text-sm text-slate-400 mt-0.5">
                 Instant casual, arcade, and relaxing browser games. 100% free, tap to play.
               </p>
             </div>
@@ -133,14 +99,14 @@ export default function HomeClient() {
 
           {/* Active Search / Filter Status */}
           {(searchQuery || selectedCategory !== 'All') && (
-            <div className="flex items-center justify-between text-xs text-slate-400 bg-slate-900/90 px-4 py-3 rounded-2xl border border-slate-800 shadow-sm">
+            <div className="typo-meta flex items-center justify-between text-xs text-slate-400 bg-slate-900/90 px-4 py-3 rounded-2xl border border-slate-800 shadow-sm">
               <span className="truncate">
-                Found <strong className="text-pink-400 font-bold">{filteredGames.length}</strong> {filteredGames.length === 1 ? 'game' : 'games'}
+                Found <strong className="text-pink-400 font-semibold">{filteredGames.length}</strong> {filteredGames.length === 1 ? 'game' : 'games'}
                 {searchQuery && (
-                  <span> for &ldquo;<span className="text-white font-semibold">{searchQuery}</span>&rdquo;</span>
+                  <span> for &ldquo;<span className="text-white font-medium">{searchQuery}</span>&rdquo;</span>
                 )}
                 {selectedCategory !== 'All' && (
-                  <span> in <span className="text-purple-400 font-semibold">{selectedCategory}</span></span>
+                  <span> in <span className="text-purple-400 font-medium">{selectedCategory}</span></span>
                 )}
               </span>
               <button
@@ -148,7 +114,7 @@ export default function HomeClient() {
                   setSearchQuery('');
                   setSelectedCategory('All');
                 }}
-                className="text-pink-400 hover:text-pink-300 font-bold ml-3 shrink-0 cursor-pointer text-xs"
+                className="typo-button text-pink-400 hover:text-pink-300 ml-3 shrink-0 cursor-pointer text-xs"
               >
                 Reset Filters
               </button>
@@ -173,8 +139,8 @@ export default function HomeClient() {
               <div className="w-16 h-16 rounded-full bg-slate-800/80 flex items-center justify-center mb-3 text-slate-400">
                 <SearchX className="w-8 h-8" />
               </div>
-              <h3 className="text-base font-bold text-white mb-1">No games found</h3>
-              <p className="text-xs text-slate-400 max-w-xs mb-4">
+              <h3 className="typo-section-heading text-base text-white mb-1">No games found</h3>
+              <p className="typo-body text-xs text-slate-400 max-w-xs mb-4">
                 No games match &ldquo;{searchQuery}&rdquo;. Try another keyword or clear filters.
               </p>
               <button
@@ -182,7 +148,7 @@ export default function HomeClient() {
                   setSearchQuery('');
                   setSelectedCategory('All');
                 }}
-                className="px-5 py-2.5 rounded-xl text-xs font-bold text-white bg-pink-500 hover:bg-pink-400 transition-colors cursor-pointer shadow-md shadow-pink-500/20"
+                className="typo-button px-5 py-2.5 rounded-xl text-xs text-white bg-pink-500 hover:bg-pink-400 transition-colors cursor-pointer shadow-md shadow-pink-500/20"
               >
                 Show All Games
               </button>
@@ -191,15 +157,15 @@ export default function HomeClient() {
         </section>
 
         {/* SEO Information & FAQ Section for Search Engines & Users */}
-        <section id="faq" className="mt-8 pt-8 border-t border-slate-800/80 flex flex-col gap-6 text-slate-400 text-xs sm:text-sm leading-relaxed scroll-mt-20">
-          
+        <section id="faq" className="typo-body mt-8 pt-8 border-t border-slate-800/80 flex flex-col gap-6 text-slate-400 text-xs sm:text-sm scroll-mt-20">
+
           {/* Key Value Pillars */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6">
             <div className="p-5 rounded-2xl bg-slate-900/40 border border-slate-800/70 hover:border-slate-700/80 transition-colors flex flex-col gap-2.5 shadow-sm">
               <div className="w-9 h-9 rounded-xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center">
                 <Zap className="w-5 h-5 text-amber-400" />
               </div>
-              <h3 className="text-sm sm:text-base font-bold text-white">
+              <h3 className="typo-section-heading text-sm sm:text-base text-white">
                 Instant Play (No Download)
               </h3>
               <p className="leading-relaxed">
@@ -211,7 +177,7 @@ export default function HomeClient() {
               <div className="w-9 h-9 rounded-xl bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center">
                 <Smartphone className="w-5 h-5 text-cyan-400" />
               </div>
-              <h3 className="text-sm sm:text-base font-bold text-white">
+              <h3 className="typo-section-heading text-sm sm:text-base text-white">
                 Mobile & Desktop Ready
               </h3>
               <p className="leading-relaxed">
@@ -223,7 +189,7 @@ export default function HomeClient() {
               <div className="w-9 h-9 rounded-xl bg-pink-500/10 border border-pink-500/20 flex items-center justify-center">
                 <Sparkles className="w-5 h-5 text-pink-400" />
               </div>
-              <h3 className="text-sm sm:text-base font-bold text-white">
+              <h3 className="typo-section-heading text-sm sm:text-base text-white">
                 100% Free & Unblocked
               </h3>
               <p className="leading-relaxed">
@@ -232,102 +198,214 @@ export default function HomeClient() {
             </div>
           </div>
 
-          {/* About TAPPYARD Content Module */}
-          <div className="p-6 sm:p-7 rounded-2xl bg-slate-900/30 border border-slate-800/70 flex flex-col gap-3">
-            <h2 className="text-base sm:text-xl font-black text-white">
-              Play Free Online Browser Games on TAPPYARD
-            </h2>
-            <p className="leading-relaxed">
-              Welcome to <strong className="text-white">TAPPYARD</strong>, your digital playground for high-performance, instant web games. Whether you are searching for an exhilarating 3D speed runner, a brain-stimulating math puzzle, or a soothing stress-relief game during a break, our games start in under a second with zero installation.
-            </p>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 pt-2 text-xs">
-              <div className="flex items-start gap-3 p-3.5 rounded-xl bg-slate-950/50 border border-slate-800/60 hover:border-cyan-500/30 transition-colors">
-                <CheckCircle2 className="w-4 h-4 text-cyan-400 shrink-0 mt-0.5" />
-                <div>
-                  <Link href="/games/jelly-bounce" className="font-bold text-cyan-300 hover:underline">
-                    Jump Jelly Jump! (3D Speed Runner)
-                  </Link>
-                  <p className="text-slate-400 text-[11px] mt-0.5 leading-relaxed">
-                    Steer your jelly cube across suspended floating tracks, collect diamonds, and launch across endless chasms with booster chevron pads.
-                  </p>
-                </div>
-              </div>
+          {/* About TAPPYARD Content & In-Page Genre Sections */}
+          <div className="p-6 sm:p-7 rounded-2xl bg-slate-900/30 border border-slate-800/70 flex flex-col gap-6">
+            <header className="flex flex-col gap-3">
+              <h1 className="typo-h1 text-xl sm:text-2xl lg:text-3xl text-white font-bold tracking-tight">
+                Free Online Browser Games: Play Instantly, No Download
+              </h1>
+              <p className="typo-body text-xs sm:text-sm text-slate-300 leading-relaxed">
+                Welcome to TAPPYARD, the destination for free browser games you can enjoy instantly on any device.
+                If you are looking for fun games to play online without downloading software or installing apps, our
+                library runs natively in your browser using modern WebGL and HTML5 technology. Jump into fast-paced
+                online arcade games like our 3D runner Jump Jelly Jump! and 1-tap reflex flyer Cyber Dash, or challenge
+                your mind with classic number merge and block placement puzzles like 2048 Neon Fusion and Block Grid Zen.
+                Every title delivers smooth 60fps performance across mobile browser games on iOS and Android as well as
+                desktop computers. Experience truly instant play games with zero waiting time, zero storage footprint,
+                and complete freedom to play anytime. Explore our four main game genres below:
+              </p>
+            </header>
 
-              <div className="flex items-start gap-3 p-3.5 rounded-xl bg-slate-950/50 border border-slate-800/60 hover:border-amber-500/30 transition-colors">
-                <CheckCircle2 className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
-                <div>
-                  <Link href="/games/2048-puzzle" className="font-bold text-amber-300 hover:underline">
-                    2048 Neon Fusion (Sliding Puzzle)
-                  </Link>
-                  <p className="text-slate-400 text-[11px] mt-0.5 leading-relaxed">
-                    Silky swipe controls with glowing neon tiles, musical merge chimes, and diamond undos to reach the legendary 2048 tile.
-                  </p>
+            {/* In-page Genre Sections with IDs and H2s */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
+              {/* Genre 1: 3D Arcade Runners */}
+              <article id="arcade-runners" className="scroll-mt-24 flex flex-col gap-2 p-4 rounded-xl bg-slate-950/50 border border-slate-800/60 hover:border-cyan-500/40 transition-colors">
+                <div className="flex items-center justify-between">
+                  <h2 className="typo-section-heading text-sm sm:text-base text-cyan-300">
+                    3D Arcade Runners
+                  </h2>
+                  <span className="typo-label text-[10px] text-cyan-400 bg-cyan-950/60 px-2 py-0.5 rounded-full border border-cyan-500/30">
+                    Arcade
+                  </span>
                 </div>
-              </div>
+                <p className="typo-body text-slate-300 text-xs leading-relaxed">
+                  Steer along suspended runways, collect diamonds, and hit booster pads to clear endless chasms across dynamic environmental zones.
+                </p>
+                <div className="pt-2 mt-auto flex items-center justify-between">
+                  <Link
+                    href="/games/jelly-bounce"
+                    className="typo-button text-xs text-white bg-cyan-500/20 hover:bg-cyan-500/30 border border-cyan-400/40 px-3 py-1.5 rounded-lg inline-flex items-center gap-1.5 transition-colors"
+                  >
+                    <span>Jump Jelly Jump! - 3D endless runner</span>
+                    <ArrowRight className="w-3.5 h-3.5 text-cyan-400" />
+                  </Link>
+                </div>
+              </article>
 
-              <div className="flex items-start gap-3 p-3.5 rounded-xl bg-slate-950/50 border border-slate-800/60 hover:border-teal-500/30 transition-colors">
-                <CheckCircle2 className="w-4 h-4 text-teal-400 shrink-0 mt-0.5" />
-                <div>
-                  <Link href="/games/color-zen" className="font-bold text-teal-300 hover:underline">
-                    Block Grid Zen (10x10 Block Puzzle)
-                  </Link>
-                  <p className="text-slate-400 text-[11px] mt-0.5 leading-relaxed">
-                    Soothing polyomino spatial puzzle designed for stress relief. Pop full lines with relaxing chime synthesizers and zero timers.
-                  </p>
+              {/* Genre 2: Brain & Math Puzzles */}
+              <article id="puzzle-games" className="scroll-mt-24 flex flex-col gap-2 p-4 rounded-xl bg-slate-950/50 border border-slate-800/60 hover:border-amber-500/40 transition-colors">
+                <div className="flex items-center justify-between">
+                  <h2 className="typo-section-heading text-sm sm:text-base text-amber-300">
+                    Brain & Math Puzzles
+                  </h2>
+                  <span className="typo-label text-[10px] text-amber-400 bg-amber-950/60 px-2 py-0.5 rounded-full border border-amber-500/30">
+                    Puzzle
+                  </span>
                 </div>
-              </div>
+                <p className="typo-body text-slate-300 text-xs leading-relaxed">
+                  Slide matching number tiles across a 4x4 matrix, listen to harmonic merge chimes, and plan moves carefully to reach the 2048 tile with diamond undos.
+                </p>
+                <div className="pt-2 mt-auto flex items-center justify-between">
+                  <Link
+                    href="/games/2048-puzzle"
+                    className="typo-button text-xs text-white bg-amber-500/20 hover:bg-amber-500/30 border border-amber-400/40 px-3 py-1.5 rounded-lg inline-flex items-center gap-1.5 transition-colors"
+                  >
+                    <span>2048 Neon Fusion - 2048 number puzzle</span>
+                    <ArrowRight className="w-3.5 h-3.5 text-amber-400" />
+                  </Link>
+                </div>
+              </article>
 
-              <div className="flex items-start gap-3 p-3.5 rounded-xl bg-slate-950/50 border border-slate-800/60 hover:border-purple-500/30 transition-colors">
-                <CheckCircle2 className="w-4 h-4 text-purple-400 shrink-0 mt-0.5" />
-                <div>
-                  <Link href="/games/quick-tap" className="font-bold text-purple-300 hover:underline">
-                    Cyber Dash (1-Tap Reflex Flight)
-                  </Link>
-                  <p className="text-slate-400 text-[11px] mt-0.5 leading-relaxed">
-                    Fast-paced 1-tap neon flight runner. Dodge pulsing laser gates, graze edges for bonus score, and trigger protective shields.
-                  </p>
+              {/* Genre 3: Relaxing Stress Relief Games */}
+              <article id="relaxing-games" className="scroll-mt-24 flex flex-col gap-2 p-4 rounded-xl bg-slate-950/50 border border-slate-800/60 hover:border-teal-500/40 transition-colors">
+                <div className="flex items-center justify-between">
+                  <h2 className="typo-section-heading text-sm sm:text-base text-teal-300">
+                    Relaxing Stress Relief Games
+                  </h2>
+                  <span className="typo-label text-[10px] text-teal-400 bg-teal-950/60 px-2 py-0.5 rounded-full border border-teal-500/30">
+                    Relaxing
+                  </span>
                 </div>
+                <p className="typo-body text-slate-300 text-xs leading-relaxed">
+                  Enjoy soothing 10x10 geometric polyomino block puzzles with zero timers, relaxing chime synthesis, and satisfying full line clears.
+                </p>
+                <div className="pt-2 mt-auto flex items-center justify-between">
+                  <Link
+                    href="/games/color-zen"
+                    className="typo-button text-xs text-white bg-teal-500/20 hover:bg-teal-500/30 border border-teal-400/40 px-3 py-1.5 rounded-lg inline-flex items-center gap-1.5 transition-colors"
+                  >
+                    <span>Block Grid Zen - 10x10 block puzzle</span>
+                    <ArrowRight className="w-3.5 h-3.5 text-teal-400" />
+                  </Link>
+                </div>
+              </article>
+
+              {/* Genre 4: 1-Tap Reflex & Rhythm Games */}
+              <article id="reflex-games" className="scroll-mt-24 flex flex-col gap-2 p-4 rounded-xl bg-slate-950/50 border border-slate-800/60 hover:border-purple-500/40 transition-colors">
+                <div className="flex items-center justify-between">
+                  <h2 className="typo-section-heading text-sm sm:text-base text-purple-300">
+                    1-Tap Reflex & Rhythm Games
+                  </h2>
+                  <span className="typo-label text-[10px] text-purple-400 bg-purple-950/60 px-2 py-0.5 rounded-full border border-purple-500/30">
+                    Casual
+                  </span>
+                </div>
+                <p className="typo-body text-slate-300 text-xs leading-relaxed">
+                  Test your timing in fast-paced neon flight. Dodge pulsing laser gates, graze tight edges for bonus diamonds, and trigger protective shields.
+                </p>
+                <div className="pt-2 mt-auto flex items-center justify-between">
+                  <Link
+                    href="/games/quick-tap"
+                    className="typo-button text-xs text-white bg-purple-500/20 hover:bg-purple-500/30 border border-purple-400/40 px-3 py-1.5 rounded-lg inline-flex items-center gap-1.5 transition-colors"
+                  >
+                    <span>Cyber Dash - 1-tap reflex flyer</span>
+                    <ArrowRight className="w-3.5 h-3.5 text-purple-400" />
+                  </Link>
+                </div>
+              </article>
+            </div>
+
+            {/* Game Guides & Comparative Articles Section */}
+            <div className="pt-4 border-t border-slate-800/80 flex flex-col gap-3">
+              <h3 className="typo-section-heading text-sm sm:text-base text-white">
+                Game Strategy Guides & Similar Games
+              </h3>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2.5 text-xs">
+                <Link
+                  href="/guides/2048-strategy"
+                  className="p-3 rounded-xl bg-slate-950/40 border border-slate-800/80 hover:border-amber-500/40 text-slate-300 hover:text-white transition-colors"
+                >
+                  <span className="font-semibold text-amber-300 block mb-0.5">2048 Strategy Guide</span>
+                  <span className="text-[11px] text-slate-400">Tips, tricks, and the corner strategy to win 2048 →</span>
+                </Link>
+                <Link
+                  href="/games-like/block-blast"
+                  className="p-3 rounded-xl bg-slate-950/40 border border-slate-800/80 hover:border-teal-500/40 text-slate-300 hover:text-white transition-colors"
+                >
+                  <span className="font-semibold text-teal-300 block mb-0.5">Games Like Block Blast</span>
+                  <span className="text-[11px] text-slate-400">Free 10x10 block puzzle browser alternative →</span>
+                </Link>
+                <Link
+                  href="/games-like/3d-runner-games"
+                  className="p-3 rounded-xl bg-slate-950/40 border border-slate-800/80 hover:border-cyan-500/40 text-slate-300 hover:text-white transition-colors"
+                >
+                  <span className="font-semibold text-cyan-300 block mb-0.5">Games Like Run 3 & Slope</span>
+                  <span className="text-[11px] text-slate-400">Free 3D endless runners with chasms & speed pads →</span>
+                </Link>
+                <Link
+                  href="/games-like/flappy-bird"
+                  className="p-3 rounded-xl bg-slate-950/40 border border-slate-800/80 hover:border-purple-500/40 text-slate-300 hover:text-white transition-colors"
+                >
+                  <span className="font-semibold text-purple-300 block mb-0.5">Games Like Flappy Bird</span>
+                  <span className="text-[11px] text-slate-400">Free 1-tap neon reflex flight game with shields →</span>
+                </Link>
               </div>
             </div>
           </div>
 
-          {/* Frequently Asked Questions (Matches FAQPage JSON-LD) */}
+          {/* Frequently Asked Questions (Matches FAQPage JSON-LD exactly) */}
           <div className="p-6 sm:p-7 rounded-2xl bg-slate-900/30 border border-slate-800/70 flex flex-col gap-4">
-            <h3 className="text-base sm:text-lg font-black text-white flex items-center gap-2">
+            <h2 className="typo-section-heading text-base sm:text-lg text-white flex items-center gap-2">
               <HelpCircle className="w-5 h-5 text-pink-400" />
-              <span>Frequently Asked Questions (FAQ)</span>
-            </h3>
+              <span>Frequently Asked Questions</span>
+            </h2>
             <div className="space-y-3">
               <div className="p-4 rounded-xl bg-slate-950/50 border border-slate-800/50">
-                <h4 className="font-bold text-white text-xs sm:text-sm">
+                <h3 className="typo-section-heading text-white text-xs sm:text-sm">
                   Are all games on TAPPYARD completely free to play?
-                </h4>
+                </h3>
                 <p className="mt-1.5 text-slate-400 text-xs leading-relaxed">
-                  Yes! Every game on TAPPYARD is 100% free to play directly in your web browser. There are no paywalls, hidden in-app purchases, or subscription fees.
+                  Yes. Every game on TAPPYARD is 100% free to play directly in your web browser with no paywalls, hidden in-app purchases, or subscription fees.
                 </p>
               </div>
               <div className="p-4 rounded-xl bg-slate-950/50 border border-slate-800/50">
-                <h4 className="font-bold text-white text-xs sm:text-sm">
+                <h3 className="typo-section-heading text-white text-xs sm:text-sm">
                   Do I need to download or install any files to play?
-                </h4>
+                </h3>
                 <p className="mt-1.5 text-slate-400 text-xs leading-relaxed">
                   No download, install, or registration is required. All games run instantly using modern HTML5, Canvas, and WebGL technology in Chrome, Safari, Firefox, Edge, and mobile browsers.
                 </p>
               </div>
               <div className="p-4 rounded-xl bg-slate-950/50 border border-slate-800/50">
-                <h4 className="font-bold text-white text-xs sm:text-sm">
+                <h3 className="typo-section-heading text-white text-xs sm:text-sm">
                   Can I play TAPPYARD games on mobile phones and tablets?
-                </h4>
+                </h3>
                 <p className="mt-1.5 text-slate-400 text-xs leading-relaxed">
-                  Yes. All TAPPYARD games are built mobile-first with responsive touch controls, full-screen support, and zero horizontal lag for iPhone, iPad, Android phones, and tablets.
+                  Yes. All TAPPYARD games are built mobile-first with responsive touch controls, full-screen support, and zero horizontal scrolling on iPhone, iPad, Android phones, and tablets.
                 </p>
               </div>
               <div className="p-4 rounded-xl bg-slate-950/50 border border-slate-800/50">
-                <h4 className="font-bold text-white text-xs sm:text-sm">
-                  Are TAPPYARD games unblocked at school and work?
-                </h4>
+                <h3 className="typo-section-heading text-white text-xs sm:text-sm">
+                  Do I need an account to play?
+                </h3>
                 <p className="mt-1.5 text-slate-400 text-xs leading-relaxed">
-                  Yes, TAPPYARD games run safely over standard secure HTTPS in your browser with zero executable downloads, making them ideal for quick casual gaming breaks on any network.
+                  No account, sign-up, or registration is required to play. Your highest scores, unlocked character skins, and diamond rewards save automatically to your local browser storage.
+                </p>
+              </div>
+              <div className="p-4 rounded-xl bg-slate-950/50 border border-slate-800/50">
+                <h3 className="typo-section-heading text-white text-xs sm:text-sm">
+                  Are the games unblocked at school or work?
+                </h3>
+                <p className="mt-1.5 text-slate-400 text-xs leading-relaxed">
+                  Yes. TAPPYARD games run safely over standard secure HTTPS in your browser with zero executable downloads, making them accessible for casual gaming breaks on school and work networks.
+                </p>
+              </div>
+              <div className="p-4 rounded-xl bg-slate-950/50 border border-slate-800/50">
+                <h3 className="typo-section-heading text-white text-xs sm:text-sm">
+                  What are good quick games to play when bored?
+                </h3>
+                <p className="mt-1.5 text-slate-400 text-xs leading-relaxed">
+                  For fast reflex fun, try Cyber Dash (1-tap flight) or Jump Jelly Jump! (3D speed runner). If you want mental stimulation, play 2048 Neon Fusion (number merge puzzle) or Block Grid Zen (10x10 spatial block puzzle). All four games start in under a second.
                 </p>
               </div>
             </div>

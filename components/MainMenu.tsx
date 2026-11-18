@@ -106,20 +106,10 @@ export default function MainMenu({
           </svg>
         </div>
 
-        {/* Best Distance Pill */}
-        {bestScore > 0 ? (
-          <div className="flex items-center gap-2 bg-[#0c2733]/80 backdrop-blur-xs px-3.5 py-1 sm:px-4 sm:py-1.5 rounded-full shadow-md border border-cyan-500/30">
-            <Trophy className="w-3.5 h-3.5 text-amber-400" />
-            <span className="text-[10px] sm:text-[11px] text-slate-300 font-bold uppercase tracking-wider">
-              BEST DISTANCE:
-            </span>
-            <span className="text-sm sm:text-base font-black text-white">{bestScore}m</span>
-          </div>
-        ) : (
-          <div className="text-[11px] sm:text-xs font-semibold text-cyan-200 bg-[#0c2733]/80 px-3.5 py-1 sm:px-4 sm:py-1.5 rounded-full border border-cyan-500/30">
-            Slide finger or mouse to steer!
-          </div>
-        )}
+        {/* Instruction Note */}
+        <div className="text-[11px] sm:text-xs font-semibold text-cyan-200 bg-[#0c2733]/85 px-4 py-2 rounded-2xl border border-cyan-500/30 text-center max-w-xs leading-snug">
+          Drag to steer the jelly cube. Collect diamonds and hit booster pads to leap the chasms.
+        </div>
 
         {/* Big PLAY Button */}
         <button

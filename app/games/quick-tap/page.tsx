@@ -1,33 +1,38 @@
 import type { Metadata } from 'next';
 import CyberDashClient from '@/components/games/CyberDash/CyberDashClient';
+import GameContentBelowFold from '@/components/tappyard/GameContentBelowFold';
+import { GAME_CONTENT_DATA } from '@/data/gameContent';
 
 const SITE_URL = 'https://tappyard.com';
 const GAME_URL = `${SITE_URL}/games/quick-tap`;
 
 export const metadata: Metadata = {
-  title: 'Cyber Dash — Play Free 1-Tap Neon Reflex Flight Online | TAPPYARD',
+  title: 'Cyber Dash - Free 1-Tap Neon Reflex Game',
   description:
-    'Play Cyber Dash free in your browser. Fast-paced 1-tap neon reflex flight runner! Dodge pulsing laser gates, graze edges for bonus score, and beat high scores. No downloads.',
+    'Tap to fly and dodge pulsing laser gates in Cyber Dash, a free 1-tap neon reflex game. Graze gates for bonus diamonds. No download.',
   keywords: [
-    'Cyber Dash',
-    '1-tap reflex game',
-    'flappy bird online free',
-    'neon runner online',
-    'rhythm flight game',
-    'tap to fly browser game',
-    'casual games mobile',
-    'unblocked games free',
-    'free online games',
-    'reflex flight runner',
+    'one tap games',
+    'one tap game online',
+    'one button games',
+    'tap to fly game',
+    'one tap flying game',
+    'reflex games',
+    'reflex games online',
+    'reaction games',
+    'neon reflex game',
+    'dodge game',
+    'laser dodge game',
+    'obstacle dodging game',
+    'hard one tap games',
     'TAPPYARD',
   ],
   alternates: {
     canonical: GAME_URL,
   },
   openGraph: {
-    title: 'Cyber Dash — Play 1-Tap Neon Reflex Flight Free | TAPPYARD',
+    title: 'Cyber Dash - Free 1-Tap Neon Reflex Game | TAPPYARD',
     description:
-      'Dodge pulsing laser gates, graze edges for bonus diamonds, and beat your high score. Play free directly in your browser!',
+      'Tap to fly and dodge pulsing laser gates in Cyber Dash, a free 1-tap neon reflex game. Graze gates for bonus diamonds. No download.',
     url: GAME_URL,
     type: 'website',
     images: [
@@ -41,84 +46,18 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Cyber Dash — Free 1-Tap Neon Reflex Runner',
+    title: 'Cyber Dash - Free 1-Tap Neon Reflex Game',
     description:
-      'Dodge pulsing laser gates and graze edges for bonus diamonds! Fast, addictive, and 100% free with no downloads.',
+      'Tap to fly and dodge pulsing laser gates in Cyber Dash, a free 1-tap neon reflex game. Graze gates for bonus diamonds. No download.',
     images: ['/og/quick-tap-og.png'],
-  },
-};
-
-// JSON-LD: Breadcrumb navigation schema
-const breadcrumbJsonLd = {
-  '@context': 'https://schema.org',
-  '@type': 'BreadcrumbList',
-  itemListElement: [
-    {
-      '@type': 'ListItem',
-      position: 1,
-      name: 'Home',
-      item: SITE_URL,
-    },
-    {
-      '@type': 'ListItem',
-      position: 2,
-      name: 'Casual Games',
-      item: `${SITE_URL}/#catalogue`,
-    },
-    {
-      '@type': 'ListItem',
-      position: 3,
-      name: 'Cyber Dash',
-      item: GAME_URL,
-    },
-  ],
-};
-
-// JSON-LD Structured Data for Cyber Dash
-const gameJsonLd = {
-  '@context': 'https://schema.org',
-  '@type': 'VideoGame',
-  name: 'Cyber Dash',
-  description:
-    'Fast-paced 1-tap neon reflex flight runner. Dodge pulsing laser gates and graze edges to earn bonus TapYard diamonds.',
-  genre: ['Casual', 'Reflex', 'Runner', 'Arcade', 'Rhythm'],
-  gamePlatform: ['Web Browser', 'Mobile Browser', 'Desktop Browser'],
-  applicationCategory: 'Game',
-  operatingSystem: 'Any',
-  playMode: 'SinglePlayer',
-  url: GAME_URL,
-  author: {
-    '@type': 'Organization',
-    name: 'TAPPYARD',
-    url: SITE_URL,
-  },
-  offers: {
-    '@type': 'Offer',
-    price: '0',
-    priceCurrency: 'USD',
-    availability: 'https://schema.org/InStock',
-  },
-  aggregateRating: {
-    '@type': 'AggregateRating',
-    ratingValue: 4.7,
-    bestRating: 5,
-    worstRating: 1,
-    ratingCount: 1420,
   },
 };
 
 export default function CyberDashPage() {
   return (
-    <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
-      />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(gameJsonLd) }}
-      />
+    <div className="min-h-screen flex flex-col bg-[#040e14] text-white overflow-x-hidden">
       <CyberDashClient />
-    </>
+      <GameContentBelowFold data={GAME_CONTENT_DATA['quick-tap']} />
+    </div>
   );
 }

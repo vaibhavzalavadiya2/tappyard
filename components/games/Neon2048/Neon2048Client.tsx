@@ -196,9 +196,9 @@ export default function Neon2048Client() {
 
   // Share score
   const handleShare = useCallback(() => {
-    const text = `🔥 I scored ${score} in 2048 Neon Fusion on TapYard! Can you beat my high score? Play free: https://tappyard.com/games/2048-puzzle`;
+    const text = `🔥 I scored ${score} in 2048 Neon Fusion on TAPPYARD! Can you beat my high score? Play free: https://tappyard.com/games/2048-puzzle`;
     if (typeof navigator !== 'undefined' && navigator.share) {
-      navigator.share({ title: '2048 Neon Fusion | TapYard', text, url: 'https://tappyard.com/games/2048-puzzle' }).catch(() => {});
+      navigator.share({ title: '2048 Neon Fusion | TAPPYARD', text, url: 'https://tappyard.com/games/2048-puzzle' }).catch(() => {});
     } else if (typeof navigator !== 'undefined' && navigator.clipboard?.writeText) {
       navigator.clipboard.writeText(text).then(() => {
         triggerNotification('Score Challenge Copied to Clipboard!');
@@ -282,27 +282,24 @@ export default function Neon2048Client() {
   };
 
   return (
-    <div
-      className="fixed inset-0 flex flex-col bg-[#061219] text-white select-none overflow-hidden safe-bottom"
-      style={{ touchAction: 'none' }}
-    >
+    <section className="w-full flex flex-col bg-[#061219] text-white select-none">
       {/* 1. Header Bar */}
       <header className="h-14 sm:h-16 px-3 sm:px-6 bg-[#081720]/95 backdrop-blur-md border-b border-cyan-500/20 flex items-center justify-between shrink-0 z-10">
         <div className="flex items-center gap-2 sm:gap-4">
           <Link
             href="/"
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-cyan-950/40 hover:bg-cyan-900/60 border border-cyan-500/30 text-cyan-300 font-bold text-xs transition-all active:scale-95 cursor-pointer"
+            className="typo-nav flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-cyan-950/40 hover:bg-cyan-900/60 border border-cyan-500/30 text-cyan-300 text-xs transition-all active:scale-95 cursor-pointer"
           >
             <ArrowLeft className="w-3.5 h-3.5" />
-            <span className="hidden sm:inline">TapYard</span>
+            <span className="hidden sm:inline">TAPPYARD</span>
           </Link>
 
           <div className="flex items-center gap-2">
-            <h1 className="text-base sm:text-lg font-black tracking-wide text-white flex items-center gap-2">
+            <h1 className="typo-game-title text-base sm:text-lg text-white flex items-center gap-2">
               <span className="w-2.5 h-2.5 rounded-full bg-amber-400 animate-pulse shadow-[0_0_8px_#f59e0b]" />
               2048 Neon Fusion
             </h1>
-            <span className="hidden md:inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider bg-amber-500/20 text-amber-300 border border-amber-500/30">
+            <span className="typo-label hidden md:inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] uppercase tracking-wider bg-amber-500/20 text-amber-300 border border-amber-500/30">
               <Puzzle className="w-3 h-3" />
               Puzzle
             </span>
@@ -311,7 +308,7 @@ export default function Neon2048Client() {
 
         <div className="flex items-center gap-2 sm:gap-3">
           {/* Diamonds Wallet */}
-          <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#0a1e27] border border-cyan-500/30 text-cyan-300 font-black text-xs shadow-inner">
+          <div className="typo-button flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#0a1e27] border border-cyan-500/30 text-cyan-300 text-xs tabular-nums shadow-inner">
             <Gem className="w-3.5 h-3.5 text-cyan-400" />
             <span>{diamonds}</span>
           </div>
@@ -344,7 +341,7 @@ export default function Neon2048Client() {
       )}
 
       {/* 2. Main Game Body */}
-      <main className="flex-1 flex flex-col items-center justify-center p-3 sm:p-6 max-w-md w-full mx-auto overflow-hidden">
+      <main id="game-stage" className="relative w-full min-h-[calc(100dvh-3.5rem)] sm:min-h-[calc(100dvh-4rem)] flex flex-col items-center justify-center p-3 sm:p-6 max-w-md mx-auto">
         {/* Score & Control Row */}
         <div className="w-full grid grid-cols-2 gap-2.5 sm:gap-3 mb-3">
           {/* Current Score */}
@@ -437,8 +434,17 @@ export default function Neon2048Client() {
 
         {/* Mobile Swipe / Controls Helper Note */}
         <p className="text-[11px] font-medium text-slate-400 text-center mt-3">
-          Swipe in any direction to merge matching tiles • Reach 2048 to win!
+          Swipe to slide the tiles. Match two equal tiles to merge them and reach 2048.
         </p>
+
+        {/* Mobile: unobtrusive link to scroll to below-fold content */}
+        <a
+          href="#game-details"
+          className="md:hidden mt-2 flex items-center gap-1 px-3 py-1 rounded-full bg-slate-900/80 hover:bg-slate-800 text-[10px] text-cyan-300 border border-cyan-500/30 backdrop-blur-md shadow-md active:scale-95 transition-all"
+        >
+          <span>How to play & tips</span>
+          <span>↓</span>
+        </a>
       </main>
 
       {/* 4. Win Modal (2048 Reached) */}
@@ -529,6 +535,6 @@ export default function Neon2048Client() {
           </div>
         </div>
       )}
-    </div>
+    </section>
   );
 }

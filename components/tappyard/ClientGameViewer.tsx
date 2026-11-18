@@ -57,16 +57,24 @@ export default function ClientGameViewer({ game }: ClientGameViewerProps) {
   // 4. Owned Game (e.g. Jelly Bounce)
   if (game.sourceType === 'owned') {
     return (
-      <div className="fixed inset-0 flex flex-col bg-[#090d16] overflow-hidden select-none safe-bottom" style={{ touchAction: 'none' }}>
+      <section className="w-full flex flex-col bg-[#081720] select-none">
         <GameHeader
           title={game.title}
           category={game.category}
           icon={<Gem className="w-4 h-4 text-cyan-400" />}
         />
-        <main className="relative flex-1 w-full h-full overflow-hidden bg-sky-100">
+        <main className="relative w-full h-[calc(100dvh-3rem)] sm:h-[calc(100dvh-3.5rem)] overflow-hidden bg-[#081720]">
           <GameContainer />
+          <a
+            href="#game-details"
+            className="md:hidden absolute bottom-2 right-3 z-20 flex items-center gap-1 px-2.5 py-1 rounded-full bg-slate-900/80 hover:bg-slate-800 text-[10px] text-cyan-300 border border-cyan-500/30 backdrop-blur-md shadow-md active:scale-95 transition-all"
+            aria-label="Scroll to how to play and tips"
+          >
+            <span>How to play & tips</span>
+            <span>↓</span>
+          </a>
         </main>
-      </div>
+      </section>
     );
   }
 
@@ -108,11 +116,11 @@ export default function ClientGameViewer({ game }: ClientGameViewerProps) {
           </div>
 
           <div>
-            <div className="inline-block px-3 py-1 rounded-full text-xs font-bold bg-indigo-500/20 text-indigo-300 border border-indigo-500/30 mb-2">
+            <div className="typo-label inline-block px-3 py-1 rounded-full text-xs bg-indigo-500/20 text-indigo-300 border border-indigo-500/30 mb-2">
               EXTERNAL GAME
             </div>
-            <h1 className="text-2xl sm:text-3xl font-black text-white">{game.title}</h1>
-            <p className="text-slate-400 text-xs sm:text-sm max-w-md mx-auto mt-2 leading-relaxed">
+            <h1 className="typo-h1 text-2xl sm:text-3xl text-white">{game.title}</h1>
+            <p className="typo-body text-slate-400 text-xs sm:text-sm max-w-md mx-auto mt-2">
               {game.description}
             </p>
           </div>
@@ -122,7 +130,7 @@ export default function ClientGameViewer({ game }: ClientGameViewerProps) {
               href={game.externalUrl || '#'}
               target="_blank"
               rel="noopener noreferrer"
-              className="w-full sm:w-auto px-8 py-3.5 rounded-2xl font-bold text-white bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-400 hover:to-purple-500 shadow-xl shadow-pink-500/20 active:scale-95 transition-all flex items-center justify-center gap-2 cursor-pointer"
+              className="typo-button w-full sm:w-auto px-8 py-3.5 rounded-2xl text-white bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-400 hover:to-purple-500 shadow-xl shadow-pink-500/20 active:scale-95 transition-all flex items-center justify-center gap-2 cursor-pointer"
             >
               <span>Play on Original Website</span>
               <ExternalLink className="w-4 h-4" />
@@ -130,14 +138,14 @@ export default function ClientGameViewer({ game }: ClientGameViewerProps) {
 
             <Link
               href="/"
-              className="w-full sm:w-auto px-6 py-3.5 rounded-2xl font-bold text-slate-300 bg-slate-800 hover:bg-slate-700 transition-colors text-center flex items-center justify-center gap-2"
+              className="typo-button w-full sm:w-auto px-6 py-3.5 rounded-2xl text-slate-300 bg-slate-800 hover:bg-slate-700 transition-colors text-center flex items-center justify-center gap-2"
             >
               <ArrowLeft className="w-4 h-4" />
               <span>Back to TAPPYARD</span>
             </Link>
           </div>
 
-          <p className="text-[11px] text-slate-500">
+          <p className="typo-meta text-[11px] text-slate-500">
             This game runs on an external developer website and opens in a new tab.
           </p>
         </div>

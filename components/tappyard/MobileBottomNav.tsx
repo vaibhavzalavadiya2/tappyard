@@ -25,8 +25,8 @@ export default function MobileBottomNav({
             const el = document.getElementById('catalogue');
             if (el) el.scrollIntoView({ behavior: 'smooth' });
           }}
-          className={`relative flex flex-col items-center justify-center flex-1 py-1.5 rounded-xl transition-all active:scale-90 cursor-pointer min-h-[48px] ${
-            selectedCategory === 'All' ? 'text-pink-400 font-black' : 'text-slate-400 hover:text-slate-200'
+          className={`typo-nav relative flex flex-col items-center justify-center flex-1 py-1.5 rounded-xl transition-all active:scale-90 cursor-pointer min-h-[48px] ${
+            selectedCategory === 'All' ? 'text-pink-400 font-semibold' : 'text-slate-400 hover:text-slate-200'
           }`}
         >
           <LayoutGrid
@@ -47,8 +47,8 @@ export default function MobileBottomNav({
             const el = document.getElementById('catalogue');
             if (el) el.scrollIntoView({ behavior: 'smooth' });
           }}
-          className={`relative flex flex-col items-center justify-center flex-1 py-1.5 rounded-xl transition-all active:scale-90 cursor-pointer min-h-[48px] ${
-            selectedCategory === 'Arcade' ? 'text-pink-400 font-black' : 'text-slate-400 hover:text-slate-200'
+          className={`typo-nav relative flex flex-col items-center justify-center flex-1 py-1.5 rounded-xl transition-all active:scale-90 cursor-pointer min-h-[48px] ${
+            selectedCategory === 'Arcade' ? 'text-pink-400 font-semibold' : 'text-slate-400 hover:text-slate-200'
           }`}
         >
           <Gamepad2
@@ -71,7 +71,7 @@ export default function MobileBottomNav({
           <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-cyan-400 via-blue-500 to-indigo-600 flex items-center justify-center shadow-lg shadow-cyan-500/40 border border-cyan-300/40 group-active:scale-95 transition-transform ring-2 ring-cyan-400/20">
             <Gem className="w-5 h-5 text-white animate-pulse" />
           </div>
-          <span className="text-[10px] font-black tracking-tight text-cyan-400 mt-0.5">
+          <span className="typo-button text-[10px] tracking-tight text-cyan-400 mt-0.5">
             Jelly 3D
           </span>
         </Link>
@@ -83,8 +83,8 @@ export default function MobileBottomNav({
             const el = document.getElementById('catalogue');
             if (el) el.scrollIntoView({ behavior: 'smooth' });
           }}
-          className={`relative flex flex-col items-center justify-center flex-1 py-1.5 rounded-xl transition-all active:scale-90 cursor-pointer min-h-[48px] ${
-            selectedCategory === 'Puzzle' ? 'text-pink-400 font-black' : 'text-slate-400 hover:text-slate-200'
+          className={`typo-nav relative flex flex-col items-center justify-center flex-1 py-1.5 rounded-xl transition-all active:scale-90 cursor-pointer min-h-[48px] ${
+            selectedCategory === 'Puzzle' ? 'text-pink-400 font-semibold' : 'text-slate-400 hover:text-slate-200'
           }`}
         >
           <Puzzle
@@ -101,11 +101,11 @@ export default function MobileBottomNav({
         {/* Tab 4: Menu (Slide out drawer from right) */}
         <button
           onClick={onOpenMenu}
-          className="relative flex flex-col items-center justify-center flex-1 py-1.5 rounded-xl text-slate-400 hover:text-white transition-all active:scale-90 cursor-pointer min-h-[48px]"
+          className="typo-nav relative flex flex-col items-center justify-center flex-1 py-1.5 rounded-xl text-slate-400 hover:text-white transition-all active:scale-90 cursor-pointer min-h-[48px]"
           aria-label="Open side menu"
         >
           <Menu className="w-5 h-5 stroke-[1.8] text-slate-300" />
-          <span className="text-[10px] tracking-tight mt-1 text-slate-300 font-semibold">
+          <span className="text-[10px] tracking-tight mt-1 text-slate-300">
             Menu
           </span>
         </button>

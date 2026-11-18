@@ -8,7 +8,6 @@ import { GAMES_CATALOGUE, type GameItem } from '@/data/games';
 import GameThumbnail from './GameThumbnail';
 import {
   Star,
-  Trophy,
   Gem,
   Zap,
   Play,
@@ -24,7 +23,14 @@ export default function HeroFeatured() {
   const [progress, setProgress] = useState<GameProgress | null>(null);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
-  const touchStartX = useRef<number | null>(null);
+  const [isDragging, setIsDragging] = useState(false);
+  const [dragOffset, setDragOffset] = useState(0);
+
+  const dragStartX = useRef<number | null>(null);
+  const dragStartY = useRef<number | null>(null);
+  const isHorizontalDrag = useRef<boolean | null>(null);
+  const hasDragged = useRef(false);
+  const latestOffset = useRef(0);
 
   const featuredGames = GAMES_CATALOGUE;
   const currentGame: GameItem = featuredGames[currentIndex] || featuredGames[0];
@@ -46,28 +52,94 @@ export default function HeroFeatured() {
     setCurrentIndex((prev) => (prev - 1 + featuredGames.length) % featuredGames.length);
   }, [featuredGames.length]);
 
-  // Auto-rotation every 6 seconds when not paused
+  // Auto-rotation every 9 seconds when not paused or dragging (resets on manual slide change)
   useEffect(() => {
-    if (isPaused) return;
+    if (isPaused || isDragging) return;
     const timer = setInterval(() => {
       nextSlide();
-    }, 6000);
+    }, 9000);
     return () => clearInterval(timer);
-  }, [isPaused, nextSlide]);
+  }, [isPaused, isDragging, currentIndex, nextSlide]);
 
-  // Touch swipe support for mobile
-  const handleTouchStart = (e: React.TouchEvent) => {
-    touchStartX.current = e.touches[0].clientX;
+  // Unified mouse + touch drag slider support
+  const handlePointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (e.pointerType === 'mouse' && e.button !== 0) return;
+    if ((e.target as HTMLElement).closest('button')) return;
+
+    dragStartX.current = e.clientX;
+    dragStartY.current = e.clientY;
+    isHorizontalDrag.current = null;
+    hasDragged.current = false;
+    latestOffset.current = 0;
+    setIsDragging(true);
   };
 
-  const handleTouchEnd = (e: React.TouchEvent) => {
-    if (touchStartX.current === null) return;
-    const diff = touchStartX.current - e.changedTouches[0].clientX;
-    if (Math.abs(diff) > 40) {
-      if (diff > 0) nextSlide();
-      else prevSlide();
+  useEffect(() => {
+    if (!isDragging) return;
+
+    const handlePointerMove = (e: PointerEvent) => {
+      if (dragStartX.current === null || dragStartY.current === null) return;
+
+      const dx = e.clientX - dragStartX.current;
+      const dy = e.clientY - dragStartY.current;
+
+      // Determine gesture direction once movement exceeds a tiny deadzone
+      if (isHorizontalDrag.current === null) {
+        if (Math.abs(dx) < 6 && Math.abs(dy) < 6) return;
+        isHorizontalDrag.current = Math.abs(dx) >= Math.abs(dy);
+      }
+
+      if (!isHorizontalDrag.current) return;
+
+      if (Math.abs(dx) > 8) {
+        hasDragged.current = true;
+      }
+
+      // Smooth damped drag preview clamped to ±120px
+      const damped = Math.max(-120, Math.min(120, dx * 0.65));
+      latestOffset.current = dx;
+      setDragOffset(damped);
+    };
+
+    const finishDrag = () => {
+      const dx = latestOffset.current;
+      if (isHorizontalDrag.current && Math.abs(dx) > 45) {
+        if (dx < 0) nextSlide();
+        else prevSlide();
+      }
+
+      dragStartX.current = null;
+      dragStartY.current = null;
+      isHorizontalDrag.current = null;
+      latestOffset.current = 0;
+      setDragOffset(0);
+      setIsDragging(false);
+
+      // Clear click-suppression flag right after any trailing click event fires
+      if (hasDragged.current) {
+        setTimeout(() => {
+          hasDragged.current = false;
+        }, 0);
+      }
+    };
+
+    window.addEventListener('pointermove', handlePointerMove, { passive: true });
+    window.addEventListener('pointerup', finishDrag);
+    window.addEventListener('pointercancel', finishDrag);
+
+    return () => {
+      window.removeEventListener('pointermove', handlePointerMove);
+      window.removeEventListener('pointerup', finishDrag);
+      window.removeEventListener('pointercancel', finishDrag);
+    };
+  }, [isDragging, nextSlide, prevSlide]);
+
+  const handleClickCapture = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (hasDragged.current) {
+      e.preventDefault();
+      e.stopPropagation();
+      hasDragged.current = false;
     }
-    touchStartX.current = null;
   };
 
   // Jelly character custom skin colors
@@ -132,13 +204,19 @@ export default function HeroFeatured() {
 
   const theme = getTheme(currentGame.id);
 
+  const dragSlideStyle = {
+    transform: dragOffset ? `translateX(${dragOffset}px)` : undefined,
+  };
+
   return (
     <div
       onMouseEnter={() => setIsPaused(true)}
       onMouseLeave={() => setIsPaused(false)}
-      onTouchStart={handleTouchStart}
-      onTouchEnd={handleTouchEnd}
-      className={`relative overflow-hidden rounded-3xl bg-gradient-to-br ${theme.bg} border ${theme.border} shadow-2xl p-4 sm:p-6 lg:p-8 xl:p-10 transition-all duration-700 w-full`}
+      onPointerDown={handlePointerDown}
+      onClickCapture={handleClickCapture}
+      onDragStart={(e) => e.preventDefault()}
+      className={`group/hero relative overflow-hidden rounded-3xl bg-gradient-to-br ${theme.bg} border ${theme.border} shadow-2xl p-4 sm:p-6 lg:p-8 xl:p-10 transition-colors duration-700 w-full select-none touch-pan-y ${isDragging ? 'cursor-grabbing' : 'cursor-grab'
+        }`}
     >
       {/* Dynamic Background Light Spheres */}
       <div
@@ -151,39 +229,45 @@ export default function HeroFeatured() {
       {/* Cyber Grid Texture Overlay */}
       <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff05_1px,transparent_1px),linear-gradient(to_bottom,#ffffff05_1px,transparent_1px)] bg-[size:32px_32px] pointer-events-none" />
 
-      {/* Slide Navigation Arrows (Desktop) */}
+      {/* Slide Navigation Arrows (Desktop — revealed on hover / keyboard focus) */}
       <button
+        type="button"
         onClick={prevSlide}
-        className="hidden lg:flex absolute left-4 top-1/2 -translate-y-1/2 z-20 w-11 h-11 rounded-2xl bg-black/60 hover:bg-black/85 border border-white/20 items-center justify-center text-white transition-all shadow-xl hover:scale-110 active:scale-95 cursor-pointer backdrop-blur-md"
+        className="hidden lg:flex absolute left-4 top-1/2 -translate-y-1/2 z-20 w-11 h-11 rounded-2xl bg-black/60 hover:bg-black/85 border border-white/20 items-center justify-center text-white shadow-xl backdrop-blur-md cursor-pointer opacity-0 -translate-x-2 pointer-events-none group-hover/hero:opacity-100 group-hover/hero:translate-x-0 group-hover/hero:pointer-events-auto focus-visible:opacity-100 focus-visible:translate-x-0 focus-visible:pointer-events-auto hover:scale-110 active:scale-95 transition-all duration-200"
         aria-label="Previous game"
       >
         <ChevronLeft className="w-5 h-5" />
       </button>
 
       <button
+        type="button"
         onClick={nextSlide}
-        className="hidden lg:flex absolute right-4 top-1/2 -translate-y-1/2 z-20 w-11 h-11 rounded-2xl bg-black/60 hover:bg-black/85 border border-white/20 items-center justify-center text-white transition-all shadow-xl hover:scale-110 active:scale-95 cursor-pointer backdrop-blur-md"
+        className="hidden lg:flex absolute right-4 top-1/2 -translate-y-1/2 z-20 w-11 h-11 rounded-2xl bg-black/60 hover:bg-black/85 border border-white/20 items-center justify-center text-white shadow-xl backdrop-blur-md cursor-pointer opacity-0 translate-x-2 pointer-events-none group-hover/hero:opacity-100 group-hover/hero:translate-x-0 group-hover/hero:pointer-events-auto focus-visible:opacity-100 focus-visible:translate-x-0 focus-visible:pointer-events-auto hover:scale-110 active:scale-95 transition-all duration-200"
         aria-label="Next game"
       >
         <ChevronRight className="w-5 h-5" />
       </button>
 
       {/* --- MOBILE COMPACT VIEW (< lg) --- */}
-      <div className="flex flex-col gap-3 lg:hidden relative z-10">
+      <div
+        style={dragSlideStyle}
+        className={`flex flex-col gap-3 lg:hidden relative z-10 ${isDragging ? 'transition-none' : 'transition-transform duration-300 ease-out'
+          }`}
+      >
         {/* Top Badges */}
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-1.5 flex-wrap">
             <span
-              className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-black tracking-wide border uppercase ${theme.badge}`}
+              className={`typo-label inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-semibold tracking-wide border uppercase ${theme.badge}`}
             >
               <span className="w-1.5 h-1.5 rounded-full bg-current animate-ping" />
               {theme.tag}
             </span>
-            <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-slate-800 text-slate-300 border border-slate-700">
+            <span className="typo-label px-2 py-0.5 rounded-full text-[10px] tracking-normal bg-slate-800 text-slate-300 border border-slate-700">
               {currentGame.category}
             </span>
           </div>
-          <span className="text-xs text-amber-400 font-black flex items-center gap-1">
+          <span className="typo-button text-xs text-amber-400 tabular-nums flex items-center gap-1">
             <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-400" />
             <span>{currentGame.rating.toFixed(1)}</span>
           </span>
@@ -192,10 +276,10 @@ export default function HeroFeatured() {
         {/* Title + Interactive Preview Side-by-Side */}
         <div className="flex items-center justify-between gap-3">
           <div className="flex-1 min-w-0">
-            <h2 className="text-xl sm:text-2xl font-black tracking-tight text-white leading-tight">
+            <h2 className="typo-h1 text-xl sm:text-2xl text-white leading-tight">
               {currentGame.title}
             </h2>
-            <p className="text-slate-300 text-xs mt-1 leading-snug line-clamp-2">
+            <p className="typo-body text-slate-300 text-xs mt-1 leading-snug line-clamp-2">
               {currentGame.description}
             </p>
           </div>
@@ -225,31 +309,10 @@ export default function HeroFeatured() {
           </Link>
         </div>
 
-        {/* Stats Pill (Jelly Jump) */}
-        {currentGame.id === 'jelly-bounce' && progress && progress.bestDistance > 0 && (
-          <div className="flex items-center justify-around py-1.5 px-2.5 rounded-xl bg-slate-900/80 border border-cyan-500/30 text-[11px] text-slate-300">
-            <div className="flex items-center gap-1">
-              <Trophy className="w-3 h-3 text-amber-400" />
-              <span className="text-slate-400 text-[9px] uppercase font-bold">Best:</span>
-              <span className="font-black text-amber-400">{progress.bestDistance}m</span>
-            </div>
-            <div className="w-px h-3.5 bg-slate-700" />
-            <div className="flex items-center gap-1">
-              <Gem className="w-3 h-3 text-cyan-400" />
-              <span className="font-black text-cyan-400">{progress.totalDiamonds}</span>
-            </div>
-            <div className="w-px h-3.5 bg-slate-700" />
-            <div className="flex items-center gap-1">
-              <Zap className="w-3 h-3 text-pink-400 fill-pink-400" />
-              <span className="font-black text-pink-400">{progress.totalBoosts}</span>
-            </div>
-          </div>
-        )}
-
         {/* Big PLAY NOW Button */}
         <Link
           href={currentGame.route}
-          className={`group relative flex items-center justify-center gap-2 h-12 w-full rounded-xl font-black text-white text-sm shadow-lg transition-all duration-150 active:scale-95 cursor-pointer border border-white/20 ${theme.btn}`}
+          className={`typo-button group relative flex items-center justify-center gap-2 h-12 w-full rounded-xl text-white text-sm tracking-wide shadow-lg transition-all duration-150 active:scale-95 cursor-pointer border border-white/20 ${theme.btn}`}
         >
           <Play className="w-4 h-4 fill-white" />
           <span>PLAY NOW</span>
@@ -262,9 +325,8 @@ export default function HeroFeatured() {
             <button
               key={game.id}
               onClick={() => setCurrentIndex(idx)}
-              className={`h-2 rounded-full transition-all duration-300 cursor-pointer ${
-                idx === currentIndex ? 'w-6 bg-white shadow-[0_0_8px_#ffffff]' : 'w-2 bg-slate-700 hover:bg-slate-500'
-              }`}
+              className={`h-2 rounded-full transition-all duration-300 cursor-pointer ${idx === currentIndex ? 'w-6 bg-white shadow-[0_0_8px_#ffffff]' : 'w-2 bg-slate-700 hover:bg-slate-500'
+                }`}
               aria-label={`Show ${game.title}`}
             />
           ))}
@@ -272,39 +334,43 @@ export default function HeroFeatured() {
       </div>
 
       {/* --- DESKTOP EXPANSIVE CINEMATIC VIEW (lg+) --- */}
-      <div className="hidden lg:grid lg:grid-cols-12 gap-8 xl:gap-12 items-center relative z-10 px-8 py-2">
+      <div
+        style={dragSlideStyle}
+        className={`hidden lg:grid lg:grid-cols-12 gap-8 xl:gap-12 items-center relative z-10 px-8 py-2 ${isDragging ? 'transition-none' : 'transition-transform duration-300 ease-out'
+          }`}
+      >
         {/* Left Column: Game Title, High-Impact Badges & Action CTAs */}
         <div className="lg:col-span-7 flex flex-col items-start gap-4">
           {/* Top Status & Intent Badges */}
           <div className="flex flex-wrap items-center gap-2">
             <span
-              className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-black border uppercase tracking-wider ${theme.badge}`}
+              className={`typo-label inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold border uppercase tracking-wider ${theme.badge}`}
             >
               <Flame className="w-3.5 h-3.5 text-current animate-pulse" />
               {theme.tag}
             </span>
-            <span className="px-3 py-1 rounded-full text-xs font-bold bg-slate-900/90 text-slate-200 border border-slate-700">
+            <span className="typo-label px-3 py-1 rounded-full text-xs tracking-normal bg-slate-900/90 text-slate-200 border border-slate-700">
               {currentGame.category}
             </span>
-            <span className="text-xs text-amber-400 font-black flex items-center gap-1 bg-black/40 px-3 py-1 rounded-full border border-amber-400/30 backdrop-blur-md">
+            <span className="typo-button text-xs text-amber-400 tabular-nums flex items-center gap-1 bg-black/40 px-3 py-1 rounded-full border border-amber-400/30 backdrop-blur-md">
               <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-400 drop-shadow-[0_0_4px_rgba(251,191,36,0.8)]" />
               <span>{currentGame.rating.toFixed(1)}</span>
-              <span className="text-slate-400 font-normal">({currentGame.playsCount} plays)</span>
+              <span className="typo-meta text-slate-400">({currentGame.playsCount} plays)</span>
             </span>
           </div>
 
           {/* Large Hero Title */}
-          <h2 className="text-4xl xl:text-5xl 2xl:text-6xl font-black tracking-tight text-white leading-[1.1] drop-shadow-lg">
+          <h2 className="typo-h1 text-4xl xl:text-5xl 2xl:text-6xl text-white drop-shadow-lg">
             {currentGame.title}
           </h2>
 
           {/* Description */}
-          <p className="text-slate-200 text-sm xl:text-base leading-relaxed max-w-2xl font-medium">
+          <p className="typo-body text-slate-200 text-sm xl:text-base max-w-2xl">
             {currentGame.description}
           </p>
 
           {/* Key Value Micro-Pills */}
-          <div className="flex items-center gap-2.5 text-xs text-slate-300 flex-wrap">
+          <div className="typo-label flex items-center gap-2.5 text-xs tracking-normal text-slate-300 flex-wrap">
             <span className="flex items-center gap-1 bg-white/10 px-3 py-1 rounded-lg border border-white/15">
               <Zap className="w-3.5 h-3.5 text-amber-400" />
               Instant 60fps WebGL
@@ -319,58 +385,11 @@ export default function HeroFeatured() {
             </span>
           </div>
 
-          {/* Jelly Jump specific personal stats */}
-          {currentGame.id === 'jelly-bounce' && progress && progress.bestDistance > 0 && (
-            <div className="flex items-center gap-4 p-3.5 rounded-2xl bg-black/40 border border-cyan-500/30 text-xs text-slate-200 backdrop-blur-md">
-              <div className="flex items-center gap-2.5">
-                <div className="w-8 h-8 rounded-xl bg-amber-500/15 border border-amber-500/30 flex items-center justify-center">
-                  <Trophy className="w-4 h-4 text-amber-400" />
-                </div>
-                <div>
-                  <span className="text-slate-400 block text-[10px] uppercase font-bold tracking-wider">
-                    Best Distance
-                  </span>
-                  <span className="text-lg font-black text-amber-400">
-                    {progress.bestDistance}m
-                  </span>
-                </div>
-              </div>
-              <div className="w-px h-6 bg-slate-700" />
-              <div className="flex items-center gap-2.5">
-                <div className="w-8 h-8 rounded-xl bg-cyan-500/15 border border-cyan-500/30 flex items-center justify-center">
-                  <Gem className="w-4 h-4 text-cyan-400" />
-                </div>
-                <div>
-                  <span className="text-slate-400 block text-[10px] uppercase font-bold tracking-wider">
-                    Diamonds
-                  </span>
-                  <span className="text-lg font-black text-cyan-400">
-                    {progress.totalDiamonds}
-                  </span>
-                </div>
-              </div>
-              <div className="w-px h-6 bg-slate-700" />
-              <div className="flex items-center gap-2.5">
-                <div className="w-8 h-8 rounded-xl bg-pink-500/15 border border-pink-500/30 flex items-center justify-center">
-                  <Zap className="w-4 h-4 text-pink-400 fill-pink-400" />
-                </div>
-                <div>
-                  <span className="text-slate-400 block text-[10px] uppercase font-bold tracking-wider">
-                    Boosts
-                  </span>
-                  <span className="text-lg font-black text-pink-400">
-                    {progress.totalBoosts}
-                  </span>
-                </div>
-              </div>
-            </div>
-          )}
-
           {/* Action Row: Big PLAY NOW CTA + Direct Carousel Tabs */}
           <div className="flex items-center gap-4 pt-2 flex-wrap">
             <Link
               href={currentGame.route}
-              className={`group relative inline-flex items-center justify-center gap-3 h-14 px-8 rounded-2xl font-black text-white text-base shadow-2xl transition-all duration-200 hover:scale-105 active:scale-95 cursor-pointer border border-white/30 ${theme.btn}`}
+              className={`typo-button group relative inline-flex items-center justify-center gap-3 h-14 px-8 rounded-2xl text-white text-base tracking-wide shadow-2xl transition-all duration-200 hover:scale-105 active:scale-95 cursor-pointer border border-white/30 ${theme.btn}`}
             >
               <Play className="w-5 h-5 fill-white group-hover:scale-110 transition-transform" />
               <span>PLAY NOW</span>
@@ -383,11 +402,10 @@ export default function HeroFeatured() {
                 <button
                   key={game.id}
                   onClick={() => setCurrentIndex(idx)}
-                  className={`px-3.5 py-2 rounded-xl text-xs font-black transition-all cursor-pointer ${
-                    idx === currentIndex
-                      ? theme.pillActive
-                      : 'text-slate-400 hover:text-white hover:bg-white/10'
-                  }`}
+                  className={`typo-nav px-3.5 py-2 rounded-xl text-xs transition-all cursor-pointer ${idx === currentIndex
+                    ? `font-semibold ${theme.pillActive}`
+                    : 'text-slate-400 hover:text-white hover:bg-white/10'
+                    }`}
                 >
                   {game.title.split(' ')[0]}
                 </button>
@@ -430,7 +448,7 @@ export default function HeroFeatured() {
             )}
 
             {/* Launch Pill Overlay */}
-            <div className="absolute bottom-4 z-10 text-xs font-black text-white bg-slate-900/90 px-4 py-2 rounded-full border border-white/20 group-hover:bg-pink-500 group-hover:border-pink-400 transition-colors flex items-center gap-1.5 shadow-xl">
+            <div className="typo-button absolute bottom-4 z-10 text-xs text-white bg-slate-900/90 px-4 py-2 rounded-full border border-white/20 group-hover:bg-pink-500 group-hover:border-pink-400 transition-colors flex items-center gap-1.5 shadow-xl">
               <span>Instant Launch</span>
               <ArrowRight className="w-3.5 h-3.5" />
             </div>

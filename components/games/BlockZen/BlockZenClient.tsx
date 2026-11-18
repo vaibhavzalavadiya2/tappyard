@@ -140,9 +140,9 @@ export default function BlockZenClient() {
 
   // Share score
   const handleShare = useCallback(() => {
-    const text = `🧩 I scored ${score} in Block Grid Zen on TapYard! Can you beat my high score? Play free: https://tappyard.com/games/color-zen`;
+    const text = `🧩 I scored ${score} in Block Grid Zen on TAPPYARD! Can you beat my high score? Play free: https://tappyard.com/games/color-zen`;
     if (typeof navigator !== 'undefined' && navigator.share) {
-      navigator.share({ title: 'Block Grid Zen | TapYard', text, url: 'https://tappyard.com/games/color-zen' }).catch(() => {});
+      navigator.share({ title: 'Block Grid Zen | TAPPYARD', text, url: 'https://tappyard.com/games/color-zen' }).catch(() => {});
     } else if (typeof navigator !== 'undefined' && navigator.clipboard?.writeText) {
       navigator.clipboard.writeText(text).then(() => {
         showNotification('Challenge link copied to clipboard!');
@@ -330,27 +330,24 @@ export default function BlockZenClient() {
   }, [draggedIndex, handlePointerMove, handlePointerUp]);
 
   return (
-    <div
-      className="fixed inset-0 flex flex-col bg-[#040e14] text-white select-none overflow-hidden safe-bottom"
-      style={{ touchAction: 'none' }}
-    >
+    <section className="w-full flex flex-col bg-[#040e14] text-white select-none">
       {/* 1. Top Navigation Bar */}
       <header className="h-14 sm:h-16 px-3 sm:px-6 bg-[#081720]/95 backdrop-blur-md border-b border-teal-500/20 flex items-center justify-between shrink-0 z-20">
         <div className="flex items-center gap-2 sm:gap-4">
           <Link
             href="/"
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-teal-950/40 hover:bg-teal-900/60 border border-teal-500/30 text-teal-300 font-bold text-xs transition-all active:scale-95 cursor-pointer"
+            className="typo-nav flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-teal-950/40 hover:bg-teal-900/60 border border-teal-500/30 text-teal-300 text-xs transition-all active:scale-95 cursor-pointer"
           >
             <ArrowLeft className="w-3.5 h-3.5" />
-            <span className="hidden sm:inline">TapYard</span>
+            <span className="hidden sm:inline">TAPPYARD</span>
           </Link>
 
           <div className="flex items-center gap-2">
-            <h1 className="text-base sm:text-lg font-black tracking-wide text-white flex items-center gap-2">
+            <h1 className="typo-game-title text-base sm:text-lg text-white flex items-center gap-2">
               <span className="w-2.5 h-2.5 rounded-full bg-teal-400 animate-pulse shadow-[0_0_8px_#14b8a6]" />
               Block Grid Zen
             </h1>
-            <span className="hidden md:inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider bg-teal-500/20 text-teal-300 border border-teal-500/30">
+            <span className="typo-label hidden md:inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] uppercase tracking-wider bg-teal-500/20 text-teal-300 border border-teal-500/30">
               <Boxes className="w-3 h-3" />
               Relaxing
             </span>
@@ -359,7 +356,7 @@ export default function BlockZenClient() {
 
         <div className="flex items-center gap-2 sm:gap-3">
           {/* Diamonds Wallet */}
-          <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#0a1e27] border border-cyan-500/30 text-cyan-300 font-black text-xs shadow-inner">
+          <div className="typo-button flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#0a1e27] border border-cyan-500/30 text-cyan-300 text-xs tabular-nums shadow-inner">
             <Gem className="w-3.5 h-3.5 text-cyan-400" />
             <span>{diamonds}</span>
           </div>
@@ -392,7 +389,7 @@ export default function BlockZenClient() {
       )}
 
       {/* 2. Main Game Body */}
-      <main className="flex-1 flex flex-col items-center justify-between p-2 sm:p-4 max-w-sm sm:max-w-md w-full mx-auto overflow-hidden">
+      <main id="game-stage" className="relative w-full min-h-[calc(100dvh-3.5rem)] sm:min-h-[calc(100dvh-4rem)] flex flex-col items-center justify-between p-2 sm:p-4 max-w-sm sm:max-w-md mx-auto">
         {/* Score & Reroll Toolbar */}
         <div className="w-full flex items-center justify-between gap-2 my-1 shrink-0">
           {/* Score & Best */}
@@ -551,6 +548,19 @@ export default function BlockZenClient() {
             </div>
           </div>
         )}
+        {/* Start / Instructions note */}
+        <p className="text-[11px] font-medium text-slate-400 text-center mt-1">
+          Drag shapes onto the 10x10 grid. Fill a full row or column to clear it.
+        </p>
+
+        {/* Mobile: unobtrusive link to scroll to below-fold content */}
+        <a
+          href="#game-details"
+          className="md:hidden mt-1.5 flex items-center gap-1 px-3 py-1 rounded-full bg-slate-900/80 hover:bg-slate-800 text-[10px] text-teal-300 border border-teal-500/30 backdrop-blur-md shadow-md active:scale-95 transition-all"
+        >
+          <span>How to play & tips</span>
+          <span>↓</span>
+        </a>
       </main>
 
       {/* 6. Game Over Modal */}
@@ -602,6 +612,6 @@ export default function BlockZenClient() {
           </div>
         </div>
       )}
-    </div>
+    </section>
   );
 }

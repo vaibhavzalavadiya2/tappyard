@@ -32,11 +32,11 @@ export default function HotGamesRow() {
     <div className="flex flex-col gap-2.5 py-1">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <span className="flex items-center gap-1.5 text-xs sm:text-sm font-black text-white uppercase tracking-wider">
+          <span className="typo-section-heading flex items-center gap-1.5 text-xs sm:text-sm text-white uppercase tracking-wider">
             <Flame className="w-4 h-4 text-pink-500 animate-bounce" />
             Hot Games
           </span>
-          <span className="text-[10px] text-pink-400 font-bold bg-pink-500/15 px-2 py-0.5 rounded-full border border-pink-500/30">
+          <span className="typo-label text-[10px] text-pink-400 bg-pink-500/15 px-2 py-0.5 rounded-full border border-pink-500/30">
             Instant Play
           </span>
         </div>
@@ -63,7 +63,7 @@ export default function HotGamesRow() {
               <span className="absolute bottom-0 right-0 w-3.5 h-3.5 rounded-full bg-emerald-500 border-2 border-[#090d16] shadow-sm" />
             </div>
 
-            <span className="text-[10px] sm:text-[11px] font-bold text-slate-300 group-hover:text-pink-300 transition-colors truncate max-w-[64px] sm:max-w-[72px] text-center">
+            <span className="typo-label text-[10px] sm:text-[11px] tracking-normal text-slate-300 group-hover:text-pink-300 transition-colors truncate max-w-[64px] sm:max-w-[72px] text-center">
               {game.title.split(' ')[0]}
             </span>
           </Link>
@@ -80,7 +80,7 @@ export default function HotGamesRow() {
               <Shuffle className="w-5 h-5 group-hover:rotate-45 transition-transform" />
             </div>
           </div>
-          <span className="text-[10px] sm:text-[11px] font-bold text-pink-400 group-hover:text-white transition-colors">
+          <span className="typo-label text-[10px] sm:text-[11px] tracking-normal text-pink-400 group-hover:text-white transition-colors">
             Random
           </span>
         </button>

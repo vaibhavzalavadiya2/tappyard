@@ -1,6 +1,23 @@
 import type { Metadata, Viewport } from 'next';
+import { Inter, Space_Grotesk } from 'next/font/google';
 import { GoogleAnalytics } from '@next/third-parties/google';
 import './globals.css';
+
+const inter = Inter({
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-inter',
+  preload: true,
+  fallback: ['system-ui', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif'],
+});
+
+const spaceGrotesk = Space_Grotesk({
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-space-grotesk',
+  preload: true,
+  fallback: ['system-ui', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'sans-serif'],
+});
 
 const SITE_URL = 'https://tappyard.com';
 const SITE_NAME = 'TAPPYARD';
@@ -21,7 +38,7 @@ export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
 
   title: {
-    default: 'TAPPYARD — Free Online Games | Play Instant Browser Games (No Download)',
+    default: 'TAPPYARD - Free Online Games',
     template: '%s | TAPPYARD',
   },
   description:
@@ -167,7 +184,11 @@ const jsonLd = {
 
 export default function RootLayout({ children }: LayoutProps<'/'>) {
   return (
-    <html lang="en" className="h-full antialiased dark" data-scroll-behavior="smooth">
+    <html
+      lang="en"
+      className={`${inter.variable} ${spaceGrotesk.variable} h-full antialiased dark`}
+      data-scroll-behavior="smooth"
+    >
       <head>
         <link rel="alternate" type="text/plain" href="/llms.txt" title="LLM Documentation" />
         <script
@@ -175,7 +196,7 @@ export default function RootLayout({ children }: LayoutProps<'/'>) {
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
       </head>
-      <body className="min-h-full bg-[#090d16] text-slate-100 antialiased selection:bg-pink-500 selection:text-white flex flex-col overscroll-none">
+      <body className="min-h-full bg-[#090d16] font-sans text-slate-100 antialiased selection:bg-pink-500 selection:text-white flex flex-col overscroll-none">
         {children}
       </body>
       <GoogleAnalytics gaId="G-H7EQCRZ477" />

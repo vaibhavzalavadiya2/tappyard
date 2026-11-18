@@ -5,49 +5,81 @@ import { GAMES_CATALOGUE } from '@/data/games';
 const SITE_URL = 'https://tappyard.com';
 
 export const metadata: Metadata = {
-  title: 'TAPPYARD — Free Online Games | Play Browser Games No Download',
+  title: {
+    absolute: 'Free Games to Play Online - No Download | TAPPYARD',
+  },
   description:
-    'Play free online games instantly in your web browser. Enjoy Jump Jelly Jump! 3D runner, 2048 Neon Fusion, Block Grid Zen, and Cyber Dash with no downloads or installs on mobile, tablet, and PC.',
+    'Free games to play online in your browser. Four original games: 3D runner, 2048 puzzle, block puzzle and 1-tap reflex. No download needed.',
   keywords: [
+    'games to play',
+    'free games to play online',
     'free online games',
-    'play games online',
-    'browser games no download',
-    'unblocked games',
-    'free games to play now',
-    'instant play web games',
-    '2048 online',
-    'block puzzle online',
-    '3D runner game',
-    'reflex games',
-    'HTML5 games',
-    'casual games mobile',
+    'browser games',
+    'online games to play',
+    'fun games to play',
+    'free browser games',
+    'play games without downloading',
+    'instant play games',
+    'mobile browser games',
+    'online arcade games',
+    '2048 unblocked',
+    'free puzzle games',
+    'running games',
+    'one tap games',
     'TAPPYARD',
   ],
   alternates: {
     canonical: SITE_URL,
   },
   openGraph: {
-    title: 'TAPPYARD — Free Online Games | Play Browser Games (No Download)',
+    title: 'Free Games to Play Online - No Download | TAPPYARD',
     description:
-      'Play free 3D arcade runners, 2048 number puzzles, 10x10 block grid zen, and rhythm reflex games instantly in your browser. No downloads, mobile-ready.',
+      'Free games to play online in your browser. Four original games: 3D runner, 2048 puzzle, block puzzle and 1-tap reflex. No download needed.',
     url: SITE_URL,
+    type: 'website',
     images: [
       {
         url: '/og/tappyard-og.png',
         width: 1200,
         height: 630,
-        alt: 'TAPPYARD — Free Online Games Platform',
+        alt: 'TAPPYARD - Free Online Browser Games',
       },
     ],
   },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Free Games to Play Online - No Download | TAPPYARD',
+    description:
+      'Free games to play online in your browser. Four original games: 3D runner, 2048 puzzle, block puzzle and 1-tap reflex. No download needed.',
+    images: ['/og/tappyard-og.png'],
+  },
 };
 
-// JSON-LD: ItemList of games for rich search results
+// JSON-LD: WebSite & Organization schema
+const websiteJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  name: 'TAPPYARD',
+  url: SITE_URL,
+  description:
+    'Free games to play online in your browser. Four original games: 3D runner, 2048 puzzle, block puzzle and 1-tap reflex. No download needed.',
+  publisher: {
+    '@type': 'Organization',
+    name: 'TAPPYARD',
+    url: SITE_URL,
+    logo: {
+      '@type': 'ImageObject',
+      url: `${SITE_URL}/icons/icon-512.png`,
+    },
+  },
+};
+
+// JSON-LD: ItemList of games (clean: zero fake ratings or inflated review counts)
 const gamesJsonLd = {
   '@context': 'https://schema.org',
   '@type': 'ItemList',
-  name: 'TAPPYARD Free Online Games Collection',
-  description: 'Free instant browser games — arcade runners, puzzles, casual, and relaxing games without downloads.',
+  name: 'TAPPYARD Free Online Browser Games Collection',
+  description: 'Original instant play browser games without downloads.',
   numberOfItems: GAMES_CATALOGUE.length,
   itemListElement: GAMES_CATALOGUE.map((game, index) => ({
     '@type': 'ListItem',
@@ -67,17 +99,16 @@ const gamesJsonLd = {
         priceCurrency: 'USD',
         availability: 'https://schema.org/InStock',
       },
-      aggregateRating: {
-        '@type': 'AggregateRating',
-        ratingValue: game.rating,
-        bestRating: 5,
-        ratingCount: parseInt(game.playsCount.replace(/[^0-9]/g, '')) || 100,
+      publisher: {
+        '@type': 'Organization',
+        name: 'TAPPYARD',
+        url: SITE_URL,
       },
     },
   })),
 };
 
-// JSON-LD: FAQPage for rich search results & People Also Ask carousels
+// JSON-LD: FAQPage matching visible text exactly
 const faqJsonLd = {
   '@context': 'https://schema.org',
   '@type': 'FAQPage',
@@ -87,7 +118,7 @@ const faqJsonLd = {
       name: 'Are all games on TAPPYARD completely free to play?',
       acceptedAnswer: {
         '@type': 'Answer',
-        text: 'Yes! Every game on TAPPYARD is 100% free to play directly in your web browser. There are no paywalls, hidden in-app purchases, or subscription fees.',
+        text: 'Yes. Every game on TAPPYARD is 100% free to play directly in your web browser with no paywalls, hidden in-app purchases, or subscription fees.',
       },
     },
     {
@@ -95,7 +126,7 @@ const faqJsonLd = {
       name: 'Do I need to download or install any files to play?',
       acceptedAnswer: {
         '@type': 'Answer',
-        text: 'No download, install, or registration is required. All games run instantly using modern HTML5, Canvas, and WebGL technology in Google Chrome, Safari, Firefox, Edge, and mobile browsers.',
+        text: 'No download, install, or registration is required. All games run instantly using modern HTML5, Canvas, and WebGL technology in Chrome, Safari, Firefox, Edge, and mobile browsers.',
       },
     },
     {
@@ -103,31 +134,43 @@ const faqJsonLd = {
       name: 'Can I play TAPPYARD games on mobile phones and tablets?',
       acceptedAnswer: {
         '@type': 'Answer',
-        text: 'Yes. All TAPPYARD games are built mobile-first with responsive touch controls, full-screen support, and zero horizontal lag for iPhone, iPad, Android phones, and tablets.',
+        text: 'Yes. All TAPPYARD games are built mobile-first with responsive touch controls, full-screen support, and zero horizontal scrolling on iPhone, iPad, Android phones, and tablets.',
       },
     },
     {
       '@type': 'Question',
-      name: 'What types of games are available on TAPPYARD?',
+      name: 'Do I need an account to play?',
       acceptedAnswer: {
         '@type': 'Answer',
-        text: 'TAPPYARD features original hit games across multiple genres: Jump Jelly Jump! (3D arcade speed runner), 2048 Neon Fusion (sliding number tile puzzle), Block Grid Zen (relaxing 10x10 spatial puzzle), and Cyber Dash (1-tap reflex flight runner).',
+        text: 'No account, sign-up, or registration is required to play. Your highest scores, unlocked character skins, and diamond rewards save automatically to your local browser storage.',
       },
     },
     {
       '@type': 'Question',
-      name: 'Are TAPPYARD games unblocked at school and work?',
+      name: 'Are the games unblocked at school or work?',
       acceptedAnswer: {
         '@type': 'Answer',
-        text: 'Yes, TAPPYARD games run safely over standard secure HTTPS in your browser with zero executable downloads, making them ideal for quick casual gaming breaks on any network.',
+        text: 'Yes. TAPPYARD games run safely over standard secure HTTPS in your browser with zero executable downloads, making them accessible for casual gaming breaks on school and work networks.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'What are good quick games to play when bored?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'For fast reflex fun, try Cyber Dash (1-tap flight) or Jump Jelly Jump! (3D speed runner). If you want mental stimulation, play 2048 Neon Fusion (number merge puzzle) or Block Grid Zen (10x10 spatial block puzzle). All four games start in under a second.',
       },
     },
   ],
 };
 
-export default function TapYardHome() {
+export default function TappyardHome() {
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJsonLd) }}
+      />
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(gamesJsonLd) }}

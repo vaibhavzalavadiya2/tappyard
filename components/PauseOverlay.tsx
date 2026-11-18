@@ -39,6 +39,9 @@ export default function PauseOverlay({
             {distance}
             <span className="text-sm text-cyan-300 ml-1">m</span>
           </div>
+          <p className="text-[10px] text-slate-300 mt-1 max-w-[220px] mx-auto leading-tight">
+            Drag to steer the jelly cube. Collect diamonds and hit booster pads to leap the chasms.
+          </p>
         </div>
 
         {/* Buttons */}
@@ -62,6 +65,15 @@ export default function PauseOverlay({
             <RotateCcw className="w-4 h-4" />
             <span>RESTART RUN</span>
           </button>
+
+          {/* Link to tips below */}
+          <a
+            href="#game-details"
+            onClick={onResume}
+            className="text-[11px] text-cyan-300 hover:text-white transition-colors text-center underline pt-0.5"
+          >
+            How to play and tips ↓
+          </a>
         </div>
 
         {/* Sound toggle */}
