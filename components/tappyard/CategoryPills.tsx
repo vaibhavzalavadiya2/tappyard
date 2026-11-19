@@ -73,40 +73,45 @@ export default function CategoryPills({
   };
 
   return (
-    <div className="flex items-center gap-2 sm:gap-2.5 overflow-x-auto pb-2 pt-1 no-scrollbar -mx-3 px-3 sm:mx-0 sm:px-0 select-none">
-      {categories.map((cat) => {
-        const isSelected = selectedCategory === cat;
-        const count = gameCounts[cat] || 0;
-        const { label, Icon, accent } = getCategoryMeta(cat);
+    <div className="relative">
+      <div className="flex items-center gap-2 sm:gap-2.5 overflow-x-auto py-2 no-scrollbar -mx-3 px-3 sm:mx-0 sm:px-2 select-none">
+        {categories.map((cat) => {
+          const isSelected = selectedCategory === cat;
+          const count = gameCounts[cat] || 0;
+          const { label, Icon, accent } = getCategoryMeta(cat);
 
-        return (
-          <button
-            key={cat}
-            onClick={() => onSelect(cat)}
-            className={`typo-nav inline-flex items-center gap-2 h-10 sm:h-11 px-3 sm:px-4 rounded-xl sm:rounded-2xl text-xs sm:text-sm whitespace-nowrap transition-all duration-200 active:scale-95 cursor-pointer ${
-              isSelected
+          return (
+            <button
+              key={cat}
+              onClick={() => onSelect(cat)}
+              className={`typo-nav inline-flex items-center gap-2 h-9 sm:h-11 px-3 sm:px-4 lg:rounded-xl rounded-lg text-xs sm:text-sm whitespace-nowrap transition-all duration-200 active:scale-95 cursor-pointer ${isSelected
                 ? 'font-semibold bg-gradient-to-r from-pink-500 via-purple-600 to-indigo-600 text-white shadow-[0_0_20px_rgba(236,72,153,0.35)] scale-102 ring-2 ring-pink-400/40'
                 : `bg-slate-900/90 text-slate-300 hover:bg-slate-800 hover:text-white border border-slate-800/80 hover:border-slate-700 bg-gradient-to-r ${accent}`
-            }`}
-          >
-            <Icon
-              className={`w-4 h-4 transition-transform duration-200 ${
-                isSelected ? 'text-white scale-110' : 'text-current'
-              }`}
-            />
-            <span>{label}</span>
-            <span
-              className={`typo-label text-[10px] tracking-normal tabular-nums px-1.5 sm:px-2 py-0.5 rounded-full transition-colors ${
-                isSelected
+                }`}
+            >
+              <Icon
+                className={`w-4 h-4 transition-transform duration-200 ${isSelected ? 'text-white scale-110' : 'text-current'
+                  }`}
+              />
+              <span>{label}</span>
+              <span
+                className={`typo-label text-[10px] tracking-normal tabular-nums px-1.5 sm:px-2 py-0.5 rounded-full transition-colors ${isSelected
                   ? 'bg-white/25 text-white'
                   : 'bg-slate-800/90 text-slate-300'
-              }`}
-            >
-              {count}
-            </span>
-          </button>
-        );
-      })}
+                  }`}
+              >
+                {count}
+              </span>
+            </button>
+          );
+        })}
+      </div>
+
+      {/* Right side subtle shadow mask */}
+      <div
+        className="pointer-events-none absolute right-0 top-0 bottom-0 w-8 bg-gradient-to-l from-[#090d16] to-transparent -me-3"
+        aria-hidden="true"
+      />
     </div>
   );
 }

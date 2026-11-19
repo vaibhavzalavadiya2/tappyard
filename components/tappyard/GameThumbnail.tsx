@@ -6,13 +6,94 @@ interface GameThumbnailProps {
   id: string;
   title: string;
   className?: string;
+  variant?: 'card' | 'avatar';
 }
 
-export default function GameThumbnail({ id, title, className = 'w-full h-full' }: GameThumbnailProps) {
+export default function GameThumbnail({
+  id,
+  title,
+  className = 'w-full h-full',
+  variant = 'card',
+}: GameThumbnailProps) {
   // Shared vignette overlay for all thumbnails
   const vignetteOverlay = (
     <div className="absolute inset-0 pointer-events-none z-[1] shadow-[inset_0_0_30px_rgba(0,0,0,0.5)]" />
   );
+
+  // Avatar-specific optimized compact views for circular story avatars / small thumbnails
+  if (variant === 'avatar') {
+    if (id === 'jelly-bounce') {
+      return (
+        <div className={`relative overflow-hidden flex items-center justify-center bg-gradient-to-b from-[#081720] via-[#0d2836] to-[#081720] ${className}`}>
+          <div className="relative w-8 h-8 sm:w-9 sm:h-9 drop-shadow-[0_4px_8px_rgba(0,240,255,0.35)]">
+            <svg viewBox="0 0 80 80" className="w-full h-full">
+              <polygon points="40,14 66,24 40,34 14,24" fill="#ff7aa8" />
+              <polygon points="14,24 40,34 40,64 14,54" fill="#ff4d88" />
+              <polygon points="40,34 66,24 66,54 40,64" fill="#cc2960" />
+              <ellipse cx="32" cy="44" rx="7" ry="7" fill="white" />
+              <ellipse cx="33" cy="44" rx="4" ry="4" fill="#220516" />
+              <ellipse cx="31.5" cy="42" rx="1.5" ry="1.5" fill="white" />
+            </svg>
+          </div>
+        </div>
+      );
+    }
+
+    if (id === '2048-puzzle' || id === '2048') {
+      return (
+        <div className={`relative overflow-hidden flex items-center justify-center bg-gradient-to-br from-[#071822] via-[#0b2837] to-[#05131b] ${className}`}>
+          <div className="grid grid-cols-2 gap-1 p-1 bg-[#05151f]/95 rounded-lg border border-amber-500/50 shadow-md">
+            <div className="w-3.5 h-3.5 rounded-[3px] bg-gradient-to-br from-[#063345] to-cyan-500 text-white font-black text-[6.5px] flex items-center justify-center border border-cyan-300/50">
+              1K
+            </div>
+            <div className="w-3.5 h-3.5 rounded-[3px] bg-gradient-to-br from-amber-500 to-yellow-300 text-amber-950 font-black text-[6.5px] flex items-center justify-center border border-yellow-100 ring-1 ring-amber-400/80">
+              2K
+            </div>
+            <div className="w-3.5 h-3.5 rounded-[3px] bg-gradient-to-br from-indigo-950 to-blue-700 text-blue-100 font-black text-[6.5px] flex items-center justify-center border border-blue-400/50">
+              512
+            </div>
+            <div className="w-3.5 h-3.5 rounded-[3px] bg-gradient-to-br from-purple-950 to-violet-700 text-violet-100 font-black text-[6.5px] flex items-center justify-center border border-violet-400/50">
+              256
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    if (id === 'color-zen' || id === 'block-zen') {
+      return (
+        <div className={`relative overflow-hidden flex items-center justify-center bg-gradient-to-br from-[#041419] via-[#07242c] to-[#030e13] ${className}`}>
+          <div className="grid grid-cols-3 gap-0.5 p-1 bg-[#051821]/95 rounded-lg border border-teal-500/50 shadow-md">
+            <div className="w-2.5 h-2.5 rounded-[2px] bg-gradient-to-br from-cyan-400 to-blue-500 border border-cyan-300/60" />
+            <div className="w-2.5 h-2.5 rounded-[2px] bg-gradient-to-br from-emerald-400 to-teal-500 border border-emerald-300/60" />
+            <div className="w-2.5 h-2.5 rounded-[2px] bg-gradient-to-br from-amber-400 to-yellow-500 border border-amber-300/60" />
+            <div className="w-2.5 h-2.5 rounded-[2px] bg-gradient-to-br from-purple-400 to-indigo-500 border border-purple-300/60" />
+            <div className="w-2.5 h-2.5 rounded-[2px] bg-gradient-to-br from-fuchsia-400 to-pink-500 border border-fuchsia-300/60" />
+            <div className="w-2.5 h-2.5 rounded-[2px] bg-[#08222e]/40 border border-teal-500/20" />
+          </div>
+        </div>
+      );
+    }
+
+    if (id === 'quick-tap' || id === 'cyber-dash') {
+      return (
+        <div className={`relative overflow-hidden flex items-center justify-center bg-gradient-to-br from-[#0c0314] via-[#1c0827] to-[#08020e] ${className}`}>
+          <div className="relative flex items-center justify-center gap-1">
+            <div className="w-2.5 h-0.5 bg-gradient-to-r from-transparent to-cyan-400 shadow-[0_0_6px_#00f0ff]" />
+            <div className="w-6 h-6 rounded-lg bg-gradient-to-tr from-cyan-400 to-fuchsia-500 flex items-center justify-center shadow-lg shadow-cyan-500/50 transform -rotate-12 border border-white/40">
+              <Zap className="w-3 h-3 text-white" />
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    return (
+      <div className={`relative overflow-hidden flex items-center justify-center bg-gradient-to-br from-violet-900 to-purple-950 ${className}`}>
+        <Zap className="w-5 h-5 text-fuchsia-300" />
+      </div>
+    );
+  }
 
   // Shared floating particles (CSS-only via pseudo-elements on wrapper)
   const particleLayer = (

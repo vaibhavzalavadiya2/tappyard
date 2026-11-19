@@ -88,11 +88,15 @@ export default function GameContentBelowFold({ data }: GameContentBelowFoldProps
     name: data.gameTitle,
     description: data.introText,
     url: data.canonicalUrl,
+    image: `https://tappyard.com/og/${data.gameId}-og.png`,
+    screenshot: `https://tappyard.com/og/${data.gameId}-og.png`,
     genre: data.category,
     gamePlatform: ['Web Browser', 'Mobile Browser', 'Desktop Browser'],
     applicationCategory: 'Game',
     operatingSystem: 'Any',
     playMode: 'SinglePlayer',
+    inLanguage: 'en',
+    datePublished: '2026-11-18',
     offers: {
       '@type': 'Offer',
       price: '0',
@@ -103,6 +107,15 @@ export default function GameContentBelowFold({ data }: GameContentBelowFoldProps
       '@type': 'Organization',
       name: 'TAPPYARD',
       url: 'https://tappyard.com',
+    },
+    publisher: {
+      '@type': 'Organization',
+      name: 'TAPPYARD',
+      url: 'https://tappyard.com',
+      logo: {
+        '@type': 'ImageObject',
+        url: 'https://tappyard.com/icons/icon-512.png',
+      },
     },
   };
 
@@ -126,7 +139,7 @@ export default function GameContentBelowFold({ data }: GameContentBelowFoldProps
       />
 
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-16 flex flex-col gap-10">
-        
+
         {/* 1. Breadcrumb navigation */}
         <nav aria-label="Breadcrumb" className="typo-nav flex items-center gap-2 text-xs text-slate-400 flex-wrap">
           <Link href="/" className="hover:text-white transition-colors">

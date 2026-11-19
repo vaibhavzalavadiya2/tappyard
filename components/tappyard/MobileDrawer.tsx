@@ -38,12 +38,12 @@ export default function MobileDrawer({
   // Prevent background scroll when drawer is open
   useEffect(() => {
     if (isOpen) {
-      document.body.style.overflow = 'hidden';
+      document.body.classList.add('no-scroll');
     } else {
-      document.body.style.overflow = '';
+      document.body.classList.remove('no-scroll');
     }
     return () => {
-      document.body.style.overflow = '';
+      document.body.classList.remove('no-scroll');
     };
   }, [isOpen]);
 
@@ -71,19 +71,17 @@ export default function MobileDrawer({
       {/* Backdrop overlay (fade in/out) */}
       <div
         onClick={onClose}
-        className={`fixed inset-0 z-50 bg-black/70 backdrop-blur-sm transition-opacity duration-300 md:hidden ${
-          isOpen
-            ? 'opacity-100 pointer-events-auto'
-            : 'opacity-0 pointer-events-none'
-        }`}
+        className={`fixed inset-0 z-50 bg-black/70 backdrop-blur-sm transition-opacity duration-300 md:hidden ${isOpen
+          ? 'opacity-100 pointer-events-auto'
+          : 'opacity-0 pointer-events-none'
+          }`}
         aria-hidden="true"
       />
 
       {/* Slide-out drawer from RIGHT side */}
       <aside
-        className={`fixed top-0 bottom-0 right-0 z-50 w-[84%] max-w-[340px] bg-[#0a0f1d] border-l border-slate-800/90 shadow-[-12px_0_36px_rgba(0,0,0,0.85)] flex flex-col transition-transform duration-300 ease-out md:hidden ${
-          isOpen ? 'translate-x-0' : 'translate-x-full'
-        }`}
+        className={`fixed top-0 bottom-0 right-0 z-50 w-full max-w-[340px] bg-[#0a0f1d] border-l border-slate-800/90 flex flex-col transition-transform duration-300 ease-out md:hidden ${isOpen ? 'translate-x-0' : 'translate-x-full'
+          }`}
         role="dialog"
         aria-modal="true"
         aria-label="Mobile Navigation Menu"
@@ -95,8 +93,8 @@ export default function MobileDrawer({
             onClick={onClose}
             className="flex items-center gap-2 group"
           >
-            <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-pink-500 to-indigo-600 p-0.5 shadow-md shadow-pink-500/20">
-              <div className="w-full h-full bg-[#0d1322] rounded-[10px] flex items-center justify-center p-1">
+            <div className="w-8 h-8 rounded-lg bg-gradient-to-tr from-pink-500 to-indigo-600 p-0.5 shadow-md shadow-pink-500/20">
+              <div className="w-full h-full bg-[#0d1322] rounded-lg flex items-center justify-center p-1">
                 <BrandIcon className="w-full h-full" />
               </div>
             </div>
@@ -110,7 +108,7 @@ export default function MobileDrawer({
           {/* Close Button */}
           <button
             onClick={onClose}
-            className="w-9 h-9 rounded-xl bg-slate-900 border border-slate-800 text-slate-300 hover:text-white hover:border-pink-500/50 flex items-center justify-center active:scale-90 transition-all cursor-pointer"
+            className="w-9 h-9 rounded-lg bg-slate-900 border border-slate-800 text-slate-300 hover:text-white hover:border-pink-500/50 flex items-center justify-center active:scale-90 transition-all cursor-pointer"
             aria-label="Close menu"
           >
             <X className="w-5 h-5 text-slate-300" />
@@ -119,34 +117,12 @@ export default function MobileDrawer({
 
         {/* Drawer Scrollable Content */}
         <div className="flex-1 overflow-y-auto no-scrollbar p-4 space-y-5">
-          {/* Diamond Wallet Badge */}
-          {diamonds !== null && (
-            <div className="flex items-center justify-between p-3 rounded-2xl bg-gradient-to-r from-cyan-950/50 via-slate-900/90 to-purple-950/40 border border-cyan-500/30 shadow-inner">
-              <div className="flex items-center gap-2">
-                <div className="w-7 h-7 rounded-lg bg-cyan-500/20 border border-cyan-400/30 flex items-center justify-center">
-                  <Gem className="w-4 h-4 text-cyan-300 animate-pulse" />
-                </div>
-                <div>
-                  <span className="typo-label text-[10px] text-slate-400 uppercase tracking-wider block">
-                    TAPPYARD Diamonds
-                  </span>
-                  <span className="font-display text-sm font-bold tabular-nums text-white">
-                    {diamonds} <span className="text-cyan-400 text-xs font-medium">💎</span>
-                  </span>
-                </div>
-              </div>
-              <span className="typo-label text-[10px] tracking-normal text-cyan-300 bg-cyan-950/80 px-2.5 py-1 rounded-full border border-cyan-500/30">
-                Active
-              </span>
-            </div>
-          )}
-
           {/* Category Filter Navigation */}
           <div>
             <span className="typo-section-heading text-[10px] uppercase tracking-wider text-slate-400 px-1 mb-2 block">
               Browse Categories
             </span>
-            <div className="space-y-1">
+            <div className="space-y-2">
               {categories.map(({ label, name, Icon }) => {
                 const isSelected = selectedCategory === label;
                 return (
@@ -158,11 +134,10 @@ export default function MobileDrawer({
                       const el = document.getElementById('catalogue');
                       if (el) el.scrollIntoView({ behavior: 'smooth' });
                     }}
-                    className={`typo-nav flex items-center justify-between w-full px-3.5 py-2.5 rounded-xl text-xs transition-all active:scale-98 cursor-pointer ${
-                      isSelected
-                        ? 'font-semibold bg-gradient-to-r from-pink-500 to-purple-600 text-white shadow-md shadow-pink-500/25 ring-1 ring-pink-400/40'
-                        : 'bg-slate-900/60 text-slate-300 hover:bg-slate-800/80 border border-slate-800/60'
-                    }`}
+                    className={`typo-nav flex items-center justify-between w-full px-3.5 py-2.5 rounded-xl text-xs transition-all active:scale-98 cursor-pointer ${isSelected
+                      ? 'font-semibold bg-gradient-to-r from-pink-500 to-purple-600 text-white shadow-md shadow-pink-500/25 ring-1 ring-pink-400/40'
+                      : 'bg-slate-900/60 text-slate-300 hover:bg-slate-800/80 border border-slate-800/60'
+                      }`}
                   >
                     <div className="flex items-center gap-2.5">
                       <Icon className={`w-4 h-4 ${isSelected ? 'text-white' : 'text-slate-400'}`} />
@@ -191,7 +166,7 @@ export default function MobileDrawer({
                   className="flex items-center gap-3 p-2 rounded-xl bg-slate-900/70 border border-slate-800/70 hover:border-pink-500/40 hover:bg-slate-850 transition-all active:scale-95 group"
                 >
                   <div className="w-12 h-12 rounded-lg overflow-hidden shrink-0 bg-slate-950 relative">
-                    <GameThumbnail id={game.thumbnail} title={game.title} />
+                    <GameThumbnail id={game.thumbnail} title={game.title} variant="avatar" />
                   </div>
                   <div className="flex-1 min-w-0">
                     <h4 className="typo-game-title text-xs text-white truncate group-hover:text-pink-300 transition-colors">
@@ -208,29 +183,10 @@ export default function MobileDrawer({
               ))}
             </div>
           </div>
-
-          {/* Useful Quick Links */}
-          <div className="pt-2 border-t border-slate-800/70 space-y-1">
-            <Link
-              href="/#faq"
-              onClick={onClose}
-              className="typo-nav flex items-center justify-between px-3 py-2 text-xs text-slate-400 hover:text-white hover:bg-slate-900/50 rounded-lg transition-colors"
-            >
-              <div className="flex items-center gap-2">
-                <HelpCircle className="w-3.5 h-3.5 text-pink-400" />
-                <span>Frequently Asked Questions</span>
-              </div>
-              <ArrowRight className="w-3 h-3 text-slate-500" />
-            </Link>
-            <div className="typo-label tracking-normal flex items-center gap-2 px-3 py-2 text-[11px] text-cyan-400">
-              <Zap className="w-3.5 h-3.5" />
-              <span>Zero Downloads • 100% Free • Unblocked</span>
-            </div>
-          </div>
         </div>
 
         {/* Drawer Footer CTA */}
-        <div className="p-4 border-t border-slate-800/80 bg-[#080d1a] safe-bottom">
+        <div className="p-4 border-t border-slate-800/80 bg-[#080d1a]">
           <Link
             href="/games/jelly-bounce"
             onClick={onClose}
@@ -239,9 +195,6 @@ export default function MobileDrawer({
             <Gem className="w-4 h-4 text-white animate-pulse" />
             <span>PLAY JUMP JELLY JUMP! (3D)</span>
           </Link>
-          <p className="typo-meta text-[10px] text-center text-slate-500 mt-2">
-            TAPPYARD v2.0 • WebGL & HTML5 Instant Play
-          </p>
         </div>
       </aside>
     </>

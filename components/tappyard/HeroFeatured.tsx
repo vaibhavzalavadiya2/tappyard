@@ -209,250 +209,252 @@ export default function HeroFeatured() {
   };
 
   return (
-    <div
-      onMouseEnter={() => setIsPaused(true)}
-      onMouseLeave={() => setIsPaused(false)}
-      onPointerDown={handlePointerDown}
-      onClickCapture={handleClickCapture}
-      onDragStart={(e) => e.preventDefault()}
-      className={`group/hero relative overflow-hidden rounded-3xl bg-gradient-to-br ${theme.bg} border ${theme.border} shadow-2xl p-4 sm:p-6 lg:p-8 xl:p-10 transition-colors duration-700 w-full select-none touch-pan-y ${isDragging ? 'cursor-grabbing' : 'cursor-grab'
-        }`}
-    >
-      {/* Dynamic Background Light Spheres */}
+    <div className="container xl:px-5 px-4">
       <div
-        className={`absolute -top-32 -left-32 w-80 h-80 sm:w-[420px] sm:h-[420px] rounded-full ${theme.glow1} blur-3xl pointer-events-none transition-colors duration-700`}
-      />
-      <div
-        className={`absolute -bottom-32 -right-32 w-80 h-80 sm:w-[420px] sm:h-[420px] rounded-full ${theme.glow2} blur-3xl pointer-events-none transition-colors duration-700`}
-      />
-
-      {/* Cyber Grid Texture Overlay */}
-      <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff05_1px,transparent_1px),linear-gradient(to_bottom,#ffffff05_1px,transparent_1px)] bg-[size:32px_32px] pointer-events-none" />
-
-      {/* Slide Navigation Arrows (Desktop — revealed on hover / keyboard focus) */}
-      <button
-        type="button"
-        onClick={prevSlide}
-        className="hidden lg:flex absolute left-4 top-1/2 -translate-y-1/2 z-20 w-11 h-11 rounded-2xl bg-black/60 hover:bg-black/85 border border-white/20 items-center justify-center text-white shadow-xl backdrop-blur-md cursor-pointer opacity-0 -translate-x-2 pointer-events-none group-hover/hero:opacity-100 group-hover/hero:translate-x-0 group-hover/hero:pointer-events-auto focus-visible:opacity-100 focus-visible:translate-x-0 focus-visible:pointer-events-auto hover:scale-110 active:scale-95 transition-all duration-200"
-        aria-label="Previous game"
-      >
-        <ChevronLeft className="w-5 h-5" />
-      </button>
-
-      <button
-        type="button"
-        onClick={nextSlide}
-        className="hidden lg:flex absolute right-4 top-1/2 -translate-y-1/2 z-20 w-11 h-11 rounded-2xl bg-black/60 hover:bg-black/85 border border-white/20 items-center justify-center text-white shadow-xl backdrop-blur-md cursor-pointer opacity-0 translate-x-2 pointer-events-none group-hover/hero:opacity-100 group-hover/hero:translate-x-0 group-hover/hero:pointer-events-auto focus-visible:opacity-100 focus-visible:translate-x-0 focus-visible:pointer-events-auto hover:scale-110 active:scale-95 transition-all duration-200"
-        aria-label="Next game"
-      >
-        <ChevronRight className="w-5 h-5" />
-      </button>
-
-      {/* --- MOBILE COMPACT VIEW (< lg) --- */}
-      <div
-        style={dragSlideStyle}
-        className={`flex flex-col gap-3 lg:hidden relative z-10 ${isDragging ? 'transition-none' : 'transition-transform duration-300 ease-out'
+        onMouseEnter={() => setIsPaused(true)}
+        onMouseLeave={() => setIsPaused(false)}
+        onPointerDown={handlePointerDown}
+        onClickCapture={handleClickCapture}
+        onDragStart={(e) => e.preventDefault()}
+        className={`group/hero relative overflow-hidden rounded-xl bg-gradient-to-br ${theme.bg} border ${theme.border} shadow-2xl p-4 sm:p-6 lg:p-8 xl:p-10 transition-colors duration-700 w-full select-none touch-pan-y ${isDragging ? 'cursor-grabbing' : 'cursor-grab'
           }`}
       >
-        {/* Top Badges */}
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-1.5 flex-wrap">
-            <span
-              className={`typo-label inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-semibold tracking-wide border uppercase ${theme.badge}`}
-            >
-              <span className="w-1.5 h-1.5 rounded-full bg-current animate-ping" />
-              {theme.tag}
-            </span>
-            <span className="typo-label px-2 py-0.5 rounded-full text-[10px] tracking-normal bg-slate-800 text-slate-300 border border-slate-700">
-              {currentGame.category}
-            </span>
-          </div>
-          <span className="typo-button text-xs text-amber-400 tabular-nums flex items-center gap-1">
-            <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-400" />
-            <span>{currentGame.rating.toFixed(1)}</span>
-          </span>
-        </div>
+        {/* Dynamic Background Light Spheres */}
+        <div
+          className={`absolute -top-32 -left-32 w-80 h-80 sm:w-[420px] sm:h-[420px] rounded-full ${theme.glow1} blur-3xl pointer-events-none transition-colors duration-700`}
+        />
+        <div
+          className={`absolute -bottom-32 -right-32 w-80 h-80 sm:w-[420px] sm:h-[420px] rounded-full ${theme.glow2} blur-3xl pointer-events-none transition-colors duration-700`}
+        />
 
-        {/* Title + Interactive Preview Side-by-Side */}
-        <div className="flex items-center justify-between gap-3">
-          <div className="flex-1 min-w-0">
-            <h2 className="typo-h1 text-xl sm:text-2xl text-white leading-tight">
-              {currentGame.title}
-            </h2>
-            <p className="typo-body text-slate-300 text-xs mt-1 leading-snug line-clamp-2">
-              {currentGame.description}
-            </p>
-          </div>
+        {/* Cyber Grid Texture Overlay */}
+        <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff05_1px,transparent_1px),linear-gradient(to_bottom,#ffffff05_1px,transparent_1px)] bg-[size:32px_32px] pointer-events-none" />
 
-          {/* Compact animated thumbnail */}
-          <Link
-            href={currentGame.route}
-            className="w-20 h-20 sm:w-24 sm:h-24 shrink-0 rounded-2xl overflow-hidden border border-white/25 shadow-xl active:scale-95 transition-transform relative bg-slate-950"
-            aria-label={`Play ${currentGame.title}`}
-          >
-            {currentGame.id === 'jelly-bounce' ? (
-              <div className="relative w-full h-full flex items-center justify-center bg-gradient-to-br from-cyan-500/20 to-blue-500/20">
-                <div className="w-12 h-12 animate-bounce-slow">
-                  <svg viewBox="0 0 80 80" className="w-full h-full drop-shadow-md">
-                    <polygon points="40,14 66,24 40,34 14,24" fill={activeTopHex} />
-                    <polygon points="14,24 40,34 40,64 14,54" fill={activeFaceHex} />
-                    <polygon points="40,34 66,24 66,54 40,64" fill={activeSideHex} />
-                    <ellipse cx="32" cy="44" rx="7" ry="7" fill="white" />
-                    <ellipse cx="33" cy="44" rx="4" ry="4" fill={activeEyeHex} />
-                    <ellipse cx="31.5" cy="42" rx="1.5" ry="1.5" fill="white" />
-                  </svg>
-                </div>
-              </div>
-            ) : (
-              <GameThumbnail id={currentGame.thumbnail} title={currentGame.title} />
-            )}
-          </Link>
-        </div>
-
-        {/* Big PLAY NOW Button */}
-        <Link
-          href={currentGame.route}
-          className={`typo-button group relative flex items-center justify-center gap-2 h-12 w-full rounded-xl text-white text-sm tracking-wide shadow-lg transition-all duration-150 active:scale-95 cursor-pointer border border-white/20 ${theme.btn}`}
+        {/* Slide Navigation Arrows (Desktop — revealed on hover / keyboard focus) */}
+        <button
+          type="button"
+          onClick={prevSlide}
+          className="hidden lg:flex absolute left-4 top-1/2 -translate-y-1/2 z-20 w-11 h-11 rounded-2xl bg-black/60 hover:bg-black/85 border border-white/20 items-center justify-center text-white shadow-xl backdrop-blur-md cursor-pointer opacity-0 -translate-x-2 pointer-events-none group-hover/hero:opacity-100 group-hover/hero:translate-x-0 group-hover/hero:pointer-events-auto focus-visible:opacity-100 focus-visible:translate-x-0 focus-visible:pointer-events-auto hover:scale-110 active:scale-95 transition-all duration-200"
+          aria-label="Previous game"
         >
-          <Play className="w-4 h-4 fill-white" />
-          <span>PLAY NOW</span>
-          <span className="text-[11px] text-white/80 font-normal">• Free Instant Game</span>
-        </Link>
+          <ChevronLeft className="w-5 h-5" />
+        </button>
 
-        {/* Carousel indicators (dots) */}
-        <div className="flex items-center justify-center gap-2 pt-1">
-          {featuredGames.map((game, idx) => (
-            <button
-              key={game.id}
-              onClick={() => setCurrentIndex(idx)}
-              className={`h-2 rounded-full transition-all duration-300 cursor-pointer ${idx === currentIndex ? 'w-6 bg-white shadow-[0_0_8px_#ffffff]' : 'w-2 bg-slate-700 hover:bg-slate-500'
-                }`}
-              aria-label={`Show ${game.title}`}
-            />
-          ))}
-        </div>
-      </div>
+        <button
+          type="button"
+          onClick={nextSlide}
+          className="hidden lg:flex absolute right-4 top-1/2 -translate-y-1/2 z-20 w-11 h-11 rounded-2xl bg-black/60 hover:bg-black/85 border border-white/20 items-center justify-center text-white shadow-xl backdrop-blur-md cursor-pointer opacity-0 translate-x-2 pointer-events-none group-hover/hero:opacity-100 group-hover/hero:translate-x-0 group-hover/hero:pointer-events-auto focus-visible:opacity-100 focus-visible:translate-x-0 focus-visible:pointer-events-auto hover:scale-110 active:scale-95 transition-all duration-200"
+          aria-label="Next game"
+        >
+          <ChevronRight className="w-5 h-5" />
+        </button>
 
-      {/* --- DESKTOP EXPANSIVE CINEMATIC VIEW (lg+) --- */}
-      <div
-        style={dragSlideStyle}
-        className={`hidden lg:grid lg:grid-cols-12 gap-8 xl:gap-12 items-center relative z-10 px-8 py-2 ${isDragging ? 'transition-none' : 'transition-transform duration-300 ease-out'
-          }`}
-      >
-        {/* Left Column: Game Title, High-Impact Badges & Action CTAs */}
-        <div className="lg:col-span-7 flex flex-col items-start gap-4">
-          {/* Top Status & Intent Badges */}
-          <div className="flex flex-wrap items-center gap-2">
-            <span
-              className={`typo-label inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold border uppercase tracking-wider ${theme.badge}`}
-            >
-              <Flame className="w-3.5 h-3.5 text-current animate-pulse" />
-              {theme.tag}
-            </span>
-            <span className="typo-label px-3 py-1 rounded-full text-xs tracking-normal bg-slate-900/90 text-slate-200 border border-slate-700">
-              {currentGame.category}
-            </span>
-            <span className="typo-button text-xs text-amber-400 tabular-nums flex items-center gap-1 bg-black/40 px-3 py-1 rounded-full border border-amber-400/30 backdrop-blur-md">
-              <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-400 drop-shadow-[0_0_4px_rgba(251,191,36,0.8)]" />
+        {/* --- MOBILE COMPACT VIEW (< lg) --- */}
+        <div
+          style={dragSlideStyle}
+          className={`flex flex-col gap-3 lg:hidden relative z-10 ${isDragging ? 'transition-none' : 'transition-transform duration-300 ease-out'
+            }`}
+        >
+          {/* Top Badges */}
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-1.5 flex-wrap">
+              <span
+                className={`typo-label inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-semibold tracking-wide border uppercase ${theme.badge}`}
+              >
+                <span className="w-1.5 h-1.5 rounded-full bg-current animate-ping" />
+                {theme.tag}
+              </span>
+              <span className="typo-label px-2 py-0.5 rounded-full text-[10px] tracking-normal bg-slate-800 text-slate-300 border border-slate-700">
+                {currentGame.category}
+              </span>
+            </div>
+            <span className="typo-button text-xs text-amber-400 tabular-nums flex items-center gap-1">
+              <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-400" />
               <span>{currentGame.rating.toFixed(1)}</span>
-              <span className="typo-meta text-slate-400">({currentGame.playsCount} plays)</span>
             </span>
           </div>
 
-          {/* Large Hero Title */}
-          <h2 className="typo-h1 text-4xl xl:text-5xl 2xl:text-6xl text-white drop-shadow-lg">
-            {currentGame.title}
-          </h2>
+          {/* Title + Interactive Preview Side-by-Side */}
+          <div className="flex items-center justify-between gap-3">
+            <div className="flex-1 min-w-0">
+              <h2 className="typo-h1 text-xl sm:text-2xl text-white leading-tight">
+                {currentGame.title}
+              </h2>
+              <p className="typo-body text-slate-300 text-xs mt-1 leading-snug line-clamp-2">
+                {currentGame.description}
+              </p>
+            </div>
 
-          {/* Description */}
-          <p className="typo-body text-slate-200 text-sm xl:text-base max-w-2xl">
-            {currentGame.description}
-          </p>
-
-          {/* Key Value Micro-Pills */}
-          <div className="typo-label flex items-center gap-2.5 text-xs tracking-normal text-slate-300 flex-wrap">
-            <span className="flex items-center gap-1 bg-white/10 px-3 py-1 rounded-lg border border-white/15">
-              <Zap className="w-3.5 h-3.5 text-amber-400" />
-              Instant 60fps WebGL
-            </span>
-            <span className="flex items-center gap-1 bg-white/10 px-3 py-1 rounded-lg border border-white/15">
-              <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
-              100% Free & Unblocked
-            </span>
-            <span className="flex items-center gap-1 bg-white/10 px-3 py-1 rounded-lg border border-white/15">
-              <Sparkles className="w-3.5 h-3.5 text-pink-400" />
-              Zero App Store Installs
-            </span>
-          </div>
-
-          {/* Action Row: Big PLAY NOW CTA + Direct Carousel Tabs */}
-          <div className="flex items-center gap-4 pt-2 flex-wrap">
+            {/* Compact animated thumbnail */}
             <Link
               href={currentGame.route}
-              className={`typo-button group relative inline-flex items-center justify-center gap-3 h-14 px-8 rounded-2xl text-white text-base tracking-wide shadow-2xl transition-all duration-200 hover:scale-105 active:scale-95 cursor-pointer border border-white/30 ${theme.btn}`}
+              className="w-20 h-20 sm:w-24 sm:h-24 shrink-0 rounded-2xl overflow-hidden border border-white/25 shadow-xl active:scale-95 transition-transform relative bg-slate-950"
+              aria-label={`Play ${currentGame.title}`}
             >
-              <Play className="w-5 h-5 fill-white group-hover:scale-110 transition-transform" />
-              <span>PLAY NOW</span>
-              <ArrowRight className="w-4 h-4 group-hover:translate-x-1.5 transition-transform" />
+              {currentGame.id === 'jelly-bounce' ? (
+                <div className="relative w-full h-full flex items-center justify-center bg-gradient-to-br from-cyan-500/20 to-blue-500/20">
+                  <div className="w-12 h-12 animate-bounce-slow">
+                    <svg viewBox="0 0 80 80" className="w-full h-full drop-shadow-md">
+                      <polygon points="40,14 66,24 40,34 14,24" fill={activeTopHex} />
+                      <polygon points="14,24 40,34 40,64 14,54" fill={activeFaceHex} />
+                      <polygon points="40,34 66,24 66,54 40,64" fill={activeSideHex} />
+                      <ellipse cx="32" cy="44" rx="7" ry="7" fill="white" />
+                      <ellipse cx="33" cy="44" rx="4" ry="4" fill={activeEyeHex} />
+                      <ellipse cx="31.5" cy="42" rx="1.5" ry="1.5" fill="white" />
+                    </svg>
+                  </div>
+                </div>
+              ) : (
+                <GameThumbnail id={currentGame.thumbnail} title={currentGame.title} />
+              )}
             </Link>
+          </div>
 
-            {/* Quick Game Switcher Tabs */}
-            <div className="flex items-center gap-1.5 bg-black/50 p-1.5 rounded-2xl border border-white/10 backdrop-blur-md">
-              {featuredGames.map((game, idx) => (
-                <button
-                  key={game.id}
-                  onClick={() => setCurrentIndex(idx)}
-                  className={`typo-nav px-3.5 py-2 rounded-xl text-xs transition-all cursor-pointer ${idx === currentIndex
-                    ? `font-semibold ${theme.pillActive}`
-                    : 'text-slate-400 hover:text-white hover:bg-white/10'
-                    }`}
-                >
-                  {game.title.split(' ')[0]}
-                </button>
-              ))}
-            </div>
+          {/* Big PLAY NOW Button */}
+          <Link
+            href={currentGame.route}
+            className={`typo-button group relative flex items-center justify-center gap-2 h-12 w-full rounded-xl text-white text-sm tracking-wide shadow-lg transition-all duration-150 active:scale-95 cursor-pointer border border-white/20 ${theme.btn}`}
+          >
+            <Play className="w-4 h-4 fill-white" />
+            <span>PLAY NOW</span>
+            <span className="text-[11px] text-white/80 font-normal">• Free Instant Game</span>
+          </Link>
+
+          {/* Carousel indicators (dots) */}
+          <div className="flex items-center justify-center gap-2 pt-1">
+            {featuredGames.map((game, idx) => (
+              <button
+                key={game.id}
+                onClick={() => setCurrentIndex(idx)}
+                className={`h-2 rounded-full transition-all duration-300 cursor-pointer ${idx === currentIndex ? 'w-6 bg-white shadow-[0_0_8px_#ffffff]' : 'w-2 bg-slate-700 hover:bg-slate-500'
+                  }`}
+                aria-label={`Show ${game.title}`}
+              />
+            ))}
           </div>
         </div>
 
-        {/* Right Column: Holographic 3D Interactive Stage */}
-        <div className="lg:col-span-5 flex justify-center w-full">
-          <Link
-            href={currentGame.route}
-            className="group relative w-full max-w-[420px] aspect-square rounded-3xl overflow-hidden border border-white/20 p-6 flex flex-col items-center justify-center shadow-2xl backdrop-blur-md transition-all duration-300 hover:scale-105 hover:border-white/40 cursor-pointer bg-slate-950/70"
-            aria-label={`Play ${currentGame.title}`}
-          >
-            {/* Ambient Lighting reflections */}
-            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-white/10 pointer-events-none z-[1]" />
-
-            {currentGame.id === 'jelly-bounce' ? (
-              <div className="relative w-full h-full flex flex-col items-center justify-center z-[2]">
-                <div className="absolute bottom-6 w-52 h-6 rounded-full bg-cyan-950/80 shadow-lg border-t border-cyan-400/50" />
-                <div className="absolute top-2 right-4 text-cyan-300 text-sm font-black animate-pulse drop-shadow-[0_0_8px_rgba(0,240,255,0.8)]">
-                  <Gem className="w-5 h-5 text-cyan-300 fill-cyan-400/30" />
-                </div>
-                <div className="relative w-44 h-44 group-hover:scale-110 group-hover:-translate-y-2 transition-all duration-300 drop-shadow-[0_16px_32px_rgba(0,240,255,0.35)]">
-                  <svg viewBox="0 0 80 80" className="w-full h-full">
-                    <polygon points="40,14 66,24 40,34 14,24" fill={activeTopHex} />
-                    <polygon points="14,24 40,34 40,64 14,54" fill={activeFaceHex} />
-                    <polygon points="40,34 66,24 66,54 40,64" fill={activeSideHex} />
-                    <ellipse cx="32" cy="44" rx="7" ry="7" fill="white" />
-                    <ellipse cx="33" cy="44" rx="4" ry="4" fill={activeEyeHex} />
-                    <ellipse cx="31.5" cy="42" rx="1.5" ry="1.5" fill="white" />
-                  </svg>
-                </div>
-              </div>
-            ) : (
-              <div className="w-full h-full rounded-2xl overflow-hidden group-hover:scale-105 transition-transform duration-300 z-[2]">
-                <GameThumbnail id={currentGame.thumbnail} title={currentGame.title} />
-              </div>
-            )}
-
-            {/* Launch Pill Overlay */}
-            <div className="typo-button absolute bottom-4 z-10 text-xs text-white bg-slate-900/90 px-4 py-2 rounded-full border border-white/20 group-hover:bg-pink-500 group-hover:border-pink-400 transition-colors flex items-center gap-1.5 shadow-xl">
-              <span>Instant Launch</span>
-              <ArrowRight className="w-3.5 h-3.5" />
+        {/* --- DESKTOP EXPANSIVE CINEMATIC VIEW (lg+) --- */}
+        <div
+          style={dragSlideStyle}
+          className={`hidden lg:grid lg:grid-cols-12 gap-8 xl:gap-12 items-center relative z-10 ${isDragging ? 'transition-none' : 'transition-transform duration-300 ease-out'
+            }`}
+        >
+          {/* Left Column: Game Title, High-Impact Badges & Action CTAs */}
+          <div className="lg:col-span-7 flex flex-col items-start gap-4">
+            {/* Top Status & Intent Badges */}
+            <div className="flex flex-wrap items-center gap-2">
+              <span
+                className={`typo-label inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold border uppercase tracking-wider ${theme.badge}`}
+              >
+                <Flame className="w-3.5 h-3.5 text-current animate-pulse" />
+                {theme.tag}
+              </span>
+              <span className="typo-label px-3 py-1 rounded-full text-xs tracking-normal bg-slate-900/90 text-slate-200 border border-slate-700">
+                {currentGame.category}
+              </span>
+              <span className="typo-button text-xs text-amber-400 tabular-nums flex items-center gap-1 bg-black/40 px-3 py-1 rounded-full border border-amber-400/30 backdrop-blur-md">
+                <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-400 drop-shadow-[0_0_4px_rgba(251,191,36,0.8)]" />
+                <span>{currentGame.rating.toFixed(1)}</span>
+                <span className="typo-meta text-slate-400">({currentGame.playsCount} plays)</span>
+              </span>
             </div>
-          </Link>
+
+            {/* Large Hero Title */}
+            <h2 className="typo-h1 text-4xl xl:text-5xl 2xl:text-6xl text-white drop-shadow-lg">
+              {currentGame.title}
+            </h2>
+
+            {/* Description */}
+            <p className="typo-body text-slate-200 text-sm xl:text-base max-w-2xl">
+              {currentGame.description}
+            </p>
+
+            {/* Key Value Micro-Pills */}
+            <div className="typo-label flex items-center gap-2.5 text-xs tracking-normal text-slate-300 flex-wrap">
+              <span className="flex items-center gap-1 bg-white/10 px-3 py-1 rounded-lg border border-white/15">
+                <Zap className="w-3.5 h-3.5 text-amber-400" />
+                Instant 60fps WebGL
+              </span>
+              <span className="flex items-center gap-1 bg-white/10 px-3 py-1 rounded-lg border border-white/15">
+                <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
+                100% Free & Unblocked
+              </span>
+              <span className="flex items-center gap-1 bg-white/10 px-3 py-1 rounded-lg border border-white/15">
+                <Sparkles className="w-3.5 h-3.5 text-pink-400" />
+                Zero App Store Installs
+              </span>
+            </div>
+
+            {/* Action Row: Big PLAY NOW CTA + Direct Carousel Tabs */}
+            <div className="flex items-center gap-4 pt-2 flex-wrap">
+              <Link
+                href={currentGame.route}
+                className={`typo-button group relative inline-flex items-center justify-center gap-3 h-14 px-8 rounded-2xl text-white text-base tracking-wide shadow-2xl transition-all duration-200 hover:scale-105 active:scale-95 cursor-pointer border border-white/30 ${theme.btn}`}
+              >
+                <Play className="w-5 h-5 fill-white group-hover:scale-110 transition-transform" />
+                <span>PLAY NOW</span>
+                <ArrowRight className="w-4 h-4 group-hover:translate-x-1.5 transition-transform" />
+              </Link>
+
+              {/* Quick Game Switcher Tabs */}
+              <div className="flex items-center gap-1.5 bg-black/50 p-1.5 rounded-2xl border border-white/10 backdrop-blur-md">
+                {featuredGames.map((game, idx) => (
+                  <button
+                    key={game.id}
+                    onClick={() => setCurrentIndex(idx)}
+                    className={`typo-nav px-3.5 py-2 rounded-xl text-xs transition-all cursor-pointer ${idx === currentIndex
+                      ? `font-semibold ${theme.pillActive}`
+                      : 'text-slate-400 hover:text-white hover:bg-white/10'
+                      }`}
+                  >
+                    {game.title.split(' ')[0]}
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* Right Column: Holographic 3D Interactive Stage */}
+          <div className="lg:col-span-5 flex justify-center w-full">
+            <Link
+              href={currentGame.route}
+              className="group relative w-full max-w-[420px] aspect-square rounded-3xl overflow-hidden border border-white/20 p-6 flex flex-col items-center justify-center shadow-2xl backdrop-blur-md transition-all duration-300 hover:scale-105 hover:border-white/40 cursor-pointer bg-slate-950/70"
+              aria-label={`Play ${currentGame.title}`}
+            >
+              {/* Ambient Lighting reflections */}
+              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-white/10 pointer-events-none z-[1]" />
+
+              {currentGame.id === 'jelly-bounce' ? (
+                <div className="relative w-full h-full flex flex-col items-center justify-center z-[2]">
+                  <div className="absolute bottom-6 w-52 h-6 rounded-full bg-cyan-950/80 shadow-lg border-t border-cyan-400/50" />
+                  <div className="absolute top-2 right-4 text-cyan-300 text-sm font-black animate-pulse drop-shadow-[0_0_8px_rgba(0,240,255,0.8)]">
+                    <Gem className="w-5 h-5 text-cyan-300 fill-cyan-400/30" />
+                  </div>
+                  <div className="relative w-44 h-44 group-hover:scale-110 group-hover:-translate-y-2 transition-all duration-300 drop-shadow-[0_16px_32px_rgba(0,240,255,0.35)]">
+                    <svg viewBox="0 0 80 80" className="w-full h-full">
+                      <polygon points="40,14 66,24 40,34 14,24" fill={activeTopHex} />
+                      <polygon points="14,24 40,34 40,64 14,54" fill={activeFaceHex} />
+                      <polygon points="40,34 66,24 66,54 40,64" fill={activeSideHex} />
+                      <ellipse cx="32" cy="44" rx="7" ry="7" fill="white" />
+                      <ellipse cx="33" cy="44" rx="4" ry="4" fill={activeEyeHex} />
+                      <ellipse cx="31.5" cy="42" rx="1.5" ry="1.5" fill="white" />
+                    </svg>
+                  </div>
+                </div>
+              ) : (
+                <div className="w-full h-full rounded-2xl overflow-hidden group-hover:scale-105 transition-transform duration-300 z-[2]">
+                  <GameThumbnail id={currentGame.thumbnail} title={currentGame.title} />
+                </div>
+              )}
+
+              {/* Launch Pill Overlay */}
+              <div className="typo-button absolute bottom-4 z-10 text-xs text-white bg-slate-900/90 px-4 py-2 rounded-full border border-white/20 group-hover:bg-pink-500 group-hover:border-pink-400 transition-colors flex items-center gap-1.5 shadow-xl">
+                <span>Instant Launch</span>
+                <ArrowRight className="w-3.5 h-3.5" />
+              </div>
+            </Link>
+          </div>
         </div>
       </div>
     </div>

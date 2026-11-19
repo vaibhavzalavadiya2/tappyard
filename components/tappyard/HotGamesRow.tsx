@@ -29,7 +29,7 @@ export default function HotGamesRow() {
   };
 
   return (
-    <div className="flex flex-col gap-2.5 py-1">
+    <div className="container xl:px-5 px-4 lg:py-6 py-4 flex flex-col gap-2.5">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
           <span className="typo-section-heading flex items-center gap-1.5 text-xs sm:text-sm text-white uppercase tracking-wider">
@@ -57,7 +57,7 @@ export default function HotGamesRow() {
               )} shadow-md group-hover:scale-110 group-hover:shadow-[0_0_16px_rgba(236,72,153,0.5)] transition-all duration-300`}
             >
               <div className="w-full h-full rounded-full overflow-hidden bg-slate-950 p-0.5">
-                <GameThumbnail id={game.thumbnail} title={game.title} />
+                <GameThumbnail id={game.thumbnail} title={game.title} variant="avatar" />
               </div>
               {/* Online pulsing dot */}
               <span className="absolute bottom-0 right-0 w-3.5 h-3.5 rounded-full bg-emerald-500 border-2 border-[#090d16] shadow-sm" />
