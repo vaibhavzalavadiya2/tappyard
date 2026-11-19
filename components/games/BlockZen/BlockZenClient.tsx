@@ -30,6 +30,8 @@ import {
   spendWalletDiamonds,
   subscribeWallet,
 } from '@/lib/wallet';
+import { shareScoreChallenge } from '@/lib/challenge';
+import ChallengerBanner from '@/components/tappyard/ChallengerBanner';
 
 const REROLL_COST = 5;
 
@@ -138,21 +140,15 @@ export default function BlockZenClient() {
     }
   }, []);
 
-  // Share score
+  // Share score challenge
   const handleShare = useCallback(() => {
-    const text = `🧩 I scored ${score} in Block Grid Zen on TAPPYARD! Can you beat my high score? Play free: https://tappyard.com/games/color-zen`;
-    if (typeof navigator !== 'undefined' && navigator.share) {
-      navigator.share({ title: 'Block Grid Zen | TAPPYARD', text, url: 'https://tappyard.com/games/color-zen' }).catch(() => {});
-    } else if (typeof navigator !== 'undefined' && navigator.clipboard?.writeText) {
-      navigator.clipboard.writeText(text).then(() => {
-        showNotification('Challenge link copied to clipboard!');
-      }).catch(() => {
-        showNotification('Link: tappyard.com/games/color-zen');
-      });
-    } else {
-      showNotification('Link: tappyard.com/games/color-zen');
-    }
-  }, [score, showNotification]);
+    shareScoreChallenge({
+      gameTitle: 'Block Grid Zen',
+      gameSlug: 'color-zen',
+      score,
+      metric: 'pts',
+    });
+  }, [score]);
 
   // Calculate grid row/col from pointer position
   const calculateGridCoord = useCallback((clientX: number, clientY: number, shape: BlockShape) => {
@@ -390,6 +386,8 @@ export default function BlockZenClient() {
 
       {/* 2. Main Game Body */}
       <main id="game-stage" className="relative w-full min-h-[calc(100dvh-3.5rem)] sm:min-h-[calc(100dvh-4rem)] flex flex-col items-center justify-between p-2 sm:p-4 max-w-sm sm:max-w-md mx-auto">
+        <ChallengerBanner gameSlug="color-zen" currentScore={score} />
+
         {/* Score & Reroll Toolbar */}
         <div className="w-full flex items-center justify-between gap-2 my-1 shrink-0">
           {/* Score & Best */}

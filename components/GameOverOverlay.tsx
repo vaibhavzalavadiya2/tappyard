@@ -1,7 +1,9 @@
 'use client';
 
+import { useEffect, useCallback } from 'react';
 import { GAME_CONFIG } from '@/game/config';
-import { RotateCcw, Palette, Volume2, VolumeX, Trophy, Gem, Sparkles } from 'lucide-react';
+import { RotateCcw, Palette, Volume2, VolumeX, Trophy, Gem, Sparkles, Share2, Swords } from 'lucide-react';
+import { shareScoreChallenge } from '@/lib/challenge';
 
 interface GameOverOverlayProps {
   distance: number;
@@ -36,6 +38,33 @@ export default function GameOverOverlay({
   const activeFaceHex = '#' + activeSkin.color.toString(16).padStart(6, '0');
   const activeSideHex = '#' + activeSkin.sideColor.toString(16).padStart(6, '0');
   const activeEyeHex = '#' + activeSkin.eyeColor.toString(16).padStart(6, '0');
+
+  const handleShare = useCallback(() => {
+    shareScoreChallenge({
+      gameTitle: 'Jump Jelly Jump!',
+      gameSlug: 'jelly-bounce',
+      score: distance,
+      metric: 'm',
+    });
+  }, [distance]);
+
+  // Keyboard controls for game-over: Space or R to restart, S to share, Esc for skins
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.code === 'Space' || e.code === 'KeyR') {
+        e.preventDefault();
+        onRetry();
+      } else if (e.code === 'KeyS') {
+        e.preventDefault();
+        handleShare();
+      } else if (e.key === 'Escape') {
+        e.preventDefault();
+        onOpenShop();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [onRetry, handleShare, onOpenShop]);
 
   return (
     <div className="absolute inset-0 flex items-center justify-center z-20 p-4 select-none animate-fade-in">
@@ -103,11 +132,11 @@ export default function GameOverOverlay({
         </div>
 
         {/* Buttons Row */}
-        <div className="flex flex-col gap-2.5 w-full pt-1">
+        <div className="flex flex-col gap-2 w-full pt-1">
           {/* RESTART Button */}
           <button
             onClick={onRetry}
-            className="w-full h-12 rounded-2xl text-white font-black text-sm shadow-xl shadow-cyan-500/20
+            className="w-full h-11 rounded-2xl text-white font-black text-sm shadow-xl shadow-cyan-500/20
               bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500
               transition-all hover:scale-102 active:scale-95 cursor-pointer flex items-center justify-center gap-2 border border-cyan-300/40"
           >
@@ -115,16 +144,34 @@ export default function GameOverOverlay({
             <span>RESTART</span>
           </button>
 
+          {/* CHALLENGE A FRIEND Button */}
+          <button
+            onClick={handleShare}
+            className="w-full h-11 rounded-2xl text-white font-bold text-xs shadow-lg shadow-pink-500/15
+              bg-gradient-to-r from-pink-500 via-purple-600 to-indigo-600 hover:from-pink-400 hover:to-purple-500
+              transition-all hover:scale-102 active:scale-95 cursor-pointer flex items-center justify-center gap-2 border border-pink-400/40"
+          >
+            <Swords className="w-4 h-4 text-pink-200" />
+            <span>CHALLENGE A FRIEND</span>
+          </button>
+
           {/* SKINS / SHOP Button */}
           <button
             onClick={onOpenShop}
-            className="w-full h-11 rounded-2xl text-cyan-200 font-bold text-xs
+            className="w-full h-10 rounded-2xl text-cyan-200 font-bold text-xs
               bg-[#123646] hover:bg-[#184457] transition-all active:scale-95 cursor-pointer
               flex items-center justify-center gap-2 border border-cyan-500/30"
           >
-            <Palette className="w-4 h-4 text-cyan-300" />
+            <Palette className="w-3.5 h-3.5 text-cyan-300" />
             <span>JELLY SKINS</span>
           </button>
+
+          {/* Desktop Keyboard Hints */}
+          <div className="hidden sm:flex items-center justify-center gap-2 text-[10px] text-slate-400/80 pt-0.5">
+            <span>Press <kbd className="px-1 py-0.2 rounded bg-slate-800 border border-slate-700 text-slate-300">Space</kbd> or <kbd className="px-1 py-0.2 rounded bg-slate-800 border border-slate-700 text-slate-300">R</kbd> to restart</span>
+            <span>•</span>
+            <span><kbd className="px-1 py-0.2 rounded bg-slate-800 border border-slate-700 text-slate-300">S</kbd> to challenge</span>
+          </div>
         </div>
 
         {/* Sound Toggle */}

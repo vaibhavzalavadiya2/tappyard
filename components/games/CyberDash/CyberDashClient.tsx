@@ -28,6 +28,8 @@ import {
   spendWalletDiamonds,
   subscribeWallet,
 } from '@/lib/wallet';
+import { shareScoreChallenge } from '@/lib/challenge';
+import ChallengerBanner from '@/components/tappyard/ChallengerBanner';
 
 const REVIVE_COST = 5;
 
@@ -192,21 +194,15 @@ export default function CyberDashClient() {
     }
   }, []);
 
-  // Share score
+  // Share score challenge
   const handleShare = useCallback(() => {
-    const text = `⚡ I scored ${score} in Cyber Dash on TAPPYARD! Can you beat my high score? Play free: https://tappyard.com/games/quick-tap`;
-    if (typeof navigator !== 'undefined' && navigator.share) {
-      navigator.share({ title: 'Cyber Dash | TAPPYARD', text, url: 'https://tappyard.com/games/quick-tap' }).catch(() => {});
-    } else if (typeof navigator !== 'undefined' && navigator.clipboard?.writeText) {
-      navigator.clipboard.writeText(text).then(() => {
-        showNotice('Challenge link copied to clipboard!');
-      }).catch(() => {
-        showNotice('Link: tappyard.com/games/quick-tap');
-      });
-    } else {
-      showNotice('Link: tappyard.com/games/quick-tap');
-    }
-  }, [score, showNotice]);
+    shareScoreChallenge({
+      gameTitle: 'Cyber Dash',
+      gameSlug: 'quick-tap',
+      score,
+      metric: 'gates',
+    });
+  }, [score]);
 
   // Keyboard navigation
   useEffect(() => {
@@ -676,6 +672,7 @@ export default function CyberDashClient() {
 
       {/* 2. Main Full-Screen Canvas */}
       <main id="game-stage" className="relative w-full h-[calc(100dvh-3.5rem)] sm:h-[calc(100dvh-4rem)] overflow-hidden cursor-pointer" onClick={handleFlap}>
+        <ChallengerBanner gameSlug="quick-tap" currentScore={score} />
         <canvas ref={canvasRef} className="w-full h-full block" style={{ touchAction: 'none' }} />
 
         {/* Mobile: unobtrusive link to scroll to below-fold content */}

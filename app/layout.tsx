@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from 'next';
 import { Inter, Space_Grotesk } from 'next/font/google';
 import { GoogleAnalytics } from '@next/third-parties/google';
 import MicrosoftClarity from '@/components/tappyard/MicrosoftClarity';
+import ToastContainer from '@/components/tappyard/Toast';
 import './globals.css';
 
 const inter = Inter({
@@ -199,6 +200,7 @@ export default function RootLayout({ children }: LayoutProps<'/'>) {
       </head>
       <body className="min-h-full bg-[#090d16] font-sans text-slate-100 antialiased selection:bg-pink-500 selection:text-white flex flex-col overscroll-none">
         {children}
+        <ToastContainer />
       </body>
       <GoogleAnalytics gaId="G-H7EQCRZ477" />
       <MicrosoftClarity projectId="zfpf7cf0vv" />

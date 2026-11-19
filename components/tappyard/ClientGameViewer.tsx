@@ -5,6 +5,7 @@ import Link from 'next/link';
 import type { GameItem } from '@/data/games';
 import GameHeader from './GameHeader';
 import GameThumbnail from './GameThumbnail';
+import ChallengerBanner from './ChallengerBanner';
 import { Gem, Puzzle, Zap, ExternalLink, ArrowLeft } from 'lucide-react';
 
 const GameContainer = dynamic(() => import('@/components/GameContainer'), {
@@ -64,6 +65,7 @@ export default function ClientGameViewer({ game }: ClientGameViewerProps) {
           icon={<Gem className="w-4 h-4 text-cyan-400" />}
         />
         <main className="relative w-full h-[calc(100dvh-3rem)] sm:h-[calc(100dvh-3.5rem)] overflow-hidden bg-[#081720]">
+          <ChallengerBanner gameSlug="jelly-bounce" />
           <GameContainer />
           <a
             href="#game-details"

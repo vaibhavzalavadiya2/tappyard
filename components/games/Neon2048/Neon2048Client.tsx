@@ -31,6 +31,8 @@ import {
   spendWalletDiamonds,
   subscribeWallet,
 } from '@/lib/wallet';
+import { shareScoreChallenge } from '@/lib/challenge';
+import ChallengerBanner from '@/components/tappyard/ChallengerBanner';
 
 const UNDO_COST = 5;
 
@@ -194,21 +196,15 @@ export default function Neon2048Client() {
     }
   }, []);
 
-  // Share score
+  // Share score challenge
   const handleShare = useCallback(() => {
-    const text = `🔥 I scored ${score} in 2048 Neon Fusion on TAPPYARD! Can you beat my high score? Play free: https://tappyard.com/games/2048-puzzle`;
-    if (typeof navigator !== 'undefined' && navigator.share) {
-      navigator.share({ title: '2048 Neon Fusion | TAPPYARD', text, url: 'https://tappyard.com/games/2048-puzzle' }).catch(() => {});
-    } else if (typeof navigator !== 'undefined' && navigator.clipboard?.writeText) {
-      navigator.clipboard.writeText(text).then(() => {
-        triggerNotification('Score Challenge Copied to Clipboard!');
-      }).catch(() => {
-        triggerNotification('Link: tappyard.com/games/2048-puzzle');
-      });
-    } else {
-      triggerNotification('Link: tappyard.com/games/2048-puzzle');
-    }
-  }, [score, triggerNotification]);
+    shareScoreChallenge({
+      gameTitle: '2048 Neon Fusion',
+      gameSlug: '2048-puzzle',
+      score,
+      metric: 'pts',
+    });
+  }, [score]);
 
   // Keyboard navigation
   useEffect(() => {
@@ -342,6 +338,8 @@ export default function Neon2048Client() {
 
       {/* 2. Main Game Body */}
       <main id="game-stage" className="relative w-full min-h-[calc(100dvh-3.5rem)] sm:min-h-[calc(100dvh-4rem)] flex flex-col items-center justify-center p-3 sm:p-6 max-w-md mx-auto">
+        <ChallengerBanner gameSlug="2048-puzzle" currentScore={score} />
+
         {/* Score & Control Row */}
         <div className="w-full grid grid-cols-2 gap-2.5 sm:gap-3 mb-3">
           {/* Current Score */}

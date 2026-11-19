@@ -9,9 +9,13 @@ import {
   ShieldCheck,
   Zap,
   LogOut,
+  Edit2,
+  Check,
 } from 'lucide-react';
 import { getWalletDiamonds, addWalletDiamonds } from '@/lib/wallet';
 import { loadProgress } from '@/game/progress';
+import { showToast } from '@/lib/toast';
+import { getPlayerName, setPlayerName } from '@/lib/challenge';
 
 interface AccountModalProps {
   isOpen: boolean;
@@ -22,6 +26,9 @@ export default function AccountModal({ isOpen, onClose }: AccountModalProps) {
   const [diamonds, setDiamonds] = useState(0);
   const [bestDistance, setBestDistance] = useState(0);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [playerName, setPlayerNameState] = useState('Player');
+  const [isEditingName, setIsEditingName] = useState(false);
+  const [nameInput, setNameInput] = useState('Player');
 
   // Prevent background scroll when modal is open and handle Escape key
   useEffect(() => {
@@ -52,32 +59,47 @@ export default function AccountModal({ isOpen, onClose }: AccountModalProps) {
       }
       const logged = localStorage.getItem('tappyard_logged_in') === 'true';
       setIsLoggedIn(logged);
+      const name = getPlayerName();
+      setPlayerNameState(name);
+      setNameInput(name);
     } catch {
       // ignore
     }
   }, [isOpen]);
 
+  const handleSaveName = () => {
+    const trimmed = nameInput.trim();
+    if (trimmed) {
+      setPlayerName(trimmed);
+      setPlayerNameState(trimmed);
+      setIsEditingName(false);
+      showToast(`Nickname updated to "${trimmed}"!`, 'success');
+    }
+  };
+
   const handleLogin = () => {
     localStorage.setItem('tappyard_logged_in', 'true');
     setIsLoggedIn(true);
+    showToast('Logged in! Progress synced to session.', 'success');
   };
 
   const handleLogout = () => {
     localStorage.removeItem('tappyard_logged_in');
     setIsLoggedIn(false);
+    showToast('Switched to Guest Session.', 'info');
   };
 
   const handleClaimDaily = () => {
     const today = new Date().toDateString();
     const lastClaim = localStorage.getItem('tappyard_last_daily_claim');
     if (lastClaim === today) {
-      alert('You have already claimed your daily reward today! Come back tomorrow.');
+      showToast('You already claimed your daily reward today! Come back tomorrow.', 'info');
       return;
     }
     const updated = addWalletDiamonds(50);
     setDiamonds(updated);
     localStorage.setItem('tappyard_last_daily_claim', today);
-    alert('🎉 Claimed 50 Daily Diamonds!');
+    showToast('🎉 Claimed 50 Daily Diamonds!', 'diamond');
   };
 
   if (!isOpen) return null;
@@ -143,6 +165,52 @@ export default function AccountModal({ isOpen, onClose }: AccountModalProps) {
               <span className="typo-label text-[10px] uppercase tracking-wider px-2 py-0.5 rounded-full bg-pink-500/15 text-pink-300 border border-pink-500/30">
                 {isLoggedIn ? 'PRO' : 'LVL 1'}
               </span>
+            </div>
+
+            {/* Nickname Row */}
+            <div className="pt-2 border-t border-slate-800/80 flex items-center justify-between gap-2">
+              <span className="typo-label text-[10px] text-slate-400 uppercase tracking-wider">
+                Display Name:
+              </span>
+              {isEditingName ? (
+                <div className="flex items-center gap-1.5 flex-1 max-w-[200px]">
+                  <input
+                    type="text"
+                    value={nameInput}
+                    onChange={(e) => setNameInput(e.target.value)}
+                    maxLength={16}
+                    className="w-full bg-slate-950 border border-pink-500/50 rounded-lg px-2 py-1 text-xs text-white focus:outline-none focus:border-pink-400"
+                    placeholder="Enter nickname"
+                    autoFocus
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter') handleSaveName();
+                      if (e.key === 'Escape') setIsEditingName(false);
+                    }}
+                  />
+                  <button
+                    onClick={handleSaveName}
+                    className="p-1 rounded-lg bg-pink-500/20 text-pink-300 hover:bg-pink-500/30 transition-colors cursor-pointer"
+                    aria-label="Save nickname"
+                  >
+                    <Check className="w-3.5 h-3.5" />
+                  </button>
+                </div>
+              ) : (
+                <div className="flex items-center gap-1.5">
+                  <span className="text-xs font-semibold text-white">{playerName}</span>
+                  <button
+                    onClick={() => {
+                      setNameInput(playerName);
+                      setIsEditingName(true);
+                    }}
+                    className="text-slate-400 hover:text-pink-400 transition-colors p-0.5 cursor-pointer"
+                    title="Edit Nickname"
+                    aria-label="Edit Nickname"
+                  >
+                    <Edit2 className="w-3 h-3" />
+                  </button>
+                </div>
+              )}
             </div>
           </div>
 
