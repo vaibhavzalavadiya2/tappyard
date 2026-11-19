@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from 'next';
 import { Inter, Space_Grotesk } from 'next/font/google';
 import { GoogleAnalytics } from '@next/third-parties/google';
+import MicrosoftClarity from '@/components/tappyard/MicrosoftClarity';
 import './globals.css';
 
 const inter = Inter({
@@ -200,6 +201,7 @@ export default function RootLayout({ children }: LayoutProps<'/'>) {
         {children}
       </body>
       <GoogleAnalytics gaId="G-H7EQCRZ477" />
+      <MicrosoftClarity projectId="zfpf7cf0vv" />
     </html>
   );
 }
