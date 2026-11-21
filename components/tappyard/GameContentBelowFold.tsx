@@ -175,7 +175,7 @@ export default function GameContentBelowFold({ data }: GameContentBelowFoldProps
         </section>
 
         {/* 3. How to Play & Controls */}
-        <section className="grid grid-cols-1 md:grid-cols-2 gap-6 p-6 rounded-2xl bg-slate-900/40 border border-slate-800">
+        <section className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:p-6 p-4 rounded-xl bg-slate-900/40 border border-slate-800">
           <div className="flex flex-col gap-3">
             <h2 className="typo-section-heading text-lg sm:text-xl text-white flex items-center gap-2">
               <Sparkles className="w-4 h-4 text-pink-400" />
@@ -236,7 +236,7 @@ export default function GameContentBelowFold({ data }: GameContentBelowFoldProps
             </Link>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
             {otherGames.map((game) => (
               <Link
                 key={game.id}
