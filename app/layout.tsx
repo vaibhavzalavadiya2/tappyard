@@ -1,23 +1,21 @@
 import type { Metadata, Viewport } from 'next';
-import { Inter, Space_Grotesk } from 'next/font/google';
+import localFont from 'next/font/local';
 import { GoogleAnalytics } from '@next/third-parties/google';
 import MicrosoftClarity from '@/components/tappyard/MicrosoftClarity';
 import ToastContainer from '@/components/tappyard/Toast';
 import './globals.css';
 
-const inter = Inter({
-  subsets: ['latin'],
+const inter = localFont({
+  src: '../public/fonts/Inter-Variable.woff2',
   display: 'swap',
   variable: '--font-inter',
-  preload: true,
   fallback: ['system-ui', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif'],
 });
 
-const spaceGrotesk = Space_Grotesk({
-  subsets: ['latin'],
+const spaceGrotesk = localFont({
+  src: '../public/fonts/SpaceGrotesk-Variable.woff2',
   display: 'swap',
   variable: '--font-space-grotesk',
-  preload: true,
   fallback: ['system-ui', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'sans-serif'],
 });
 
