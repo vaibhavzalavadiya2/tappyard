@@ -103,22 +103,6 @@ export default function GameThumbnail({
       <div className="absolute w-1 h-1 rounded-full bg-white/25 top-[35%] left-[50%] animate-[float_6s_ease-in-out_2s_infinite]" />
       <div className="absolute w-0.5 h-0.5 rounded-full bg-white/20 top-[80%] left-[30%] animate-[float_4.5s_ease-in-out_0.5s_infinite]" />
       <div className="absolute w-1 h-1 rounded-full bg-white/15 top-[10%] left-[85%] animate-[float_5.5s_ease-in-out_1.5s_infinite]" />
-      <style>{`
-        @keyframes float {
-          0%, 100% { transform: translateY(0) translateX(0); opacity: 0.3; }
-          25% { transform: translateY(-8px) translateX(3px); opacity: 0.7; }
-          50% { transform: translateY(-16px) translateX(-2px); opacity: 0.5; }
-          75% { transform: translateY(-10px) translateX(4px); opacity: 0.8; }
-        }
-        @keyframes chevron-slide {
-          0%, 100% { transform: translateX(0); opacity: 0.8; }
-          50% { transform: translateX(6px); opacity: 1; }
-        }
-        @keyframes shimmer {
-          0% { background-position: -100% 0; }
-          100% { background-position: 200% 0; }
-        }
-      `}</style>
     </div>
   );
 

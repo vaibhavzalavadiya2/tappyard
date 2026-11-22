@@ -65,8 +65,6 @@ export default function HomeClient() {
 
         {/* Featured Multi-Game Carousel Banner (only show when not actively searching) */}
         {!searchQuery && selectedCategory === 'All' && <HeroFeatured />}
-        {/* Recently Played ("Jump Back In") */}
-        {!searchQuery && <RecentlyPlayed />}
 
         {/* Games Catalogue Section */}
         <section id="catalogue" className="flex flex-col gap-4 sm:gap-6 scroll-mt-20 container xl:px-5 px-4 lg:pt-8 pt-6">
@@ -154,6 +152,9 @@ export default function HomeClient() {
             </div>
           )}
         </section>
+
+        {/* Recently Played Section (placed below catalogue to eliminate above-the-fold layout shift) */}
+        {!searchQuery && <RecentlyPlayed />}
 
         {/* SEO Information & FAQ Section for Search Engines & Users */}
         <section id="faq" className="typo-body mt-8 mb-8 pt-8 border-t border-slate-800/80 text-slate-400 text-xs sm:text-sm scroll-mt-20">

@@ -216,7 +216,7 @@ export default function HeroFeatured() {
         onPointerDown={handlePointerDown}
         onClickCapture={handleClickCapture}
         onDragStart={(e) => e.preventDefault()}
-        className={`group/hero relative overflow-hidden rounded-xl bg-gradient-to-br ${theme.bg} border ${theme.border} shadow-2xl p-4 sm:p-6 lg:p-8 xl:p-10 transition-colors duration-700 w-full select-none touch-pan-y ${isDragging ? 'cursor-grabbing' : 'cursor-grab'
+        className={`group/hero relative overflow-hidden rounded-xl bg-gradient-to-br ${theme.bg} border ${theme.border} shadow-2xl p-4 sm:p-6 lg:p-8 xl:p-10 transition-colors duration-700 w-full min-h-[380px] sm:min-h-[420px] lg:min-h-[440px] select-none touch-pan-y ${isDragging ? 'cursor-grabbing' : 'cursor-grab'
           }`}
       >
         {/* Dynamic Background Light Spheres */}

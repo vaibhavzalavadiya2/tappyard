@@ -1,6 +1,6 @@
 import type { Metadata, Viewport } from 'next';
 import localFont from 'next/font/local';
-import { GoogleAnalytics } from '@next/third-parties/google';
+import GoogleAnalytics from '@/components/tappyard/GoogleAnalytics';
 import MicrosoftClarity from '@/components/tappyard/MicrosoftClarity';
 import ToastContainer from '@/components/tappyard/Toast';
 import './globals.css';
@@ -190,6 +190,20 @@ export default function RootLayout({ children }: LayoutProps<'/'>) {
       data-scroll-behavior="smooth"
     >
       <head>
+        <link
+          rel="preload"
+          href="/fonts/SpaceGrotesk-Variable.woff2"
+          as="font"
+          type="font/woff2"
+          crossOrigin="anonymous"
+        />
+        <link
+          rel="preload"
+          href="/fonts/Inter-Variable.woff2"
+          as="font"
+          type="font/woff2"
+          crossOrigin="anonymous"
+        />
         <link rel="alternate" type="text/plain" href="/llms.txt" title="LLM Documentation" />
         <script
           type="application/ld+json"
@@ -199,9 +213,9 @@ export default function RootLayout({ children }: LayoutProps<'/'>) {
       <body className="min-h-full bg-[#090d16] font-sans text-slate-100 antialiased selection:bg-pink-500 selection:text-white flex flex-col overscroll-none">
         {children}
         <ToastContainer />
+        <GoogleAnalytics gaId="G-H7EQCRZ477" />
+        <MicrosoftClarity projectId="zfpf7cf0vv" />
       </body>
-      <GoogleAnalytics gaId="G-H7EQCRZ477" />
-      <MicrosoftClarity projectId="zfpf7cf0vv" />
     </html>
   );
 }

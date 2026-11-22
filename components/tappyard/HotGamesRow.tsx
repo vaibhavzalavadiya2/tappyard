@@ -33,7 +33,7 @@ export default function HotGamesRow() {
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
           <span className="typo-section-heading flex items-center gap-1.5 text-xs sm:text-sm text-white uppercase tracking-wider">
-            <Flame className="w-4 h-4 text-pink-500 animate-bounce" />
+            <Flame className="w-4 h-4 text-pink-500 animate-pulse" />
             Hot Games
           </span>
           <span className="typo-label text-[10px] text-pink-400 bg-pink-500/15 px-2 py-0.5 rounded-full border border-pink-500/30">

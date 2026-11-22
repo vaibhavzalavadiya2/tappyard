@@ -290,17 +290,15 @@ export default function Navbar({
                 </button>
               )}
 
-              {diamonds !== null && (
-                <button
-                  onClick={() => setAccountModalOpen(true)}
-                  className="typo-button flex items-center gap-1.5 px-3.5 py-2 rounded-full bg-cyan-950/40 hover:bg-cyan-900/50 border border-cyan-500/30 hover:border-cyan-400/60 text-cyan-300 text-xs tabular-nums shadow-xs transition-all active:scale-95 cursor-pointer"
-                  title="View Diamonds Wallet"
-                >
-                  <Gem className="w-3.5 h-3.5 text-cyan-400 animate-pulse" />
-                  <span>{diamonds}</span>
-                  <span className="text-[10px] text-cyan-400/70 font-normal">💎</span>
-                </button>
-              )}
+              <button
+                onClick={() => setAccountModalOpen(true)}
+                className="typo-button flex items-center gap-1.5 px-3.5 py-2 rounded-full bg-cyan-950/40 hover:bg-cyan-900/50 border border-cyan-500/30 hover:border-cyan-400/60 text-cyan-300 text-xs tabular-nums shadow-xs transition-all active:scale-95 cursor-pointer"
+                title="View Diamonds Wallet"
+              >
+                <Gem className="w-3.5 h-3.5 text-cyan-400" />
+                <span>{diamonds !== null ? diamonds : 10}</span>
+                <span className="text-[10px] text-cyan-400/70 font-normal">💎</span>
+              </button>
 
               {/* Account / Login Pill Button (CrazyGames & now.gg style) */}
               <button
@@ -317,33 +315,28 @@ export default function Navbar({
               </button>
             </div>
 
-            {/* Mobile Right Controls: Profile Avatar + Hamburger */}
+            {/* Mobile Right Controls: Diamond Wallet + Hamburger */}
             <div className="flex md:hidden items-center gap-2">
-              {canClaimDaily && (
-                <button
-                  onClick={() => setAccountModalOpen(true)}
-                  className="p-2 rounded-lg bg-amber-500/20 border border-amber-500/40 text-amber-300 flex items-center gap-1 active:scale-95 cursor-pointer animate-pulse"
-                  aria-label="Claim Daily Gift"
-                  title="Claim Daily Gift"
-                >
-                  <Sparkles className="w-3.5 h-3.5 text-amber-400" />
-                </button>
-              )}
-
               <button
                 onClick={() => setAccountModalOpen(true)}
-                className="p-2 rounded-lg bg-slate-900 border border-slate-800 text-cyan-300 flex items-center gap-1.5 active:scale-95 cursor-pointer"
-                aria-label="Open Profile"
+                className="relative h-10 px-2.5 rounded-lg bg-slate-900 border border-slate-800 text-cyan-300 flex items-center gap-1.5 active:scale-95 cursor-pointer"
+                aria-label="Open Profile & Wallet"
               >
-                <Gem className="w-3.5 h-3.5 text-cyan-400" />
-                {diamonds !== null && (
-                  <span className="typo-button text-xs tabular-nums">{diamonds}</span>
+                <Gem className="w-3.5 h-3.5 text-cyan-400 shrink-0" />
+                <span className="typo-button text-xs tabular-nums min-w-[14px]">
+                  {diamonds !== null ? diamonds : 10}
+                </span>
+                {canClaimDaily && (
+                  <span
+                    className="absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full bg-amber-400 shadow-[0_0_8px_#f59e0b] animate-ping"
+                    title="Daily Gift Available"
+                  />
                 )}
               </button>
 
               <button
                 onClick={toggleMenu}
-                className="p-2 rounded-lg bg-slate-900 border border-slate-800 text-slate-300 hover:text-white focus:outline-none active:scale-95 transition-all cursor-pointer min-w-10 min-h-10 flex items-center justify-center hover:border-pink-500/40"
+                className="w-10 h-10 rounded-lg bg-slate-900 border border-slate-800 text-slate-300 hover:text-white focus:outline-none active:scale-95 transition-all cursor-pointer flex items-center justify-center hover:border-pink-500/40"
                 aria-label="Open mobile menu"
               >
                 <Menu className="w-5 h-5 text-slate-200" />
