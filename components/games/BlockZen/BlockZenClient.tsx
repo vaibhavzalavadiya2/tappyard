@@ -25,6 +25,7 @@ import {
   findCompletedLines,
 } from '@/game/blockzen/shapes';
 import { blockZenAudio } from '@/game/blockzen/audio';
+import { triggerHaptic } from '@/lib/haptics';
 import {
   addWalletDiamonds,
   spendWalletDiamonds,
@@ -49,6 +50,7 @@ export default function BlockZenClient() {
   const [bestScore, setBestScore] = useState(0);
   const [streak, setStreak] = useState(0);
   const [diamonds, setDiamonds] = useState(0);
+  const [hasFreeReroll, setHasFreeReroll] = useState(true);
   const [isGameOver, setIsGameOver] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
   const [isFullscreen, setIsFullscreen] = useState(false);
@@ -102,6 +104,7 @@ export default function BlockZenClient() {
     setAvailableShapes(dealThreeShapes());
     setScore(0);
     setStreak(0);
+    setHasFreeReroll(true);
     setIsGameOver(false);
     setDraggedIndex(null);
     setDragPos(null);
@@ -109,8 +112,17 @@ export default function BlockZenClient() {
     blockZenAudio.place();
   }, []);
 
-  // Reroll current tray with diamonds
+  // Reroll current tray (1 Free per match, then diamonds)
   const handleReroll = useCallback(() => {
+    if (hasFreeReroll) {
+      setHasFreeReroll(false);
+      blockZenAudio.powerup();
+      setAvailableShapes(dealThreeShapes(grid));
+      setIsGameOver(false);
+      showNotification('FREE Reroll Used! Shapes Reshuffled!');
+      return;
+    }
+
     if (diamonds < REROLL_COST) {
       showNotification(`Need ${REROLL_COST} 💎 Diamonds to Reroll!`);
       return;
@@ -120,10 +132,10 @@ export default function BlockZenClient() {
     if (!success) return;
 
     blockZenAudio.powerup();
-    setAvailableShapes(dealThreeShapes());
+    setAvailableShapes(dealThreeShapes(grid));
     setIsGameOver(false);
     showNotification(`-${REROLL_COST} 💎 Shapes Reshuffled!`);
-  }, [diamonds, showNotification]);
+  }, [hasFreeReroll, diamonds, grid, showNotification]);
 
   // Audio mute toggle
   const handleToggleMute = useCallback(() => {
@@ -204,6 +216,7 @@ export default function BlockZenClient() {
       // Add points for placing the shape
       addScore(blockCount * 10);
       blockZenAudio.place();
+      triggerHaptic('light');
 
       // 2. Check for completed lines (horizontal & vertical)
       const { rows, cols } = findCompletedLines(newGrid);
@@ -229,6 +242,7 @@ export default function BlockZenClient() {
         addScore(linePoints);
         setStreak((prev) => prev + 1);
         blockZenAudio.clear(totalLines);
+        triggerHaptic(totalLines >= 2 ? 'success' : 'medium');
 
         // Milestone Diamond Rewards
         if (totalLines >= 3) {
@@ -250,7 +264,7 @@ export default function BlockZenClient() {
       const remaining = nextShapes.filter((s) => s !== null);
       let finalShapes = nextShapes;
       if (remaining.length === 0) {
-        finalShapes = dealThreeShapes();
+        finalShapes = dealThreeShapes(newGrid);
       }
 
       setGrid(newGrid);
@@ -407,19 +421,24 @@ export default function BlockZenClient() {
 
           {/* Action Powerups */}
           <div className="flex items-center gap-1.5">
-            {/* Reroll Shapes (5 Diamonds) */}
+            {/* Reroll Shapes (1 Free per match, then 5 Diamonds) */}
             <button
               onClick={handleReroll}
-              disabled={diamonds < REROLL_COST}
+              disabled={!hasFreeReroll && diamonds < REROLL_COST}
               className={`h-9 px-3 rounded-xl font-bold text-xs flex items-center gap-1.5 border transition-all cursor-pointer ${
-                diamonds >= REROLL_COST
+                hasFreeReroll
+                  ? 'bg-gradient-to-r from-emerald-500/20 to-teal-500/20 hover:from-emerald-500/30 hover:to-teal-500/30 border-emerald-400/50 text-emerald-300 active:scale-95 shadow-md shadow-emerald-950/40 animate-pulse'
+                  : diamonds >= REROLL_COST
                   ? 'bg-teal-950/60 hover:bg-teal-900 border-teal-500/40 text-teal-200 active:scale-95 shadow-md shadow-teal-950/40'
                   : 'bg-slate-900/60 border-slate-800 text-slate-500 cursor-not-allowed opacity-60'
               }`}
+              aria-label={hasFreeReroll ? 'Free Reroll Shapes' : `Reroll Shapes (${REROLL_COST} Diamonds)`}
             >
               <RefreshCw className="w-3 h-3 text-teal-400" />
               <span>Reroll</span>
-              <span className="text-[10px] text-teal-300">({REROLL_COST} 💎)</span>
+              <span className="text-[10px] text-teal-300">
+                {hasFreeReroll ? '(FREE)' : `(${REROLL_COST} 💎)`}
+              </span>
             </button>
 
             {/* Restart */}
@@ -578,14 +597,16 @@ export default function BlockZenClient() {
             </div>
 
             <div className="flex flex-col gap-2.5 w-full pt-2">
-              {/* Reshuffle Shapes Powerup with Diamonds */}
-              {diamonds >= REROLL_COST && (
+              {/* Reshuffle Shapes Powerup (Free or with Diamonds) */}
+              {(hasFreeReroll || diamonds >= REROLL_COST) && (
                 <button
                   onClick={handleReroll}
                   className="w-full h-11 rounded-2xl bg-gradient-to-r from-teal-500 to-cyan-500 text-teal-950 font-black text-xs transition-all active:scale-95 cursor-pointer shadow-lg shadow-teal-500/20 flex items-center justify-center gap-2 border border-teal-200"
                 >
                   <RefreshCw className="w-4 h-4 text-teal-950" />
-                  <span>RESHUFFLE PIECES ({REROLL_COST} 💎)</span>
+                  <span>
+                    {hasFreeReroll ? 'FREE RESHUFFLE' : `RESHUFFLE PIECES (${REROLL_COST} 💎)`}
+                  </span>
                 </button>
               )}
 

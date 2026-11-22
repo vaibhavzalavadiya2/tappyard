@@ -128,10 +128,10 @@ export default function GameHUD({
         </div>
       </div>
 
-      {/* Celebratory Milestone Toast Banner */}
+      {/* Celebratory Milestone Toast Banner (Compact & Elevated so track is 100% visible) */}
       {milestoneToast && (
-        <div className="flex justify-center mt-3 animate-bounce">
-          <div className="px-5 py-2 rounded-2xl bg-gradient-to-r from-amber-500/90 to-yellow-400/90 backdrop-blur-md border border-white/70 shadow-2xl text-slate-950 font-black text-xs tracking-wider uppercase">
+        <div className="flex justify-center mt-1 pointer-events-none animate-fadeInDown">
+          <div className="px-4 py-1.5 rounded-full bg-gradient-to-r from-amber-500/95 to-yellow-400/95 backdrop-blur-md border border-white/60 shadow-xl text-slate-950 font-black text-[11px] tracking-wider uppercase">
             {milestoneToast}
           </div>
         </div>

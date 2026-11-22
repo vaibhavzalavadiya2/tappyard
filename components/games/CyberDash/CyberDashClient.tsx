@@ -23,6 +23,7 @@ import {
   getThemeForScore,
 } from '@/game/cyberdash/engine';
 import { cyberDashAudio } from '@/game/cyberdash/audio';
+import { triggerHaptic } from '@/lib/haptics';
 import {
   addWalletDiamonds,
   spendWalletDiamonds,
@@ -68,6 +69,8 @@ export default function CyberDashClient() {
     score: 0,
     bestScore: 0,
     streak: 0,
+    grazeStreak: 0,
+    launchTimer: 0,
     screenShake: 0,
     lastTime: 0,
     animFrameId: 0,
@@ -98,8 +101,12 @@ export default function CyberDashClient() {
     if (gameState === 'idle') {
       setGameState('playing');
       setHasRevived(false);
-      engineRef.current.player.vy = -380;
+      const eng = engineRef.current;
+      eng.player.vy = -380;
+      eng.launchTimer = 1.2;
+      eng.grazeStreak = 0;
       cyberDashAudio.flap();
+      triggerHaptic('light');
       return;
     }
 
@@ -107,6 +114,7 @@ export default function CyberDashClient() {
       const eng = engineRef.current;
       eng.player.vy = -410;
       cyberDashAudio.flap();
+      triggerHaptic('light');
 
       // Emit burst particles from engine
       for (let i = 0; i < 6; i++) {
@@ -135,6 +143,8 @@ export default function CyberDashClient() {
     eng.player.vy = 0;
     eng.player.angle = 0;
     eng.player.shieldTime = 0;
+    eng.launchTimer = 0;
+    eng.grazeStreak = 0;
     eng.gates = [];
     eng.particles = [];
     eng.floatingTexts = [];
@@ -170,6 +180,8 @@ export default function CyberDashClient() {
       eng.player.vy = -180;
     }
     eng.player.shieldTime = 2.2; // 2.2 seconds invulnerability
+    eng.launchTimer = 1.0;
+    eng.grazeStreak = 0;
     eng.screenShake = 12;
 
     // Clear gates dangerously close to player
@@ -267,8 +279,13 @@ export default function CyberDashClient() {
       if (gameState === 'playing') {
         const theme = getThemeForScore(eng.score);
 
-        // Player Gravity
-        eng.player.vy += 1320 * dt;
+        // Player Gravity with launch glide (softer 820 px/s² during opening 1.2s to prevent sub-3s novice deaths)
+        if (eng.launchTimer > 0) {
+          eng.launchTimer -= dt;
+        }
+        const isLaunchPhase = eng.launchTimer > 0 || (eng.score === 0 && eng.gates.length > 0 && eng.gates[0].x > eng.player.x + 80);
+        const gravity = isLaunchPhase ? 820 : 1320;
+        eng.player.vy += gravity * dt;
         eng.player.y += eng.player.vy * dt;
 
         // Player Tilt
@@ -337,19 +354,25 @@ export default function CyberDashClient() {
             // Graze window: close to laser beam (15px to 28px)
             if (minEdgeDist < 26 && minEdgeDist > p.radius) {
               gate.grazed = true;
+              eng.grazeStreak++;
+              const grazeDiamonds = eng.grazeStreak >= 3 ? 2 : 1;
               cyberDashAudio.graze();
-              addWalletDiamonds(1);
-              eng.screenShake = 6;
+              triggerHaptic('success');
+              addWalletDiamonds(grazeDiamonds);
+              eng.screenShake = eng.grazeStreak >= 3 ? 10 : 6;
+
+              const text = eng.grazeStreak >= 3 ? `GRAZE x${eng.grazeStreak}! +${grazeDiamonds} 💎` : 'GRAZE! +1 💎';
+              const color = eng.grazeStreak >= 3 ? '#ec4899' : '#f59e0b';
 
               eng.floatingTexts.push({
                 id: eng.textIdCounter++,
                 x: p.x + 20,
                 y: p.y - 15,
-                text: 'GRAZE! +1 💎',
-                color: '#f59e0b',
+                text,
+                color,
                 alpha: 1,
                 vy: -55,
-                scale: 1.2,
+                scale: eng.grazeStreak >= 3 ? 1.4 : 1.2,
               });
             }
           }
@@ -357,6 +380,9 @@ export default function CyberDashClient() {
           // Check Gate Clearance (Score + 1)
           if (!gate.passed && gate.x + gate.width < p.x - p.radius) {
             gate.passed = true;
+            if (!gate.grazed) {
+              eng.grazeStreak = 0;
+            }
             eng.score++;
             eng.streak++;
             setScore(eng.score);
@@ -398,6 +424,7 @@ export default function CyberDashClient() {
 
             if (hitTop || hitBottom) {
               cyberDashAudio.crash();
+              triggerHaptic('warning');
               eng.screenShake = 16;
               setGameState('gameover');
             }
@@ -414,13 +441,14 @@ export default function CyberDashClient() {
           eng.player.y = h - 12 - eng.player.radius;
           if (eng.player.shieldTime <= 0) {
             cyberDashAudio.crash();
+            triggerHaptic('warning');
             eng.screenShake = 16;
             setGameState('gameover');
           }
         }
         if (eng.player.y - eng.player.radius < 12) {
           eng.player.y = 12 + eng.player.radius;
-          eng.player.vy = 0;
+          eng.player.vy = 120; // Soft bounce downward instead of abrupt zero halt
         }
       }
 

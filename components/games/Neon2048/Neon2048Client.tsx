@@ -25,6 +25,7 @@ import {
   getTileStyle,
 } from '@/game/2048/logic';
 import { neon2048Audio } from '@/game/2048/audio';
+import { triggerHaptic } from '@/lib/haptics';
 import {
   getWalletDiamonds,
   addWalletDiamonds,
@@ -45,6 +46,7 @@ export default function Neon2048Client() {
   const [tiles, setTiles] = useState<BoardTile[]>([]);
   const [score, setScore] = useState(0);
   const [bestScore, setBestScore] = useState(0);
+  const [moves, setMoves] = useState(0);
   const [history, setHistory] = useState<HistoryState[]>([]);
   const [isGameOver, setIsGameOver] = useState(false);
   const [hasWon, setHasWon] = useState(false);
@@ -112,11 +114,13 @@ export default function Neon2048Client() {
         return; // Nothing moved
       }
 
-      // Play audio
+      // Play audio & haptics
       if (result.mergeCount > 0) {
         neon2048Audio.merge(result.highestMerged);
+        triggerHaptic(result.highestMerged >= 128 ? 'success' : 'medium');
       } else {
         neon2048Audio.slide();
+        triggerHaptic('light');
       }
 
       // Save to undo history (keep last 5 moves)
@@ -124,6 +128,7 @@ export default function Neon2048Client() {
 
       // Update state
       setTiles(result.tiles);
+      setMoves((m) => m + 1);
       updateScoreAndBest(result.score);
 
       // Handle diamond rewards
@@ -137,6 +142,7 @@ export default function Neon2048Client() {
         setHasWon(true);
         addWalletDiamonds(50); // Massive win reward!
         neon2048Audio.win();
+        triggerHaptic('success');
         return;
       }
 
@@ -144,6 +150,7 @@ export default function Neon2048Client() {
       if (!canMakeMove(result.tiles)) {
         setIsGameOver(true);
         neon2048Audio.gameOver();
+        triggerHaptic('warning');
       }
     },
     [isGameOver, hasWon, keepPlaying, tiles, score, updateScoreAndBest, triggerNotification]
@@ -164,6 +171,7 @@ export default function Neon2048Client() {
     const last = history[history.length - 1];
     setTiles(last.tiles);
     setScore(last.score);
+    setMoves((m) => Math.max(0, m - 1));
     setHistory((prev) => prev.slice(0, -1));
     setIsGameOver(false);
     triggerNotification(`-${UNDO_COST} 💎 Move Undone!`);
@@ -174,6 +182,7 @@ export default function Neon2048Client() {
     const newTiles = createNewBoard();
     setTiles(newTiles);
     setScore(0);
+    setMoves(0);
     setHistory([]);
     setIsGameOver(false);
     setHasWon(false);
@@ -341,20 +350,26 @@ export default function Neon2048Client() {
         <ChallengerBanner gameSlug="2048-puzzle" currentScore={score} />
 
         {/* Score & Control Row */}
-        <div className="w-full grid grid-cols-2 gap-2.5 sm:gap-3 mb-3">
+        <div className="w-full grid grid-cols-3 gap-2 sm:gap-2.5 mb-3">
           {/* Current Score */}
-          <div className="bg-[#0b1f2a] rounded-2xl p-2.5 sm:p-3 border border-cyan-500/30 text-center shadow-lg shadow-cyan-950/50 flex flex-col items-center">
-            <span className="text-[10px] font-black uppercase tracking-widest text-cyan-400">Score</span>
-            <span className="text-xl sm:text-2xl font-black text-white">{score}</span>
+          <div className="bg-[#0b1f2a] rounded-2xl p-2 sm:p-2.5 border border-cyan-500/30 text-center shadow-lg shadow-cyan-950/50 flex flex-col items-center">
+            <span className="text-[9px] sm:text-[10px] font-black uppercase tracking-widest text-cyan-400">Score</span>
+            <span className="text-lg sm:text-xl font-black text-white">{score}</span>
+          </div>
+
+          {/* Moves */}
+          <div className="bg-[#0b1f2a] rounded-2xl p-2 sm:p-2.5 border border-teal-500/30 text-center shadow-lg shadow-teal-950/50 flex flex-col items-center">
+            <span className="text-[9px] sm:text-[10px] font-black uppercase tracking-widest text-teal-400">Moves</span>
+            <span className="text-lg sm:text-xl font-black text-white">{moves}</span>
           </div>
 
           {/* Best Score */}
-          <div className="bg-[#0b1f2a] rounded-2xl p-2.5 sm:p-3 border border-amber-500/30 text-center shadow-lg shadow-amber-950/50 flex flex-col items-center">
-            <span className="text-[10px] font-black uppercase tracking-widest text-amber-400 flex items-center gap-1">
-              <Trophy className="w-3 h-3 text-amber-400" />
+          <div className="bg-[#0b1f2a] rounded-2xl p-2 sm:p-2.5 border border-amber-500/30 text-center shadow-lg shadow-amber-950/50 flex flex-col items-center">
+            <span className="text-[9px] sm:text-[10px] font-black uppercase tracking-widest text-amber-400 flex items-center gap-0.5">
+              <Trophy className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-amber-400" />
               Best
             </span>
-            <span className="text-xl sm:text-2xl font-black text-white">{bestScore}</span>
+            <span className="text-lg sm:text-xl font-black text-white">{bestScore}</span>
           </div>
         </div>
 

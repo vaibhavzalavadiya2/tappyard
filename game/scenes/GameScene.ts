@@ -3,6 +3,7 @@ import { GAME_CONFIG, type JellySkin, type EnvironmentTheme } from '../config';
 import { audioManager } from '../audio';
 import { eventBridge } from '../events';
 import { loadProgress, updateAfterRun } from '../progress';
+import { triggerHaptic } from '@/lib/haptics';
 
 interface TrackSegment {
   zStart: number;
@@ -541,8 +542,9 @@ export class GameScene extends Phaser.Scene {
     this.squashFactor = 0.55;
     this.stretchFactor = 1.55;
 
-    // Audio effect with streak pitch escalation
+    // Audio effect with streak pitch escalation & haptic feedback
     audioManager.boost(this.boostStreak);
+    triggerHaptic(this.boostStreak >= 3 ? 'success' : 'medium');
 
     // Camera shake impact juice
     this.cameras.main.shake(160, 0.007);
@@ -627,6 +629,7 @@ export class GameScene extends Phaser.Scene {
     this.isDragging = false;
 
     audioManager.fall();
+    triggerHaptic('warning');
 
     // Persist progress and calculate game over summary
     const result = updateAfterRun(

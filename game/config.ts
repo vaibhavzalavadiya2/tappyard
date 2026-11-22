@@ -144,6 +144,24 @@ export const GAME_CONFIG = {
       eyeColor: 0x1e152a,
       unlockCost: 400,
     },
+    {
+      id: 'golden-comet',
+      name: 'Golden Comet',
+      color: 0xf1c40f,
+      sideColor: 0xd4ac0d,
+      topColor: 0xf9e79f,
+      eyeColor: 0x3d2b05,
+      unlockCost: 600,
+    },
+    {
+      id: 'void-phantom',
+      name: 'Void Phantom',
+      color: 0x8e44ad,
+      sideColor: 0x2c0c3e,
+      topColor: 0xa569bd,
+      eyeColor: 0x07010d,
+      unlockCost: 1000,
+    },
   ],
 } as const;
 

@@ -175,14 +175,30 @@ const SHAPE_TEMPLATES: { name: string; matrix: number[][] }[] = [
   },
 ];
 
+// Smaller friendly shapes for when the board is dense
+const SMALL_TEMPLATES = SHAPE_TEMPLATES.filter(
+  (t) => t.matrix.flat().filter((b) => b === 1).length <= 4 && t.name !== '3x3 Square'
+);
+
 let shapeIdCounter = 1;
 
-// Generate random set of 3 playable shapes
-export function dealThreeShapes(): BlockShape[] {
+// Generate set of 3 playable shapes with smart adaptive dealing and drought protection
+export function dealThreeShapes(grid?: (string | null)[][]): BlockShape[] {
   const shapes: BlockShape[] = [];
+  let square3x3Count = 0;
 
   for (let i = 0; i < 3; i++) {
-    const tmpl = SHAPE_TEMPLATES[Math.floor(Math.random() * SHAPE_TEMPLATES.length)];
+    // Drought protection: avoid dealing multiple 3x3 squares in the same 3-piece hand
+    let pool = SHAPE_TEMPLATES;
+    if (square3x3Count >= 1) {
+      pool = SHAPE_TEMPLATES.filter((t) => t.name !== '3x3 Square');
+    }
+
+    const tmpl = pool[Math.floor(Math.random() * pool.length)];
+    if (tmpl.name === '3x3 Square') {
+      square3x3Count++;
+    }
+
     const colorStyle = SHAPE_COLORS[Math.floor(Math.random() * SHAPE_COLORS.length)];
 
     shapes.push({
@@ -193,6 +209,47 @@ export function dealThreeShapes(): BlockShape[] {
       glow: colorStyle.glow,
       border: colorStyle.border,
     });
+  }
+
+  // Smart Adaptive Dealing: when grid is provided and tight, guarantee at least 1 legal move
+  if (grid) {
+    let occupied = 0;
+    for (let r = 0; r < GRID_SIZE; r++) {
+      for (let c = 0; c < GRID_SIZE; c++) {
+        if (grid[r][c] !== null) occupied++;
+      }
+    }
+
+    // If board is > 45% occupied, verify that at least one dealt shape fits
+    if (occupied > 45 && !canAnyShapeFit(grid, shapes)) {
+      // Find a small shape template that can legally fit
+      for (const smallTmpl of SMALL_TEMPLATES) {
+        let fits = false;
+        for (let r = 0; r < GRID_SIZE; r++) {
+          for (let c = 0; c < GRID_SIZE; c++) {
+            if (canPlaceShape(grid, smallTmpl.matrix, r, c)) {
+              fits = true;
+              break;
+            }
+          }
+          if (fits) break;
+        }
+
+        if (fits) {
+          // Replace the third shape with this playable piece
+          const colorStyle = SHAPE_COLORS[Math.floor(Math.random() * SHAPE_COLORS.length)];
+          shapes[2] = {
+            id: `shape-${shapeIdCounter++}`,
+            name: smallTmpl.name,
+            matrix: smallTmpl.matrix,
+            color: colorStyle.color,
+            glow: colorStyle.glow,
+            border: colorStyle.border,
+          };
+          break;
+        }
+      }
+    }
   }
 
   return shapes;

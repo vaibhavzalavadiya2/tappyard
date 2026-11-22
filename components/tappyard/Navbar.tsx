@@ -43,6 +43,7 @@ export default function Navbar({
 }: NavbarProps) {
   const [internalOpen, setInternalOpen] = useState(false);
   const [diamonds, setDiamonds] = useState<number | null>(null);
+  const [canClaimDaily, setCanClaimDaily] = useState(false);
   const [accountModalOpen, setAccountModalOpen] = useState(false);
   const [playerName, setPlayerName] = useState<string>('Guest');
   const [searchFocused, setSearchFocused] = useState(false);
@@ -62,6 +63,10 @@ export default function Navbar({
 
   useEffect(() => {
     try {
+      const today = new Date().toDateString();
+      const lastClaim = localStorage.getItem('tappyard_last_daily_claim');
+      setCanClaimDaily(lastClaim !== today);
+
       const unsub = subscribeWallet((d) => setDiamonds(d));
       const saved = localStorage.getItem('tappyard_player_name');
       if (saved) setPlayerName(saved);
@@ -274,6 +279,17 @@ export default function Navbar({
 
             {/* Desktop Right Links: Diamonds + Account / Login */}
             <div className="hidden md:flex items-center gap-3">
+              {canClaimDaily && (
+                <button
+                  onClick={() => setAccountModalOpen(true)}
+                  className="typo-button flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-gradient-to-r from-amber-500/20 to-yellow-500/20 hover:from-amber-500/30 hover:to-yellow-500/30 border border-amber-400/50 text-amber-300 text-xs font-bold animate-pulse shadow-md transition-all active:scale-95 cursor-pointer"
+                  title="Claim Daily Diamond Reward"
+                >
+                  <Sparkles className="w-3.5 h-3.5 text-amber-400" />
+                  <span>Daily Gift</span>
+                </button>
+              )}
+
               {diamonds !== null && (
                 <button
                   onClick={() => setAccountModalOpen(true)}
@@ -303,6 +319,17 @@ export default function Navbar({
 
             {/* Mobile Right Controls: Profile Avatar + Hamburger */}
             <div className="flex md:hidden items-center gap-2">
+              {canClaimDaily && (
+                <button
+                  onClick={() => setAccountModalOpen(true)}
+                  className="p-2 rounded-lg bg-amber-500/20 border border-amber-500/40 text-amber-300 flex items-center gap-1 active:scale-95 cursor-pointer animate-pulse"
+                  aria-label="Claim Daily Gift"
+                  title="Claim Daily Gift"
+                >
+                  <Sparkles className="w-3.5 h-3.5 text-amber-400" />
+                </button>
+              )}
+
               <button
                 onClick={() => setAccountModalOpen(true)}
                 className="p-2 rounded-lg bg-slate-900 border border-slate-800 text-cyan-300 flex items-center gap-1.5 active:scale-95 cursor-pointer"
