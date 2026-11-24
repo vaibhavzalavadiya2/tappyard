@@ -17,6 +17,8 @@ export default function GameCard({ game, onPlay }: GameCardProps) {
         return 'Jump Jelly Jump! - 3D endless runner';
       case '2048-puzzle':
         return '2048 Neon Fusion - 2048 number puzzle';
+      case 'cupcake-2048':
+        return 'Cupcake 2048 - 2048 cupcakes puzzle';
       case 'color-zen':
         return 'Block Grid Zen - 10x10 block puzzle';
       case 'quick-tap':
@@ -51,6 +53,8 @@ export default function GameCard({ game, onPlay }: GameCardProps) {
         return 'group-hover/card:border-cyan-400/60 group-hover/card:shadow-[0_0_24px_rgba(0,240,255,0.25)]';
       case '2048-puzzle':
         return 'group-hover/card:border-amber-400/60 group-hover/card:shadow-[0_0_24px_rgba(245,158,11,0.25)]';
+      case 'cupcake-2048':
+        return 'group-hover/card:border-pink-400/60 group-hover/card:shadow-[0_0_24px_rgba(236,72,153,0.25)]';
       case 'color-zen':
         return 'group-hover/card:border-teal-400/60 group-hover/card:shadow-[0_0_24px_rgba(20,184,166,0.25)]';
       case 'quick-tap':
@@ -83,10 +87,10 @@ export default function GameCard({ game, onPlay }: GameCardProps) {
           <span>{game.rating.toFixed(1)}</span>
         </div>
 
-        {/* Original Badge (top-right, CrazyGames style) */}
+        {/* Badge (top-right, CrazyGames style) */}
         <div className="absolute top-2.5 right-2.5 z-10">
           <span className="typo-label px-2 py-0.5 rounded-full text-[8px] sm:text-[9px] tracking-wider uppercase border border-pink-500/40 bg-pink-500/25 text-pink-300 backdrop-blur-md">
-            ORIGINAL
+            {game.badge || 'ORIGINAL'}
           </span>
         </div>
 

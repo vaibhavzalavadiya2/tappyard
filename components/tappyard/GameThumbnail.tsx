@@ -1,6 +1,7 @@
 'use client';
 
 import { Gem, Zap } from 'lucide-react';
+import CupcakeIllustration from '@/components/games/Cupcake2048/CupcakeIllustration';
 
 interface GameThumbnailProps {
   id: string;
@@ -84,6 +85,14 @@ export default function GameThumbnail({
               <Zap className="w-3 h-3 text-white" />
             </div>
           </div>
+        </div>
+      );
+    }
+
+    if (id === 'cupcake-2048' || id === 'cupcake') {
+      return (
+        <div className={`relative overflow-hidden flex items-center justify-center bg-gradient-to-br from-[#240c2d] via-[#341142] to-[#1a0721] ${className}`}>
+          <CupcakeIllustration value={2048} className="w-8 h-8 sm:w-9 sm:h-9 drop-shadow-[0_4px_8px_rgba(236,72,153,0.4)]" />
         </div>
       );
     }
@@ -220,6 +229,31 @@ export default function GameThumbnail({
           <div className="w-6 h-0.5 bg-gradient-to-r from-transparent to-cyan-400 shadow-[0_0_8px_#00f0ff]" />
           <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-cyan-400 to-fuchsia-500 flex items-center justify-center shadow-lg shadow-cyan-500/50 transform -rotate-12 animate-pulse border border-white/40">
             <Zap className="w-4 h-4 text-white" />
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (id === 'cupcake-2048' || id === 'cupcake') {
+    return (
+      <div className={`relative overflow-hidden flex items-center justify-center bg-gradient-to-br from-[#220c2b] via-[#361344] to-[#16061c] ${className}`}>
+        {particleLayer}
+        {vignetteOverlay}
+
+        <div className="absolute inset-0 bg-radial from-pink-500/20 via-transparent to-transparent pointer-events-none" />
+        <div className="grid grid-cols-2 gap-1.5 sm:gap-2 p-2 sm:p-2.5 bg-[#1f0d27]/80 rounded-2xl border border-pink-500/40 shadow-xl shadow-pink-950/60 backdrop-blur-xs z-[2]">
+          <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-br from-amber-100 to-orange-100 flex items-center justify-center border border-amber-300 shadow-sm transition-transform duration-300 group-hover/card:scale-110">
+            <CupcakeIllustration value={2} className="w-6 h-6 sm:w-7 sm:h-7" />
+          </div>
+          <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-br from-pink-100 to-rose-200 flex items-center justify-center border border-pink-300 shadow-sm transition-transform duration-300 group-hover/card:scale-110">
+            <CupcakeIllustration value={4} className="w-6 h-6 sm:w-7 sm:h-7" />
+          </div>
+          <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-br from-rose-800 to-red-950 flex items-center justify-center border border-rose-400 shadow-sm transition-transform duration-300 group-hover/card:scale-110">
+            <CupcakeIllustration value={256} className="w-6 h-6 sm:w-7 sm:h-7" />
+          </div>
+          <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-br from-cyan-400 via-fuchsia-400 to-pink-400 flex items-center justify-center border border-white shadow-lg ring-2 ring-pink-400/60 animate-pulse transition-transform duration-300 group-hover/card:scale-110">
+            <CupcakeIllustration value={2048} className="w-6 h-6 sm:w-7 sm:h-7" />
           </div>
         </div>
       </div>

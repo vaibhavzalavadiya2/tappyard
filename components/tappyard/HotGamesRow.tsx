@@ -20,6 +20,8 @@ export default function HotGamesRow() {
         return 'from-cyan-400 via-blue-500 to-indigo-500 shadow-cyan-500/30';
       case '2048-puzzle':
         return 'from-amber-400 via-orange-500 to-yellow-500 shadow-amber-500/30';
+      case 'cupcake-2048':
+        return 'from-pink-400 via-rose-500 to-amber-400 shadow-pink-500/30';
       case 'color-zen':
         return 'from-teal-400 via-emerald-500 to-cyan-500 shadow-teal-500/30';
       case 'quick-tap':

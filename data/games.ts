@@ -83,6 +83,21 @@ export const GAMES_CATALOGUE: GameItem[] = [
     badge: 'TAPPYARD ORIGINAL',
     accentColor: '#a855f7',
   },
+  {
+    id: 'cupcake-2048',
+    title: 'Cupcake 2048',
+    description: 'Play Cupcake 2048 free online in your browser. Merge delicious cupcake tiles to reach the 2048 Diamond Cupcake with undo support and no downloads needed.',
+    category: 'Puzzle',
+    thumbnail: 'cupcake-2048',
+    route: '/games/cupcake-2048',
+    sourceType: 'owned',
+    featured: true,
+    rating: 4.9,
+    playsCount: '15.4k',
+    tags: ['Cupcake 2048', '2048 Cupcakes', 'Puzzle', 'Brain Puzzle', 'Merge Game', 'Unblocked Games', 'Dessert Games'],
+    badge: 'NEW DESSERT',
+    accentColor: '#ec4899',
+  },
 ];
 
 export function getFeaturedGames(): GameItem[] {

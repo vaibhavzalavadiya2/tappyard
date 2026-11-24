@@ -8,6 +8,7 @@ const routes = [
   { url: '/', file: 'index.html' },
   { url: '/games/jelly-bounce', file: 'games/jelly-bounce.html' },
   { url: '/games/2048-puzzle', file: 'games/2048-puzzle.html' },
+  { url: '/games/cupcake-2048', file: 'games/cupcake-2048.html' },
   { url: '/games/color-zen', file: 'games/color-zen.html' },
   { url: '/games/quick-tap', file: 'games/quick-tap.html' },
   { url: '/guides/2048-strategy', file: 'guides/2048-strategy.html' },

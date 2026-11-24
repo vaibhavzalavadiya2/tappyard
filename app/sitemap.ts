@@ -15,6 +15,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
   const supportingPages = [
     {
+      url: `${SITE_URL}/games/cupcake-2048`,
+      lastModified: new Date('2026-11-24'),
+      changeFrequency: 'daily' as const,
+      priority: 0.9,
+    },
+    {
       url: `${SITE_URL}/guides/2048-strategy`,
       lastModified: new Date('2026-11-21'),
       changeFrequency: 'weekly' as const,

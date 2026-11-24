@@ -176,6 +176,17 @@ export default function HeroFeatured() {
           tag: 'BRAIN & MATH SLIDING TILES',
           pillActive: 'bg-amber-500/30 text-amber-200 border-amber-400/50 shadow-[0_0_12px_rgba(245,158,11,0.4)]',
         };
+      case 'cupcake-2048':
+        return {
+          bg: 'from-[#220c2b] via-[#2f113b] to-[#16061c]',
+          border: 'border-pink-500/40',
+          glow1: 'bg-pink-500/25',
+          glow2: 'bg-rose-600/20',
+          btn: 'bg-gradient-to-r from-pink-400 via-rose-500 to-amber-400 shadow-pink-500/40 hover:shadow-pink-500/60',
+          badge: 'bg-pink-500/20 text-pink-300 border-pink-500/40',
+          tag: 'VIRAL DESSERT MERGE PUZZLE',
+          pillActive: 'bg-pink-500/30 text-pink-200 border-pink-400/50 shadow-[0_0_12px_rgba(236,72,153,0.4)]',
+        };
       case 'color-zen':
         return {
           bg: 'from-[#031818] via-[#072a29] to-[#021313]',
@@ -216,7 +227,7 @@ export default function HeroFeatured() {
         onPointerDown={handlePointerDown}
         onClickCapture={handleClickCapture}
         onDragStart={(e) => e.preventDefault()}
-        className={`group/hero relative overflow-hidden rounded-xl bg-gradient-to-br ${theme.bg} border ${theme.border} shadow-2xl p-4 sm:p-6 lg:p-8 xl:p-10 transition-colors duration-700 w-full min-h-[380px] sm:min-h-[420px] lg:min-h-[440px] select-none touch-pan-y ${isDragging ? 'cursor-grabbing' : 'cursor-grab'
+        className={`group/hero relative overflow-hidden rounded-xl bg-gradient-to-br ${theme.bg} border ${theme.border} shadow-2xl p-4 sm:p-6 lg:p-8 xl:p-10 transition-colors duration-700 w-full sm:min-h-[420px] lg:min-h-[440px] select-none touch-pan-y ${isDragging ? 'cursor-grabbing' : 'cursor-grab'
           }`}
       >
         {/* Dynamic Background Light Spheres */}
