@@ -1,9 +1,12 @@
 import { createServerClient } from '@supabase/ssr';
 import { cookies } from 'next/headers';
 
+const DEFAULT_SUPABASE_URL = 'https://mxbzlkyljcpydixrsuoz.supabase.co';
+const DEFAULT_SUPABASE_ANON_KEY = 'sb_publishable_nGpJRsOkzH3G0oxrvfurhQ_gd7nYpaX';
+
 export async function createSupabaseServerClient() {
-  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL || DEFAULT_SUPABASE_URL;
+  const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || DEFAULT_SUPABASE_ANON_KEY;
 
   if (!url || !anonKey) {
     return null;

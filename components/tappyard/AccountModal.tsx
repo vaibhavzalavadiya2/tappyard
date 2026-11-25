@@ -515,7 +515,7 @@ export default function AccountModal({ isOpen, onClose }: AccountModalProps) {
               {/* Google Sign-In Button */}
               <button
                 onClick={handleGoogleLogin}
-                disabled={authBusy || !authState.configured}
+                disabled={authBusy}
                 className="typo-button flex items-center justify-center gap-2.5 w-full py-2.5 rounded-xl text-xs font-bold text-slate-900 bg-white hover:bg-slate-100 shadow-md active:scale-95 transition-all cursor-pointer disabled:opacity-60"
               >
                 <svg viewBox="0 0 24 24" className="w-4 h-4" aria-hidden="true">
