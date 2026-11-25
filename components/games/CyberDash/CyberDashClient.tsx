@@ -31,6 +31,12 @@ import {
 } from '@/lib/wallet';
 import { shareScoreChallenge } from '@/lib/challenge';
 import ChallengerBanner from '@/components/tappyard/ChallengerBanner';
+import {
+  getGameBestScore,
+  setGameBestScore,
+  incrementGamePlayCount,
+} from '@/lib/highScores';
+import { PROFILE_SYNCED_EVENT } from '@/lib/syncEvents';
 
 const REVIVE_COST = 5;
 
@@ -78,17 +84,21 @@ export default function CyberDashClient() {
 
   // Sync state & load best score
   useEffect(() => {
-    const saved = localStorage.getItem('tappyard-cyberdash-best');
-    if (saved) {
-      const val = parseInt(saved, 10) || 0;
+    const syncBest = () => {
+      const val = getGameBestScore('quick-tap');
       setBestScore(val);
       engineRef.current.bestScore = val;
-    }
+    };
+    syncBest();
 
     setIsMuted(cyberDashAudio.getMuted());
     const unsub = subscribeWallet((d) => setDiamonds(d));
+    window.addEventListener(PROFILE_SYNCED_EVENT, syncBest);
 
-    return () => unsub();
+    return () => {
+      unsub();
+      window.removeEventListener(PROFILE_SYNCED_EVENT, syncBest);
+    };
   }, []);
 
   const showNotice = useCallback((msg: string) => {
@@ -390,9 +400,8 @@ export default function CyberDashClient() {
 
             // Update best
             if (eng.score > eng.bestScore) {
-              eng.bestScore = eng.score;
-              setBestScore(eng.score);
-              localStorage.setItem('tappyard-cyberdash-best', String(eng.score));
+              eng.bestScore = setGameBestScore('quick-tap', eng.score);
+              setBestScore(eng.bestScore);
             }
 
             // Milestone Diamond Rewards
@@ -426,6 +435,7 @@ export default function CyberDashClient() {
               cyberDashAudio.crash();
               triggerHaptic('warning');
               eng.screenShake = 16;
+              incrementGamePlayCount('quick-tap');
               setGameState('gameover');
             }
           }

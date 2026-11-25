@@ -34,6 +34,12 @@ import {
 } from '@/lib/wallet';
 import { shareScoreChallenge } from '@/lib/challenge';
 import ChallengerBanner from '@/components/tappyard/ChallengerBanner';
+import {
+  getGameBestScore,
+  setGameBestScore,
+  incrementGamePlayCount,
+} from '@/lib/highScores';
+import { PROFILE_SYNCED_EVENT } from '@/lib/syncEvents';
 
 const UNDO_COST = 5;
 
@@ -62,23 +68,24 @@ export default function Neon2048Client() {
 
   // Initialize game & wallet on mount
   useEffect(() => {
-    // Load best score
-    const savedBest = localStorage.getItem('tappyard-2048-best');
-    if (savedBest) {
-      setBestScore(parseInt(savedBest, 10) || 0);
-    }
+    const syncBest = () => setBestScore(getGameBestScore('2048-puzzle'));
+    syncBest();
 
     // Set initial audio mute state
     setIsMuted(neon2048Audio.getMuted());
 
     // Subscribe to unified diamond wallet
     const unsub = subscribeWallet((d) => setDiamonds(d));
+    window.addEventListener(PROFILE_SYNCED_EVENT, syncBest);
 
     // Create fresh board
     const initialTiles = createNewBoard();
     setTiles(initialTiles);
 
-    return () => unsub();
+    return () => {
+      unsub();
+      window.removeEventListener(PROFILE_SYNCED_EVENT, syncBest);
+    };
   }, []);
 
   // Update best score
@@ -86,8 +93,7 @@ export default function Neon2048Client() {
     setScore(newScore);
     setBestScore((prev) => {
       if (newScore > prev) {
-        localStorage.setItem('tappyard-2048-best', String(newScore));
-        return newScore;
+        return setGameBestScore('2048-puzzle', newScore);
       }
       return prev;
     });
@@ -149,6 +155,7 @@ export default function Neon2048Client() {
       // Check game over
       if (!canMakeMove(result.tiles)) {
         setIsGameOver(true);
+        incrementGamePlayCount('2048-puzzle');
         neon2048Audio.gameOver();
         triggerHaptic('warning');
       }

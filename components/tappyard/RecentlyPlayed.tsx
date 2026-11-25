@@ -5,34 +5,28 @@ import { useEffect, useState } from 'react';
 import { GAMES_CATALOGUE, type GameItem } from '@/data/games';
 import GameThumbnail from './GameThumbnail';
 import { Clock, Play, ArrowRight } from 'lucide-react';
+import { getRecentGameIds } from '@/lib/highScores';
+import { PROFILE_SYNCED_EVENT } from '@/lib/syncEvents';
 
 export default function RecentlyPlayed() {
   const [recentGames, setRecentGames] = useState<GameItem[]>([]);
 
   useEffect(() => {
-    try {
-      const stored =
-        localStorage.getItem('tappyard_recent_games') ||
-        localStorage.getItem('playhub_recent_games');
-      const ids: string[] = stored ? JSON.parse(stored) : [];
-
-      // If user has previous Jelly Bounce progress, ensure it shows in recently played
-      if (
-        !ids.includes('jelly-bounce') &&
-        localStorage.getItem('jelly-bounce-progress')
-      ) {
-        ids.unshift('jelly-bounce');
-      }
-
+    const syncRecent = () => {
+      const ids = getRecentGameIds();
       if (ids.length > 0) {
         const found = ids
           .map((id) => GAMES_CATALOGUE.find((g) => g.id === id))
           .filter((g): g is GameItem => Boolean(g));
         setRecentGames(found);
+      } else {
+        setRecentGames([]);
       }
-    } catch {
-      // Ignore
-    }
+    };
+
+    syncRecent();
+    window.addEventListener(PROFILE_SYNCED_EVENT, syncRecent);
+    return () => window.removeEventListener(PROFILE_SYNCED_EVENT, syncRecent);
   }, []);
 
   if (recentGames.length === 0) return null;

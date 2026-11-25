@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { useEffect, useState, useCallback, useRef } from 'react';
 import { loadProgress, type GameProgress } from '@/game/progress';
 import { GAME_CONFIG } from '@/game/config';
+import { PROFILE_SYNCED_EVENT } from '@/lib/syncEvents';
 import { GAMES_CATALOGUE, type GameItem } from '@/data/games';
 import GameThumbnail from './GameThumbnail';
 import {
@@ -36,12 +37,16 @@ export default function HeroFeatured() {
   const currentGame: GameItem = featuredGames[currentIndex] || featuredGames[0];
 
   useEffect(() => {
-    try {
-      const p = loadProgress();
-      setProgress(p);
-    } catch {
-      // Ignore
-    }
+    const syncProgress = () => {
+      try {
+        setProgress(loadProgress());
+      } catch {
+        // Ignore
+      }
+    };
+    syncProgress();
+    window.addEventListener(PROFILE_SYNCED_EVENT, syncProgress);
+    return () => window.removeEventListener(PROFILE_SYNCED_EVENT, syncProgress);
   }, []);
 
   const nextSlide = useCallback(() => {

@@ -1,19 +1,21 @@
 'use client';
 
 import Link from 'next/link';
+import dynamic from 'next/dynamic';
 import { useState, useEffect, useRef, useMemo } from 'react';
 import {
   GAMES_CATALOGUE,
   searchGames,
   type GameCategory,
-  type GameItem,
 } from '@/data/games';
-import { Search, X, Menu, Gem, User, Flame, ArrowRight, Play, Sparkles } from 'lucide-react';
+import { Search, X, Menu, Gem, User, Flame, Play, Sparkles } from 'lucide-react';
 import { subscribeWallet } from '@/lib/wallet';
+import { PROFILE_SYNCED_EVENT } from '@/lib/syncEvents';
 import MobileDrawer from './MobileDrawer';
-import AccountModal from './AccountModal';
 import BrandIcon from './BrandIcon';
 import GameThumbnail from './GameThumbnail';
+
+const AccountModal = dynamic(() => import('./AccountModal'), { ssr: false });
 
 const TRENDING_TAGS = [
   { label: '2048', query: '2048' },
@@ -46,6 +48,7 @@ export default function Navbar({
   const [canClaimDaily, setCanClaimDaily] = useState(false);
   const [accountModalOpen, setAccountModalOpen] = useState(false);
   const [playerName, setPlayerName] = useState<string>('Guest');
+  const [isCloudLoggedIn, setIsCloudLoggedIn] = useState(false);
   const [searchFocused, setSearchFocused] = useState(false);
 
   const desktopSearchRef = useRef<HTMLDivElement>(null);
@@ -62,18 +65,28 @@ export default function Navbar({
   };
 
   useEffect(() => {
-    try {
-      const today = new Date().toDateString();
-      const lastClaim = localStorage.getItem('tappyard_last_daily_claim');
-      setCanClaimDaily(lastClaim !== today);
+    const syncNavbarProfile = () => {
+      try {
+        const today = new Date().toDateString();
+        const lastClaim = localStorage.getItem('tappyard_last_daily_claim');
+        setCanClaimDaily(lastClaim !== today);
 
-      const unsub = subscribeWallet((d) => setDiamonds(d));
-      const saved = localStorage.getItem('tappyard_player_name');
-      if (saved) setPlayerName(saved);
-      return () => unsub();
-    } catch {
-      // fallback
-    }
+        const saved = localStorage.getItem('tappyard_player_name');
+        setPlayerName(saved && saved.trim() ? saved.trim() : 'Guest');
+        setIsCloudLoggedIn(localStorage.getItem('tappyard_logged_in') === 'true');
+      } catch {
+        // fallback
+      }
+    };
+
+    syncNavbarProfile();
+    const unsub = subscribeWallet((d) => setDiamonds(d));
+    window.addEventListener(PROFILE_SYNCED_EVENT, syncNavbarProfile);
+
+    return () => {
+      unsub();
+      window.removeEventListener(PROFILE_SYNCED_EVENT, syncNavbarProfile);
+    };
   }, []);
 
   // Global keyboard shortcuts: '/' to focus search, 'Escape' to blur/close (Desktop only)
@@ -306,11 +319,17 @@ export default function Navbar({
                 className="typo-button flex items-center gap-2.5 px-4 py-2 rounded-full text-xs text-white bg-slate-900/90 hover:bg-slate-850 border border-slate-700/80 hover:border-pink-500/60 shadow-md hover:shadow-[0_0_20px_rgba(236,72,153,0.3)] hover:scale-105 active:scale-95 transition-all cursor-pointer group"
                 aria-label="Open Account & Profile"
               >
-                <div className="w-6 h-6 rounded-full bg-gradient-to-tr from-pink-500 to-purple-600 flex items-center justify-center text-white text-[10px] font-semibold shadow-sm">
+                <div className="relative w-6 h-6 rounded-full bg-gradient-to-tr from-pink-500 to-purple-600 flex items-center justify-center text-white text-[10px] font-semibold shadow-sm">
                   <User className="w-3.5 h-3.5 text-white" />
+                  {isCloudLoggedIn && (
+                    <span
+                      className="absolute -bottom-0.5 -right-0.5 w-2 h-2 rounded-full bg-emerald-400 border border-[#090d16]"
+                      title="Cloud Synced"
+                    />
+                  )}
                 </div>
                 <span className="group-hover:text-pink-300 transition-colors">
-                  {playerName !== 'Guest' ? playerName : 'Player Profile'}
+                  {playerName !== 'Guest' && playerName !== 'Player' ? playerName : isCloudLoggedIn ? 'Cloud Player' : 'Player Profile'}
                 </span>
               </button>
             </div>
@@ -381,11 +400,13 @@ export default function Navbar({
         diamonds={diamonds}
       />
 
-      {/* Player Account & Profile Modal */}
-      <AccountModal
-        isOpen={accountModalOpen}
-        onClose={() => setAccountModalOpen(false)}
-      />
+      {/* Player Account & Profile Modal (lazy-loaded on open to keep homepage bundle tiny) */}
+      {accountModalOpen && (
+        <AccountModal
+          isOpen={accountModalOpen}
+          onClose={() => setAccountModalOpen(false)}
+        />
+      )}
     </>
   );
 }

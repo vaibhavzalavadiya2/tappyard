@@ -108,14 +108,14 @@ export default function Footer() {
               © 2026 TAPPYARD. All rights reserved.
               <span className="hidden md:inline"> Play free instant browser games online.</span>
             </p>
-            <div className="typo-label tracking-normal flex items-center justify-center gap-2 sm:gap-3 text-[10px] sm:text-xs text-slate-400 whitespace-nowrap">
+            <div className="typo-label tracking-normal flex flex-wrap items-center justify-center gap-2 sm:gap-3 text-[10px] sm:text-xs text-slate-400">
+              <Link href="/privacy" className="hover:text-slate-200 transition-colors">Privacy Policy</Link>
+              <span className="text-slate-600">•</span>
+              <Link href="/terms" className="hover:text-slate-200 transition-colors">Terms of Service</Link>
+              <span className="text-slate-600">•</span>
               <span>HTML5 Games</span>
               <span className="text-slate-600">•</span>
-              <span>WebGL 3D</span>
-              <span className="text-slate-600">•</span>
               <span>Mobile Ready</span>
-              <span className="text-slate-600">•</span>
-              <span>No Downloads</span>
             </div>
           </div>
         </div>

@@ -1,5 +1,6 @@
 // Progress manager - handles localStorage persistence for Jump Jelly Jump
 import { GAME_CONFIG } from './config';
+import { notifyLocalDataChanged } from '@/lib/syncEvents';
 
 export interface GameProgress {
   bestDistance: number;
@@ -57,12 +58,18 @@ export function loadProgress(): GameProgress {
   }
 }
 
-export function saveProgress(progress: GameProgress): void {
+export function saveProgress(
+  progress: GameProgress,
+  options?: { silentSync?: boolean }
+): void {
   if (typeof window === 'undefined') return;
   try {
     progress.bestScore = progress.bestDistance;
     localStorage.setItem(STORAGE_KEY, JSON.stringify(progress));
     localStorage.setItem(LEGACY_STORAGE_KEY, JSON.stringify(progress));
+    if (!options?.silentSync) {
+      notifyLocalDataChanged('progress');
+    }
   } catch {
     // localStorage may be disabled or full
   }

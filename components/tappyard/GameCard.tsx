@@ -4,6 +4,7 @@ import Link from 'next/link';
 import type { GameItem } from '@/data/games';
 import GameThumbnail from './GameThumbnail';
 import { Star, Play, Sparkles } from 'lucide-react';
+import { addRecentGameId } from '@/lib/highScores';
 
 interface GameCardProps {
   game: GameItem;
@@ -31,19 +32,7 @@ export default function GameCard({ game, onPlay }: GameCardProps) {
   const descriptiveTitle = getDescriptiveTitle(game.id, game.title);
 
   const recordPlay = () => {
-    try {
-      const stored =
-        localStorage.getItem('tappyard_recent_games') ||
-        localStorage.getItem('playhub_recent_games');
-      const recent: string[] = stored ? JSON.parse(stored) : [];
-      const updated = [game.id, ...recent.filter((id) => id !== game.id)].slice(
-        0,
-        6
-      );
-      localStorage.setItem('tappyard_recent_games', JSON.stringify(updated));
-    } catch {
-      // Ignore localStorage errors
-    }
+    addRecentGameId(game.id);
     if (onPlay) onPlay(game);
   };
 

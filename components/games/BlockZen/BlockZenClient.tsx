@@ -33,6 +33,12 @@ import {
 } from '@/lib/wallet';
 import { shareScoreChallenge } from '@/lib/challenge';
 import ChallengerBanner from '@/components/tappyard/ChallengerBanner';
+import {
+  getGameBestScore,
+  setGameBestScore,
+  incrementGamePlayCount,
+} from '@/lib/highScores';
+import { PROFILE_SYNCED_EVENT } from '@/lib/syncEvents';
 
 const REROLL_COST = 5;
 
@@ -65,17 +71,19 @@ export default function BlockZenClient() {
 
   // Initialize
   useEffect(() => {
-    const saved = localStorage.getItem('tappyard-blockzen-best');
-    if (saved) {
-      setBestScore(parseInt(saved, 10) || 0);
-    }
+    const syncBest = () => setBestScore(getGameBestScore('color-zen'));
+    syncBest();
     setIsMuted(blockZenAudio.getMuted());
     const unsub = subscribeWallet((d) => setDiamonds(d));
+    window.addEventListener(PROFILE_SYNCED_EVENT, syncBest);
 
     // Deal first round of 3 shapes
     setAvailableShapes(dealThreeShapes());
 
-    return () => unsub();
+    return () => {
+      unsub();
+      window.removeEventListener(PROFILE_SYNCED_EVENT, syncBest);
+    };
   }, []);
 
   const showNotification = useCallback((msg: string) => {
@@ -89,8 +97,7 @@ export default function BlockZenClient() {
       const updated = prev + points;
       setBestScore((bPrev) => {
         if (updated > bPrev) {
-          localStorage.setItem('tappyard-blockzen-best', String(updated));
-          return updated;
+          return setGameBestScore('color-zen', updated);
         }
         return bPrev;
       });
@@ -273,6 +280,7 @@ export default function BlockZenClient() {
       // 4. Verify if any moves remain
       if (!canAnyShapeFit(newGrid, finalShapes)) {
         setIsGameOver(true);
+        incrementGamePlayCount('color-zen');
         blockZenAudio.gameOver();
       }
     },

@@ -13,6 +13,7 @@ import MainMenu from './MainMenu';
 import GameHUD from './GameHUD';
 import PauseOverlay from './PauseOverlay';
 import GameOverOverlay from './GameOverOverlay';
+import { PROFILE_SYNCED_EVENT } from '@/lib/syncEvents';
 
 type GameState = 'menu' | 'playing' | 'paused' | 'gameOver';
 
@@ -33,14 +34,19 @@ export default function GameContainer() {
   const [progress, setProgress] = useState<GameProgress | null>(null);
   const [openShopOnMenu, setOpenShopOnMenu] = useState(false);
 
-  // Load progress on mount
+  // Load progress on mount & refresh on cloud sync
   useEffect(() => {
-    const p = loadProgress();
-    setBestDistance(p.bestDistance);
-    setTotalDiamonds(p.totalDiamonds);
-    setIsMuted(p.soundMuted);
-    audioManager.setMuted(p.soundMuted);
-    setProgress(p);
+    const syncLocal = () => {
+      const p = loadProgress();
+      setBestDistance(p.bestDistance);
+      setTotalDiamonds(p.totalDiamonds);
+      setIsMuted(p.soundMuted);
+      audioManager.setMuted(p.soundMuted);
+      setProgress(p);
+    };
+    syncLocal();
+    window.addEventListener(PROFILE_SYNCED_EVENT, syncLocal);
+    return () => window.removeEventListener(PROFILE_SYNCED_EVENT, syncLocal);
   }, []);
 
   // Initialize Phaser

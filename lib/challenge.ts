@@ -1,5 +1,6 @@
 import { showToast } from './toast';
 import { addWalletDiamonds } from './wallet';
+import { notifyLocalDataChanged } from './syncEvents';
 
 export interface ChallengeData {
   isChallenge: boolean;
@@ -19,10 +20,13 @@ export function getPlayerName(): string {
   return 'Player';
 }
 
-export function setPlayerName(name: string): void {
+export function setPlayerName(name: string, options?: { silentSync?: boolean }): void {
   if (typeof window === 'undefined') return;
   try {
     localStorage.setItem('tappyard_player_name', name.trim() || 'Player');
+    if (!options?.silentSync) {
+      notifyLocalDataChanged('profile');
+    }
   } catch {
     // ignore
   }

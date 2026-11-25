@@ -36,6 +36,12 @@ import { shareScoreChallenge } from '@/lib/challenge';
 import ChallengerBanner from '@/components/tappyard/ChallengerBanner';
 import CupcakeIllustration from './CupcakeIllustration';
 import { CUPCAKE_TIERS, getCupcakeTier } from './CupcakeData';
+import {
+  getGameBestScore,
+  setGameBestScore,
+  incrementGamePlayCount,
+} from '@/lib/highScores';
+import { PROFILE_SYNCED_EVENT } from '@/lib/syncEvents';
 
 const UNDO_COST = 5;
 
@@ -65,23 +71,24 @@ export default function Cupcake2048Client() {
 
   // Initialize game on mount
   useEffect(() => {
-    // Load best score
-    const savedBest = localStorage.getItem('tappyard-cupcake-2048-best');
-    if (savedBest) {
-      setBestScore(parseInt(savedBest, 10) || 0);
-    }
+    const syncBest = () => setBestScore(getGameBestScore('cupcake-2048'));
+    syncBest();
 
     // Set audio mute
     setIsMuted(neon2048Audio.getMuted());
 
     // Subscribe to unified diamond wallet
     const unsub = subscribeWallet((d) => setDiamonds(d));
+    window.addEventListener(PROFILE_SYNCED_EVENT, syncBest);
 
     // Create fresh board
     const initialTiles = createNewBoard();
     setTiles(initialTiles);
 
-    return () => unsub();
+    return () => {
+      unsub();
+      window.removeEventListener(PROFILE_SYNCED_EVENT, syncBest);
+    };
   }, []);
 
   // Update best score
@@ -89,8 +96,7 @@ export default function Cupcake2048Client() {
     setScore(newScore);
     setBestScore((prev) => {
       if (newScore > prev) {
-        localStorage.setItem('tappyard-cupcake-2048-best', String(newScore));
-        return newScore;
+        return setGameBestScore('cupcake-2048', newScore);
       }
       return prev;
     });
@@ -150,6 +156,7 @@ export default function Cupcake2048Client() {
       // Check game over
       if (!canMakeMove(result.tiles)) {
         setIsGameOver(true);
+        incrementGamePlayCount('cupcake-2048');
         neon2048Audio.gameOver();
         triggerHaptic('warning');
       }
