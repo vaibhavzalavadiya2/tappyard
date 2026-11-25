@@ -61,7 +61,7 @@ export default function GameCard({ game, onPlay }: GameCardProps) {
     >
       {/* Squircle Game Thumbnail (now.gg / iOS App Store style) */}
       <div
-        className={`relative aspect-square sm:aspect-4/3 w-full rounded-2xl sm:rounded-3xl overflow-hidden bg-slate-950 border border-slate-800/90 shadow-md transition-all duration-300 group-hover/card:scale-[1.03] group-hover/card:-translate-y-1.5 ${getAccentBorder(
+        className={`relative aspect-square sm:aspect-4/3 w-full rounded-2xl overflow-hidden bg-slate-950 border border-slate-800/90 shadow-md transition-all duration-300 group-hover/card:scale-[1.03] group-hover/card:-translate-y-1.5 ${getAccentBorder(
           game.id
         )}`}
       >
@@ -75,14 +75,6 @@ export default function GameCard({ game, onPlay }: GameCardProps) {
           <Star className="w-2.5 h-2.5 sm:w-3 sm:h-3 fill-amber-400 text-amber-400 drop-shadow-[0_0_4px_rgba(251,191,36,0.8)]" />
           <span>{game.rating.toFixed(1)}</span>
         </div>
-
-        {/* Badge (top-right, CrazyGames style) */}
-        <div className="absolute top-2.5 right-2.5 z-10">
-          <span className="typo-label px-2 py-0.5 rounded-full text-[8px] sm:text-[9px] tracking-wider uppercase border border-pink-500/40 bg-pink-500/25 text-pink-300 backdrop-blur-md">
-            {game.badge || 'ORIGINAL'}
-          </span>
-        </div>
-
         {/* Hover Play Button Overlay (Desktop) */}
         <div className="absolute inset-0 z-[2] hidden sm:flex items-center justify-center opacity-0 group-hover/card:opacity-100 transition-opacity duration-300 backdrop-blur-xs bg-slate-950/30">
           <div className="w-13 h-13 rounded-full bg-pink-500/90 text-white flex items-center justify-center shadow-[0_0_24px_rgba(236,72,153,0.6)] transform scale-90 group-hover/card:scale-100 transition-transform border border-white/30">

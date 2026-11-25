@@ -398,6 +398,7 @@ export default function Navbar({
         selectedCategory={selectedCategory}
         onCategorySelect={onCategorySelect}
         diamonds={diamonds}
+        onOpenAccountModal={() => setAccountModalOpen(true)}
       />
 
       {/* Player Account & Profile Modal (lazy-loaded on open to keep homepage bundle tiny) */}

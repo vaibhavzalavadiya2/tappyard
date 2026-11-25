@@ -120,7 +120,7 @@ export default function HomeClient() {
 
           {/* Games Grid: 2 columns on mobile, 3 on tablet, 4 on desktop (now.gg & CrazyGames style) */}
           {filteredGames.length > 0 ? (
-            <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-6">
+            <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 sm:gap-6">
               {filteredGames.map((game, idx) => (
                 <div
                   key={game.id}
