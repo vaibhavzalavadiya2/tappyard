@@ -9,7 +9,7 @@ export const metadata: Metadata = {
     absolute: 'Free Games to Play Online - No Download | TAPPYARD',
   },
   description:
-    'Free games to play online in your browser. Four original games: 3D runner, 2048 puzzle, block puzzle and 1-tap reflex. No download needed.',
+    'Free games to play online in your browser. Play 3D runners, 2048 puzzles, Cupcake 2048, block zen, 1-tap reflex, and sorting games. No download.',
   keywords: [
     'games to play',
     'free games to play online',
@@ -34,7 +34,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'Free Games to Play Online - No Download | TAPPYARD',
     description:
-      'Free games to play online in your browser. Four original games: 3D runner, 2048 puzzle, block puzzle and 1-tap reflex. No download needed.',
+      'Free games to play online in your browser. Play 3D runners, 2048 puzzles, Cupcake 2048, block zen, 1-tap reflex, and sorting games. No download.',
     url: SITE_URL,
     type: 'website',
     images: [
@@ -50,7 +50,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'Free Games to Play Online - No Download | TAPPYARD',
     description:
-      'Free games to play online in your browser. Four original games: 3D runner, 2048 puzzle, block puzzle and 1-tap reflex. No download needed.',
+      'Free games to play online in your browser. Play 3D runners, 2048 puzzles, Cupcake 2048, block zen, 1-tap reflex, and sorting games. No download.',
     images: ['/og/tappyard-og.png'],
   },
 };
@@ -62,7 +62,7 @@ const websiteJsonLd = {
   name: 'TAPPYARD',
   url: SITE_URL,
   description:
-    'Free games to play online in your browser. Four original games: 3D runner, 2048 puzzle, block puzzle and 1-tap reflex. No download needed.',
+    'Free games to play online in your browser. Play 3D runners, 2048 puzzles, Cupcake 2048, block zen, 1-tap reflex, and sorting games. No download.',
   publisher: {
     '@type': 'Organization',
     name: 'TAPPYARD',
@@ -158,7 +158,7 @@ const faqJsonLd = {
       name: 'What are good quick games to play when bored?',
       acceptedAnswer: {
         '@type': 'Answer',
-        text: 'For fast reflex fun, try Cyber Dash (1-tap flight) or Jump Jelly Jump! (3D speed runner). If you want mental stimulation, play 2048 Neon Fusion (number merge puzzle) or Block Grid Zen (10x10 spatial block puzzle). All four games start in under a second.',
+        text: 'For fast reflex fun, try Conveyor Sort Rush (shape sorting arcade), Cyber Dash (1-tap flight), or Jump Jelly Jump! (3D speed runner). If you want mental stimulation, play 2048 Neon Fusion, Cupcake 2048, or Block Grid Zen (10x10 spatial block puzzle). Every TAPPYARD game starts in under a second.',
       },
     },
   ],

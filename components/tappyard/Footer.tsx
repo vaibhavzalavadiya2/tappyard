@@ -61,6 +61,16 @@ export default function Footer() {
                     Cyber Dash (Reflex Flight)
                   </Link>
                 </li>
+                <li>
+                  <Link href="/games/cupcake-2048" className="hover:text-pink-400 transition-colors">
+                    Cupcake 2048 (Dessert Merge)
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/games/belt-sort" className="hover:text-sky-400 transition-colors">
+                    Conveyor Sort Rush (Shape Sorting)
+                  </Link>
+                </li>
               </ul>
             </div>
 

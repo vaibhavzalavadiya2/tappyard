@@ -1,0 +1,478 @@
+/* Conveyor Sort Rush — Glossy 3D CSS Depth Recipe & Tokens */
+
+.bs-root {
+  --blue-light: #62a4ff;
+  --blue: #2f6bff;
+  --blue-dark: #1642bf;
+  --blue-rim: #92c2ff;
+  --blue-pit: #0b216b;
+
+  --green-light: #64e577;
+  --green: #2fbf4a;
+  --green-dark: #187c2c;
+  --green-rim: #9cf5a8;
+  --green-pit: #0c3f18;
+
+  --red-light: #ff7068;
+  --red: #ff3b30;
+  --red-dark: #b31b13;
+  --red-rim: #ffa19c;
+  --red-pit: #5a0c08;
+
+  --purple-light: #b37aff;
+  --purple: #8a3ffc;
+  --purple-dark: #5219b8;
+  --purple-rim: #d4b5ff;
+  --purple-pit: #27095c;
+
+  --gold-light: #ffe36e;
+  --gold: #ffd23f;
+  --gold-dark: #f59e0b;
+  --gold-rim: #fff5a8;
+
+  --navy-top: #162468;
+  --navy-bottom: #0b1233;
+  --navy-border: #5aa9ff;
+  --navy-dark: #0a0f2b;
+}
+
+.bs-font-display {
+  font-family: var(--font-lilita-one), 'Lilita One', var(--font-space-grotesk), system-ui, sans-serif;
+}
+
+.bs-font-body {
+  font-family: var(--font-fredoka), 'Fredoka', var(--font-inter), system-ui, sans-serif;
+}
+
+/* Outlined yellow casual-arcade numbers & headlines */
+.bs-outline-num {
+  background: linear-gradient(180deg, #fff59e 0%, #ffe36e 38%, #ffb300 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  filter: drop-shadow(0 2px 0 #09123a) drop-shadow(0 -1px 0 #09123a)
+    drop-shadow(1px 0 0 #09123a) drop-shadow(-1px 0 0 #09123a)
+    drop-shadow(0 3px 4px rgba(5, 10, 35, 0.55));
+}
+
+.bs-text-stroke {
+  text-shadow:
+    -1.5px -1.5px 0 #09123a,
+    1.5px -1.5px 0 #09123a,
+    -1.5px 1.5px 0 #09123a,
+    1.5px 1.5px 0 #09123a,
+    0 2.5px 0 #09123a,
+    0 4px 8px rgba(0, 0, 0, 0.45);
+}
+
+/* Navy Glass HUD Panel */
+.bs-panel {
+  position: relative;
+  background: linear-gradient(180deg, var(--navy-top) 0%, var(--navy-bottom) 100%);
+  border: 2px solid var(--navy-border);
+  box-shadow:
+    inset 0 2px 0 rgba(255, 255, 255, 0.25),
+    0 4px 0 var(--navy-dark),
+    0 10px 18px rgba(7, 12, 42, 0.4);
+}
+
+.bs-panel::before {
+  content: '';
+  position: absolute;
+  left: 3px;
+  right: 3px;
+  top: 2px;
+  height: 44%;
+  border-radius: inherit;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.22) 0%, rgba(255, 255, 255, 0) 100%);
+  pointer-events: none;
+}
+
+/* Glossy 3D Button (Pause, Power-Ups, Start CTA) */
+.bs-gloss-btn {
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.1s ease, box-shadow 0.1s ease, filter 0.15s ease;
+}
+
+.bs-gloss-btn::before {
+  content: '';
+  position: absolute;
+  left: 3px;
+  right: 3px;
+  top: 2px;
+  height: 45%;
+  border-radius: inherit;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.55) 0%, rgba(255, 255, 255, 0) 100%);
+  pointer-events: none;
+}
+
+.bs-gloss-btn:active:not(:disabled),
+.bs-gloss-btn.bs-pressed:not(:disabled) {
+  transform: translateY(4px);
+}
+
+.bs-btn-blue {
+  background: linear-gradient(180deg, var(--blue-light) 0%, var(--blue) 55%, var(--blue-dark) 100%);
+  border: 2px solid #96c7ff;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.55),
+    0 5px 0 #102b8c,
+    0 10px 16px rgba(0, 0, 0, 0.35);
+}
+
+.bs-btn-blue:active:not(:disabled),
+.bs-btn-blue.bs-pressed:not(:disabled) {
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.45),
+    0 2px 0 #102b8c,
+    0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.bs-btn-freeze {
+  background: linear-gradient(180deg, #b8f5ff 0%, #38bdf8 55%, #0284c7 100%);
+  border: 2px solid #e0fbff;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.6),
+    0 5px 0 #075985,
+    0 10px 16px rgba(0, 0, 0, 0.35);
+}
+
+.bs-btn-freeze:active:not(:disabled) {
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.5),
+    0 2px 0 #075985,
+    0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.bs-btn-locked {
+  background: linear-gradient(180deg, #8b95ad 0%, #5c657c 55%, #3d4457 100%);
+  border: 2px solid #aab3c8;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.35),
+    0 5px 0 #262b38,
+    0 8px 14px rgba(0, 0, 0, 0.3);
+}
+
+.bs-btn-gold {
+  background: linear-gradient(180deg, #fff199 0%, #ffd23f 50%, #f59e0b 100%);
+  border: 2px solid #fff7c2;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.65),
+    0 5px 0 #b45309,
+    0 10px 18px rgba(0, 0, 0, 0.35);
+}
+
+.bs-btn-gold:active:not(:disabled) {
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.5),
+    0 2px 0 #b45309,
+    0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+/* =========================================================
+   3D OPEN BIN BOXES (Exact Depth Recipe)
+   ========================================================= */
+.bs-bin-btn {
+  --bin-light: var(--blue-light);
+  --bin-mid: var(--blue);
+  --bin-dark: var(--blue-dark);
+  --bin-rim: var(--blue-rim);
+  --bin-pit: var(--blue-pit);
+
+  position: relative;
+  min-height: 88px;
+  border-radius: 16px 16px 18px 18px;
+  background: linear-gradient(180deg, var(--bin-light) 0%, var(--bin-mid) 45%, var(--bin-dark) 100%);
+  box-shadow:
+    inset 1px 1px 0 rgba(255, 255, 255, 0.55),
+    inset -1px -1px 0 rgba(0, 0, 0, 0.35),
+    0 6px 0 var(--bin-dark),
+    0 12px 18px rgba(0, 0, 0, 0.35);
+  transition: transform 0.09s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.09s ease, filter 0.12s ease;
+  touch-action: manipulation;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Trapezoid lighter top rim with ::before */
+.bs-bin-btn::before {
+  content: '';
+  position: absolute;
+  left: 2px;
+  right: 2px;
+  top: -6px;
+  height: 22px;
+  background: linear-gradient(180deg, var(--bin-rim) 0%, var(--bin-light) 100%);
+  clip-path: polygon(8% 0%, 92% 0%, 100% 100%, 0% 100%);
+  border-radius: 12px 12px 0 0;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.7);
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Top 45% curved gloss layer over front face */
+.bs-bin-front-gloss {
+  position: absolute;
+  left: 3px;
+  right: 3px;
+  top: 20px;
+  height: 38%;
+  border-radius: 10px 10px 14px 14px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.35) 0%, rgba(255, 255, 255, 0) 100%);
+  pointer-events: none;
+  z-index: 2;
+}
+
+/* Dark inner box opening */
+.bs-bin-opening {
+  position: relative;
+  z-index: 2;
+  width: 82%;
+  height: 18px;
+  margin: 0 auto;
+  margin-top: -1px;
+  border-radius: 6px;
+  background: linear-gradient(180deg, rgba(6, 10, 26, 0.9) 0%, var(--bin-pit) 100%);
+  box-shadow:
+    inset 0 8px 14px rgba(0, 0, 0, 0.6),
+    inset 1px 0 0 rgba(0, 0, 0, 0.35),
+    inset -1px 0 0 rgba(0, 0, 0, 0.35),
+    0 1px 0 rgba(255, 255, 255, 0.45);
+}
+
+.bs-bin-btn[data-shape='circle'] {
+  --bin-light: var(--blue-light);
+  --bin-mid: var(--blue);
+  --bin-dark: #103299;
+  --bin-rim: var(--blue-rim);
+  --bin-pit: var(--blue-pit);
+}
+
+.bs-bin-btn[data-shape='square'] {
+  --bin-light: var(--green-light);
+  --bin-mid: var(--green);
+  --bin-dark: #136823;
+  --bin-rim: var(--green-rim);
+  --bin-pit: var(--green-pit);
+}
+
+.bs-bin-btn[data-shape='triangle'] {
+  --bin-light: var(--red-light);
+  --bin-mid: var(--red);
+  --bin-dark: #99130c;
+  --bin-rim: var(--red-rim);
+  --bin-pit: var(--red-pit);
+}
+
+.bs-bin-btn[data-shape='diamond'] {
+  --bin-light: var(--purple-light);
+  --bin-mid: var(--purple);
+  --bin-dark: #43129c;
+  --bin-rim: var(--purple-rim);
+  --bin-pit: var(--purple-pit);
+}
+
+.bs-bin-btn:active,
+.bs-bin-btn.bs-bin-pressed {
+  transform: translateY(4px);
+  box-shadow:
+    inset 1px 1px 0 rgba(255, 255, 255, 0.55),
+    inset -1px -1px 0 rgba(0, 0, 0, 0.35),
+    0 2px 0 var(--bin-dark),
+    0 5px 10px rgba(0, 0, 0, 0.35);
+}
+
+.bs-bin-btn.bs-bin-bounce {
+  animation: bsBinBounce 0.24s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.bs-bin-btn.bs-bin-wrong {
+  animation: bsBinWrong 0.32s ease;
+  filter: brightness(1.3) saturate(1.4);
+  box-shadow:
+    0 0 0 3px #ff3b30,
+    0 6px 0 #7f1d1d,
+    0 0 22px rgba(255, 59, 48, 0.85);
+}
+
+.bs-bin-slide-in {
+  animation: bsBinSlideIn 0.45s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+/* Chain bar shine animation */
+@keyframes bsBarShine {
+  0% {
+    transform: translateX(-100%) skewX(-20deg);
+  }
+  100% {
+    transform: translateX(260%) skewX(-20deg);
+  }
+}
+
+.bs-chain-shine {
+  animation: bsBarShine 2.2s ease-in-out infinite;
+}
+
+/* Perfect Zone soft glow pulse */
+@keyframes bsPerfectPulse {
+  0%,
+  100% {
+    box-shadow:
+      0 0 14px rgba(255, 210, 63, 0.55),
+      inset 0 2px 0 rgba(255, 255, 255, 0.7);
+  }
+  50% {
+    box-shadow:
+      0 0 24px rgba(255, 210, 63, 0.9),
+      inset 0 2px 0 rgba(255, 255, 255, 0.9);
+  }
+}
+
+.bs-perfect-glow {
+  animation: bsPerfectPulse 1.8s ease-in-out infinite;
+}
+
+@keyframes bsBinBounce {
+  0% {
+    transform: translateY(4px) scale(0.96);
+  }
+  55% {
+    transform: translateY(-4px) scale(1.06, 0.96);
+  }
+  100% {
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes bsBinWrong {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  20% {
+    transform: translateX(-6px);
+  }
+  45% {
+    transform: translateX(6px);
+  }
+  70% {
+    transform: translateX(-4px);
+  }
+}
+
+@keyframes bsBinSlideIn {
+  0% {
+    opacity: 0;
+    transform: translateX(48px) scale(0.7);
+  }
+  65% {
+    opacity: 1;
+    transform: translateX(-4px) scale(1.05);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
+}
+
+@keyframes bsHeartShake {
+  0%,
+  100% {
+    transform: scale(1) rotate(0deg);
+  }
+  25% {
+    transform: scale(1.2) rotate(-14deg);
+  }
+  50% {
+    transform: scale(0.88) rotate(12deg);
+  }
+  75% {
+    transform: scale(1.08) rotate(-8deg);
+  }
+}
+
+.bs-heart-shake {
+  animation: bsHeartShake 0.4s ease;
+}
+
+@keyframes bsStageShake {
+  0%,
+  100% {
+    transform: translate(0, 0);
+  }
+  20% {
+    transform: translate(-5px, 3px);
+  }
+  40% {
+    transform: translate(5px, -3px);
+  }
+  60% {
+    transform: translate(-4px, -2px);
+  }
+  80% {
+    transform: translate(3px, 2px);
+  }
+}
+
+.bs-stage-shake {
+  animation: bsStageShake 0.28s ease;
+}
+
+@keyframes bsPopBanner {
+  0% {
+    opacity: 0;
+    transform: scale(0.6) translateY(8px);
+  }
+  35% {
+    opacity: 1;
+    transform: scale(1.12) translateY(-2px);
+  }
+  70% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(0.95) translateY(-10px);
+  }
+}
+
+.bs-pop-banner {
+  animation: bsPopBanner 1.2s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+@keyframes bsBurstSpin {
+  0% {
+    transform: rotate(0deg) scale(0.95);
+  }
+  100% {
+    transform: rotate(360deg) scale(1.05);
+  }
+}
+
+.bs-burst-rays {
+  background: repeating-conic-gradient(
+    from 0deg,
+    rgba(255, 227, 110, 0.34) 0deg 14deg,
+    rgba(255, 227, 110, 0) 14deg 30deg
+  );
+  animation: bsBurstSpin 6s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bs-chain-shine,
+  .bs-perfect-glow,
+  .bs-bin-bounce,
+  .bs-bin-wrong,
+  .bs-bin-slide-in,
+  .bs-heart-shake,
+  .bs-stage-shake,
+  .bs-burst-rays {
+    animation: none !important;
+  }
+
+  .bs-pop-banner {
+    animation-duration: 0.45s !important;
+  }
+}

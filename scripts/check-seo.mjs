@@ -12,10 +12,12 @@ const TARGET_ROUTES = [
   { url: 'https://tappyard.com/games/cupcake-2048', file: 'games/cupcake-2048.html' },
   { url: 'https://tappyard.com/games/color-zen', file: 'games/color-zen.html' },
   { url: 'https://tappyard.com/games/quick-tap', file: 'games/quick-tap.html' },
+  { url: 'https://tappyard.com/games/belt-sort', file: 'games/belt-sort.html' },
   { url: 'https://tappyard.com/guides/2048-strategy', file: 'guides/2048-strategy.html' },
   { url: 'https://tappyard.com/games-like/block-blast', file: 'games-like/block-blast.html' },
   { url: 'https://tappyard.com/games-like/3d-runner-games', file: 'games-like/3d-runner-games.html' },
   { url: 'https://tappyard.com/games-like/flappy-bird', file: 'games-like/flappy-bird.html' },
+  { url: 'https://tappyard.com/games-like/conveyor-sort', file: 'games-like/conveyor-sort.html' },
 ];
 
 console.log('🔍 Running TAPPYARD SEO Build-Time Audit on compiled HTML...\n');

@@ -44,6 +44,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: 'weekly' as const,
       priority: 0.8,
     },
+    {
+      url: `${SITE_URL}/games-like/conveyor-sort`,
+      lastModified: new Date('2026-11-25'),
+      changeFrequency: 'weekly' as const,
+      priority: 0.8,
+    },
   ];
 
   return [

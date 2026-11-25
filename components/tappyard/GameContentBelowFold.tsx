@@ -251,10 +251,19 @@ export default function GameContentBelowFold({ data }: GameContentBelowFoldProps
                     {game.category}
                   </span>
                   <h3 className="typo-game-title text-sm font-semibold text-white group-hover:text-pink-300 transition-colors mt-0.5">
-                    {game.id === 'jelly-bounce' && 'Jump Jelly Jump! - 3D endless runner'}
-                    {game.id === '2048-puzzle' && '2048 Neon Fusion - 2048 number puzzle'}
-                    {game.id === 'color-zen' && 'Block Grid Zen - 10x10 block puzzle'}
-                    {game.id === 'quick-tap' && 'Cyber Dash - 1-tap reflex flyer'}
+                    {game.id === 'jelly-bounce'
+                      ? 'Jump Jelly Jump! - 3D endless runner'
+                      : game.id === '2048-puzzle'
+                        ? '2048 Neon Fusion - 2048 number puzzle'
+                        : game.id === 'cupcake-2048'
+                          ? 'Cupcake 2048 - 2048 cupcakes puzzle'
+                          : game.id === 'color-zen'
+                            ? 'Block Grid Zen - 10x10 block puzzle'
+                            : game.id === 'quick-tap'
+                              ? 'Cyber Dash - 1-tap reflex flyer'
+                              : game.id === 'belt-sort'
+                                ? 'Conveyor Sort Rush - Shape sorting arcade'
+                                : game.title}
                   </h3>
                   <p className="typo-body text-xs text-slate-400 line-clamp-2 mt-1">
                     {game.description}
@@ -290,7 +299,7 @@ export default function GameContentBelowFold({ data }: GameContentBelowFoldProps
         </section>
 
         {/* 7. About This Game */}
-        <section className="p-6 rounded-2xl bg-slate-900/30 border border-slate-800/80 flex flex-col gap-3">
+        <section className="lg:p-6 p-4 rounded-2xl bg-slate-900/30 border border-slate-800/80 flex flex-col gap-3">
           <h3 className="typo-section-heading text-base text-white">About This Game</h3>
           <dl className="grid grid-cols-2 sm:grid-cols-5 gap-3 typo-body text-xs">
             <div>

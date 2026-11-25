@@ -24,6 +24,8 @@ export default function GameCard({ game, onPlay }: GameCardProps) {
         return 'Block Grid Zen - 10x10 block puzzle';
       case 'quick-tap':
         return 'Cyber Dash - 1-tap reflex flyer';
+      case 'belt-sort':
+        return 'Conveyor Sort Rush - Shape sorting arcade';
       default:
         return defaultTitle;
     }
@@ -46,6 +48,8 @@ export default function GameCard({ game, onPlay }: GameCardProps) {
         return 'group-hover/card:border-pink-400/60 group-hover/card:shadow-[0_0_24px_rgba(236,72,153,0.25)]';
       case 'color-zen':
         return 'group-hover/card:border-teal-400/60 group-hover/card:shadow-[0_0_24px_rgba(20,184,166,0.25)]';
+      case 'belt-sort':
+        return 'group-hover/card:border-sky-400/70 group-hover/card:shadow-[0_0_24px_rgba(47,107,255,0.3)]';
       case 'quick-tap':
       default:
         return 'group-hover/card:border-purple-400/60 group-hover/card:shadow-[0_0_24px_rgba(168,85,247,0.25)]';

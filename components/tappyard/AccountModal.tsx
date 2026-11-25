@@ -57,6 +57,7 @@ function readInitialBestScores(): Record<GameStatId, number> {
     'cupcake-2048': 0,
     'color-zen': 0,
     'quick-tap': 0,
+    'belt-sort': 0,
   };
   if (typeof window === 'undefined') return scores;
   GAME_STAT_DEFINITIONS.forEach((def) => {

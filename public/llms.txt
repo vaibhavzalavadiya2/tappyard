@@ -35,6 +35,12 @@
   - Key Mechanics: Flap/thrust upward to navigate through pulsing laser gates, near-miss edge graze multipliers for bonus diamonds, sub-bass graze audio, diamond revive shields, high-score challenge sharing.
   - Target URL: https://tappyard.com/games/quick-tap
 
+- [Conveyor Sort Rush](https://tappyard.com/games/belt-sort): Fast-paced perspective shape sorting arcade game with Endless & 60s seeded Daily Run modes.
+  - Genre: Casual, Shape Sorting, Reflex Arcade
+  - Controls: Tap colored shape bins (1/2/3/4, A/S/D/F, Arrow keys); Q Freeze, Space/E Slow-Mo
+  - Key Mechanics: Perspective conveyor belt, x2 Perfect Zone timing, up to x5 chain multipliers, 4th Diamond bin unlock at 25 sorts, Wildcard stars and Freeze crystals at 60 sorts, seeded Daily Run with emoji share grid.
+  - Target URL: https://tappyard.com/games/belt-sort
+
 ## Technology & Engineering Architecture
 - **Framework**: Next.js 16 (Turbopack, App Router, React 19, Tailwind CSS v4)
 - **Rendering Engines**: Phaser 3D WebGL, procedural 2D Canvas

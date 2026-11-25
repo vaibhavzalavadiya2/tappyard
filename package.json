@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "eslint",
     "check-seo": "node scripts/check-seo.mjs",
-    "check-og": "node scripts/verify-og-images.mjs"
+    "check-og": "node scripts/verify-og-images.mjs",
+    "test:beltsort": "node scripts/test-beltsort.mjs"
   },
   "dependencies": {
     "@next/third-parties": "^16.4.6",

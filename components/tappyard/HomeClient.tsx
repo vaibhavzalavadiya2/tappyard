@@ -299,15 +299,22 @@ export default function HomeClient() {
                       </span>
                     </div>
                     <p className="typo-body text-slate-300 text-xs leading-relaxed">
-                      Test your timing in fast-paced neon flight. Dodge pulsing laser gates, graze tight edges for bonus diamonds, and trigger protective shields.
+                      Test your timing in fast-paced neon flight or rapid shape sorting! Dodge laser gates in Cyber Dash, or rush matching shapes down the factory belt in Conveyor Sort Rush.
                     </p>
-                    <div className="pt-2 mt-auto flex items-center justify-between">
+                    <div className="pt-2 mt-auto flex flex-wrap items-center gap-2">
                       <Link
                         href="/games/quick-tap"
                         className="typo-button text-xs text-white bg-purple-500/20 hover:bg-purple-500/30 border border-purple-400/40 px-3 py-1.5 rounded-lg inline-flex items-center gap-1.5 transition-colors"
                       >
                         <span>Cyber Dash - 1-tap reflex flyer</span>
                         <ArrowRight className="w-3.5 h-3.5 text-purple-400" />
+                      </Link>
+                      <Link
+                        href="/games/belt-sort"
+                        className="typo-button text-xs text-white bg-sky-500/20 hover:bg-sky-500/30 border border-sky-400/40 px-3 py-1.5 rounded-lg inline-flex items-center gap-1.5 transition-colors"
+                      >
+                        <span>Conveyor Sort Rush - shape sorting arcade</span>
+                        <ArrowRight className="w-3.5 h-3.5 text-sky-400" />
                       </Link>
                     </div>
                   </article>
@@ -401,7 +408,7 @@ export default function HomeClient() {
                       What are good quick games to play when bored?
                     </h3>
                     <p className="mt-1.5 text-slate-400 text-xs leading-relaxed">
-                      For fast reflex fun, try Cyber Dash (1-tap flight) or Jump Jelly Jump! (3D speed runner). If you want mental stimulation, play 2048 Neon Fusion (number merge puzzle) or Block Grid Zen (10x10 spatial block puzzle). All four games start in under a second.
+                      For fast reflex fun, try Conveyor Sort Rush (shape sorting arcade), Cyber Dash (1-tap flight), or Jump Jelly Jump! (3D speed runner). If you want mental stimulation, play 2048 Neon Fusion, Cupcake 2048, or Block Grid Zen (10x10 spatial block puzzle). Every TAPPYARD game starts in under a second.
                     </p>
                   </div>
                 </div>

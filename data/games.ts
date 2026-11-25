@@ -98,6 +98,21 @@ export const GAMES_CATALOGUE: GameItem[] = [
     badge: 'NEW DESSERT',
     accentColor: '#ec4899',
   },
+  {
+    id: 'belt-sort',
+    title: 'Conveyor Sort Rush',
+    description: 'Sort fast-moving shapes on a 3D-perspective conveyor belt into matching bins! Trigger Perfect Zone x2 multipliers, Slow-Mo chains, Freeze crystals, and daily seeded challenges.',
+    category: 'Casual',
+    thumbnail: 'belt-sort',
+    route: '/games/belt-sort',
+    sourceType: 'owned',
+    featured: true,
+    rating: 4.9,
+    playsCount: '12.8k',
+    tags: ['Shape Sorting Game', 'Conveyor Belt Game', '1-Tap Casual', 'Daily Challenge', 'Reflex Game', 'Free Online Games'],
+    badge: 'NEW',
+    accentColor: '#2f6bff',
+  },
 ];
 
 export function getFeaturedGames(): GameItem[] {

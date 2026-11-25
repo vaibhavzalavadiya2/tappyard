@@ -24,6 +24,8 @@ export default function HotGamesRow() {
         return 'from-pink-400 via-rose-500 to-amber-400 shadow-pink-500/30';
       case 'color-zen':
         return 'from-teal-400 via-emerald-500 to-cyan-500 shadow-teal-500/30';
+      case 'belt-sort':
+        return 'from-sky-400 via-blue-500 to-amber-400 shadow-sky-500/30';
       case 'quick-tap':
       default:
         return 'from-purple-500 via-fuchsia-500 to-pink-500 shadow-purple-500/30';

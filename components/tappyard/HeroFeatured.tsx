@@ -203,6 +203,17 @@ export default function HeroFeatured() {
           tag: 'RELAXING 10x10 SPATIAL ZEN',
           pillActive: 'bg-teal-500/30 text-teal-200 border-teal-400/50 shadow-[0_0_12px_rgba(20,184,166,0.4)]',
         };
+      case 'belt-sort':
+        return {
+          bg: 'from-[#091845] via-[#162468] to-[#0b1233]',
+          border: 'border-sky-400/50',
+          glow1: 'bg-sky-400/25',
+          glow2: 'bg-amber-400/20',
+          btn: 'bg-gradient-to-r from-sky-400 via-blue-500 to-indigo-600 shadow-sky-500/40 hover:shadow-sky-500/60',
+          badge: 'bg-amber-400/20 text-amber-200 border-amber-400/50',
+          tag: 'NEW DAILY SORTING RUSH',
+          pillActive: 'bg-sky-500/30 text-sky-200 border-sky-400/60 shadow-[0_0_12px_rgba(90,169,255,0.45)]',
+        };
       case 'quick-tap':
       default:
         return {

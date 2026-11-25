@@ -9,7 +9,8 @@ export type GameStatId =
   | '2048-puzzle'
   | 'cupcake-2048'
   | 'color-zen'
-  | 'quick-tap';
+  | 'quick-tap'
+  | 'belt-sort';
 
 export interface GameStatMeta {
   id: GameStatId;
@@ -24,6 +25,7 @@ export const GAME_STAT_DEFINITIONS: GameStatMeta[] = [
   { id: 'cupcake-2048', title: 'Cupcake 2048', unit: 'pts', storageKey: 'tappyard-cupcake-2048-best' },
   { id: 'color-zen', title: 'Block Grid Zen', unit: 'pts', storageKey: 'tappyard-blockzen-best' },
   { id: 'quick-tap', title: 'Cyber Dash', unit: 'pts', storageKey: 'tappyard-cyberdash-best' },
+  { id: 'belt-sort', title: 'Conveyor Sort Rush', unit: 'pts', storageKey: 'tappyard-beltsort-best' },
 ];
 
 export interface LocalGameStat {

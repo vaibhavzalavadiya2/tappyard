@@ -1,5 +1,6 @@
 'use client';
 
+import { useId } from 'react';
 import { Gem, Zap } from 'lucide-react';
 import CupcakeIllustration from '@/components/games/Cupcake2048/CupcakeIllustration';
 
@@ -16,6 +17,7 @@ export default function GameThumbnail({
   className = 'w-full h-full',
   variant = 'card',
 }: GameThumbnailProps) {
+  const uid = useId().replace(/:/g, '');
   // Shared vignette overlay for all thumbnails
   const vignetteOverlay = (
     <div className="absolute inset-0 pointer-events-none z-[1] shadow-[inset_0_0_30px_rgba(0,0,0,0.5)]" />
@@ -93,6 +95,35 @@ export default function GameThumbnail({
       return (
         <div className={`relative overflow-hidden flex items-center justify-center bg-gradient-to-br from-[#240c2d] via-[#341142] to-[#1a0721] ${className}`}>
           <CupcakeIllustration value={2048} className="w-8 h-8 sm:w-9 sm:h-9 drop-shadow-[0_4px_8px_rgba(236,72,153,0.4)]" />
+        </div>
+      );
+    }
+
+    if (id === 'belt-sort') {
+      return (
+        <div className={`relative overflow-hidden flex items-center justify-center bg-gradient-to-b from-[#6ec6ff] via-[#5c86f5] to-[#162468] ${className}`}>
+          <svg viewBox="0 0 64 64" className="w-full h-full" aria-hidden="true">
+            {/* Mini perspective belt */}
+            <polygon points="20,4 44,4 54,42 10,42" fill="#3a3f52" />
+            <polygon points="17,4 20,4 10,42 6,42" fill="#a78bfa" />
+            <polygon points="44,4 47,4 58,42 54,42" fill="#a78bfa" />
+            {/* Gold zone */}
+            <polygon points="12,33 52,33 54,42 10,42" fill="#ffd23f" />
+            {/* Shapes */}
+            <polygon points="32,9 39,17 25,17" fill="#ff3b30" />
+            <rect x="24" y="18" width="16" height="10" rx="2.5" fill="#2fbf4a" />
+            <ellipse cx="32" cy="34" rx="9" ry="6" fill="#1642bf" />
+            <ellipse cx="32" cy="32" rx="9" ry="5.5" fill="#2f6bff" stroke="#92c2ff" strokeWidth="1" />
+            {/* 4 bins */}
+            <rect x="6" y="44" width="12" height="14" rx="3" fill="#2f6bff" stroke="#92c2ff" strokeWidth="1" />
+            <rect x="19" y="44" width="12" height="14" rx="3" fill="#2fbf4a" stroke="#9cf5a8" strokeWidth="1" />
+            <rect x="33" y="44" width="12" height="14" rx="3" fill="#ff3b30" stroke="#ffa19c" strokeWidth="1" />
+            <rect x="46" y="44" width="12" height="14" rx="3" fill="#8a3ffc" stroke="#d4b5ff" strokeWidth="1" />
+            <circle cx="12" cy="52" r="3" fill="#ffffff" />
+            <rect x="22.5" y="49.5" width="5" height="5" rx="1" fill="#ffffff" />
+            <polygon points="39,49 42,54.5 36,54.5" fill="#ffffff" />
+            <path d="M52 49 L55 52 L52 55 L49 52 Z" fill="#ffffff" />
+          </svg>
         </div>
       );
     }
@@ -255,6 +286,315 @@ export default function GameThumbnail({
           <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-br from-cyan-400 via-fuchsia-400 to-pink-400 flex items-center justify-center border border-white shadow-lg ring-2 ring-pink-400/60 animate-pulse transition-transform duration-300 group-hover/card:scale-110">
             <CupcakeIllustration value={2048} className="w-6 h-6 sm:w-7 sm:h-7" />
           </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (id === 'belt-sort') {
+    const bins = [
+      {
+        x: 11,
+        light: '#62a4ff',
+        mid: '#2f6bff',
+        dark: '#1642bf',
+        rim: '#9ecbff',
+        pit: '#091a59',
+        shape: 'circle' as const,
+      },
+      {
+        x: 77,
+        light: '#64e577',
+        mid: '#2fbf4a',
+        dark: '#187c2c',
+        rim: '#a6f9b3',
+        pit: '#093514',
+        shape: 'square' as const,
+      },
+      {
+        x: 143,
+        light: '#ff7068',
+        mid: '#ff3b30',
+        dark: '#b31b13',
+        rim: '#ffa8a3',
+        pit: '#520905',
+        shape: 'triangle' as const,
+      },
+      {
+        x: 209,
+        light: '#b37aff',
+        mid: '#8a3ffc',
+        dark: '#5219b8',
+        rim: '#dcc2ff',
+        pit: '#230754',
+        shape: 'diamond' as const,
+      },
+    ];
+
+    return (
+      <div
+        className={`relative overflow-hidden bg-gradient-to-b from-[#6ec6ff] via-[#7f92ff] to-[#1a1f5c] ${className}`}
+      >
+        {/* Full-bleed sky + stylized factory silhouette scene */}
+        <svg
+          viewBox="0 0 320 240"
+          preserveAspectRatio="xMidYMid slice"
+          className="absolute inset-0 w-full h-full pointer-events-none"
+          aria-hidden="true"
+        >
+          <defs>
+            <linearGradient id={`${uid}-sky`} x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stopColor="#6ec6ff" />
+              <stop offset="60%" stopColor="#85a2ff" />
+              <stop offset="100%" stopColor="#8f7bff" />
+            </linearGradient>
+            <linearGradient id={`${uid}-floor`} x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stopColor="#5d46c7" />
+              <stop offset="50%" stopColor="#2c2473" />
+              <stop offset="100%" stopColor="#12184a" />
+            </linearGradient>
+            <linearGradient id={`${uid}-teal`} x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0%" stopColor="#2dd4bf" />
+              <stop offset="100%" stopColor="#0f766e" />
+            </linearGradient>
+            <linearGradient id={`${uid}-orange`} x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0%" stopColor="#ffbe55" />
+              <stop offset="100%" stopColor="#ea580c" />
+            </linearGradient>
+            <linearGradient id={`${uid}-tank`} x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0%" stopColor="#ffe57f" />
+              <stop offset="100%" stopColor="#f59e0b" />
+            </linearGradient>
+          </defs>
+
+          <rect width="320" height="240" fill={`url(#${uid}-sky)`} />
+
+          {/* Soft clouds */}
+          <g fill="#ffffff" opacity="0.45">
+            <circle cx="52" cy="46" r="18" />
+            <circle cx="72" cy="44" r="22" />
+            <circle cx="92" cy="48" r="15" />
+            <circle cx="242" cy="36" r="16" />
+            <circle cx="262" cy="34" r="20" />
+            <circle cx="282" cy="38" r="14" />
+          </g>
+
+          {/* Left factory machines & pipes */}
+          <g opacity="0.82">
+            <rect x="8" y="84" width="38" height="90" rx="8" fill="#5e4cc2" opacity="0.5" />
+            <rect x="44" y="100" width="34" height="72" rx="6" fill="#6f5be0" opacity="0.45" />
+            <rect x="14" y="96" width="26" height="68" rx="10" fill={`url(#${uid}-orange)`} />
+            <rect x="10" y="92" width="34" height="9" rx="4" fill="#ffd23f" />
+            <path
+              d="M27 92 V68 Q27 60 35 60 H66 Q74 60 74 68 V142"
+              fill="none"
+              stroke={`url(#${uid}-teal)`}
+              strokeWidth="10"
+              strokeLinecap="round"
+            />
+            <rect x="4" y="128" width="46" height="28" rx="6" fill="#2c2473" opacity="0.6" />
+          </g>
+
+          {/* Right factory tanks & pipes */}
+          <g opacity="0.82">
+            <rect x="242" y="76" width="46" height="98" rx="8" fill="#5e4cc2" opacity="0.48" />
+            <rect x="272" y="64" width="34" height="106" rx="10" fill={`url(#${uid}-tank)`} />
+            <ellipse cx="289" cy="64" rx="17" ry="6" fill="#fff099" />
+            <path
+              d="M289 58 V42 Q289 36 283 36 H258 Q250 36 250 44 V146"
+              fill="none"
+              stroke={`url(#${uid}-orange)`}
+              strokeWidth="9"
+              strokeLinecap="round"
+            />
+            <rect x="236" y="102" width="30" height="58" rx="8" fill={`url(#${uid}-teal)`} />
+            <rect x="232" y="98" width="38" height="8" rx="4" fill="#5eead4" />
+          </g>
+
+          {/* Factory floor */}
+          <rect x="0" y="156" width="320" height="84" fill={`url(#${uid}-floor)`} />
+          <ellipse cx="160" cy="176" rx="140" ry="30" fill="#a78bfa" opacity="0.18" />
+        </svg>
+
+        {particleLayer}
+        {vignetteOverlay}
+
+        {/* Centered Hero Belt + Glossy Items + Gold Zone + 4 3D Bins */}
+        <div className="relative z-[2] w-full h-full flex items-center justify-center p-2 sm:p-2.5 transition-transform duration-300 group-hover/card:scale-[1.04]">
+          <svg
+            viewBox="0 0 280 212"
+            preserveAspectRatio="xMidYMid meet"
+            className="w-full h-full drop-shadow-[0_10px_18px_rgba(9,14,48,0.5)]"
+            aria-hidden="true"
+          >
+            <defs>
+              <linearGradient id={`${uid}-belt`} x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stopColor="#4f5670" />
+                <stop offset="55%" stopColor="#3a3f52" />
+                <stop offset="100%" stopColor="#262a3b" />
+              </linearGradient>
+              <linearGradient id={`${uid}-rail`} x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stopColor="#d8c8ff" />
+                <stop offset="55%" stopColor="#a78bfa" />
+                <stop offset="100%" stopColor="#6c4fd6" />
+              </linearGradient>
+              <linearGradient id={`${uid}-clamp`} x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stopColor="#ffe580" />
+                <stop offset="55%" stopColor="#ffb300" />
+                <stop offset="100%" stopColor="#b45309" />
+              </linearGradient>
+              <linearGradient id={`${uid}-gold`} x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stopColor="#fff4a8" />
+                <stop offset="45%" stopColor="#ffd23f" />
+                <stop offset="100%" stopColor="#f59e0b" />
+              </linearGradient>
+              <linearGradient id={`${uid}-purple`} x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stopColor="#ba87ff" />
+                <stop offset="100%" stopColor="#8a3ffc" />
+              </linearGradient>
+              <linearGradient id={`${uid}-red`} x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stopColor="#ff7b73" />
+                <stop offset="100%" stopColor="#ff3b30" />
+              </linearGradient>
+              <linearGradient id={`${uid}-green`} x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stopColor="#70eb82" />
+                <stop offset="100%" stopColor="#2fbf4a" />
+              </linearGradient>
+              <linearGradient id={`${uid}-blue`} x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stopColor="#6eb0ff" />
+                <stop offset="100%" stopColor="#2f6bff" />
+              </linearGradient>
+              {bins.map((b, i) => (
+                <linearGradient
+                  key={b.shape}
+                  id={`${uid}-bin-${i}`}
+                  x1="0"
+                  y1="0"
+                  x2="0"
+                  y2="1"
+                >
+                  <stop offset="0%" stopColor={b.light} />
+                  <stop offset="45%" stopColor={b.mid} />
+                  <stop offset="100%" stopColor={b.dark} />
+                </linearGradient>
+              ))}
+            </defs>
+
+            {/* Lavender outer side rails */}
+            <polygon points="88,6 97,6 42,127 29,127" fill={`url(#${uid}-rail)`} stroke="#ede4ff" strokeWidth="1" />
+            <polygon points="183,6 192,6 251,127 238,127" fill={`url(#${uid}-rail)`} stroke="#ede4ff" strokeWidth="1" />
+
+            {/* Conveyor belt surface */}
+            <polygon points="97,6 183,6 238,127 42,127" fill={`url(#${uid}-belt)`} />
+
+            {/* Perspective chevrons on belt */}
+            <g
+              fill="none"
+              stroke="rgba(255,255,255,0.14)"
+              strokeWidth="3.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <polyline points="124,18 140,24 156,18" />
+              <polyline points="116,42 140,50 164,42" />
+              <polyline points="107,70 140,80 173,70" />
+              <polyline points="96,98 140,110 184,98" />
+            </g>
+
+            {/* Amber rail clamps */}
+            <rect x="75" y="25" width="14" height="7" rx="2.5" fill={`url(#${uid}-clamp)`} transform="rotate(-24 82 28.5)" />
+            <rect x="191" y="25" width="14" height="7" rx="2.5" fill={`url(#${uid}-clamp)`} transform="rotate(24 198 28.5)" />
+            <rect x="57" y="61" width="16" height="8" rx="3" fill={`url(#${uid}-clamp)`} transform="rotate(-24 65 65)" />
+            <rect x="207" y="61" width="16" height="8" rx="3" fill={`url(#${uid}-clamp)`} transform="rotate(24 215 65)" />
+            <rect x="37" y="100" width="18" height="9" rx="3" fill={`url(#${uid}-clamp)`} transform="rotate(-24 46 104.5)" />
+            <rect x="225" y="100" width="18" height="9" rx="3" fill={`url(#${uid}-clamp)`} transform="rotate(24 234 104.5)" />
+
+            {/* Gold glowing Perfect Zone band */}
+            <polygon points="50,105 230,105 239,127 41,127" fill={`url(#${uid}-gold)`} />
+            <line x1="51" y1="106" x2="229" y2="106" stroke="#ffffff" strokeWidth="1.5" strokeOpacity="0.7" />
+            {/* 4-point sparkles on Perfect Zone */}
+            <path d="M58 111 L60 115 L64 117 L60 119 L58 123 L56 119 L52 117 L56 115 Z" fill="#ffffff" opacity="0.9" />
+            <path d="M222 111 L224 115 L228 117 L224 119 L222 123 L220 119 L216 117 L220 115 Z" fill="#ffffff" opacity="0.9" />
+
+            {/* 1. Purple Diamond (top) */}
+            <path d="M140 10 L152 19 L140 28 L128 19 Z" fill="#5219b8" />
+            <path d="M140 7 L152 16 L140 25 L128 16 Z" fill={`url(#${uid}-purple)`} stroke="#e3ccff" strokeWidth="1.1" />
+
+            {/* 2. Red Triangle */}
+            <polygon points="140,32 157,54 123,54" fill="#a81811" stroke="#a81811" strokeWidth="3" strokeLinejoin="round" />
+            <polygon points="140,28 157,50 123,50" fill={`url(#${uid}-red)`} stroke="#ffb0ab" strokeWidth="1.2" strokeLinejoin="round" />
+            <line x1="138" y1="32" x2="128" y2="46" stroke="rgba(255,255,255,0.45)" strokeWidth="2" strokeLinecap="round" />
+
+            {/* 3. Green Square */}
+            <rect x="118" y="61" width="44" height="26" rx="7" fill="#187c2c" />
+            <rect x="118" y="56" width="44" height="26" rx="7" fill={`url(#${uid}-green)`} stroke="#a6f9b3" strokeWidth="1.3" />
+            <rect x="123" y="59" width="34" height="6" rx="3" fill="rgba(255,255,255,0.4)" />
+
+            {/* 4. Blue Circle (front hero puck straddling Perfect Zone) */}
+            <ellipse cx="140" cy="117" rx="28" ry="11" fill="rgba(8,12,40,0.34)" />
+            <ellipse cx="140" cy="111" rx="25" ry="14" fill="#1642bf" />
+            <rect x="115" y="104" width="50" height="7" fill="#1642bf" />
+            <ellipse cx="140" cy="104" rx="25" ry="14" fill={`url(#${uid}-blue)`} stroke="#9ecbff" strokeWidth="1.5" />
+            <path d="M123 99 Q132 92 148 93" fill="none" stroke="rgba(255,255,255,0.68)" strokeWidth="2.8" strokeLinecap="round" />
+
+            {/* 4 Glossy 3D Open Bins docked below Perfect Zone */}
+            {bins.map((b, idx) => {
+              const cx = b.x + 30;
+              return (
+                <g key={b.shape}>
+                  {/* Drop shadow & hard 3D thickness */}
+                  <rect x={b.x} y="136" width="60" height="69" rx="12" fill="rgba(6,10,36,0.48)" />
+                  <rect x={b.x} y="135" width="60" height="66" rx="11" fill={b.dark} />
+
+                  {/* Main glossy bin front shell */}
+                  <rect
+                    x={b.x}
+                    y="130"
+                    width="60"
+                    height="65"
+                    rx="11"
+                    fill={`url(#${uid}-bin-${idx})`}
+                    stroke="rgba(255,255,255,0.35)"
+                    strokeWidth="1"
+                  />
+
+                  {/* Top outer lighter rim */}
+                  <rect x={b.x + 3} y="131.5" width="54" height="19" rx="7" fill={b.rim} />
+
+                  {/* Dark sunken open interior pit */}
+                  <rect x={b.x + 6} y="134" width="48" height="14" rx="5" fill={b.pit} />
+                  <rect x={b.x + 7} y="144" width="46" height="3.5" rx="2" fill="rgba(255,255,255,0.12)" />
+
+                  {/* Front face glossy highlight band */}
+                  <rect x={b.x + 4} y="152" width="52" height="11" rx="5" fill="rgba(255,255,255,0.22)" />
+
+                  {/* Crisp white shape emblem */}
+                  {b.shape === 'circle' && <circle cx={cx} cy="173" r="11" fill="#ffffff" />}
+                  {b.shape === 'square' && (
+                    <rect x={cx - 10} y="163" width="20" height="20" rx="4" fill="#ffffff" />
+                  )}
+                  {b.shape === 'triangle' && (
+                    <polygon
+                      points={`${cx},162 ${cx + 11.5},183 ${cx - 11.5},183`}
+                      fill="#ffffff"
+                      stroke="#ffffff"
+                      strokeWidth="2.5"
+                      strokeLinejoin="round"
+                    />
+                  )}
+                  {b.shape === 'diamond' && (
+                    <path
+                      d={`M${cx} 161 L${cx + 11.5} 173 L${cx} 185 L${cx - 11.5} 173 Z`}
+                      fill="#ffffff"
+                      stroke="#ffffff"
+                      strokeWidth="2"
+                      strokeLinejoin="round"
+                    />
+                  )}
+                </g>
+              );
+            })}
+          </svg>
         </div>
       </div>
     );

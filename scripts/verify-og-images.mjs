@@ -11,10 +11,12 @@ const routes = [
   { url: '/games/cupcake-2048', file: 'games/cupcake-2048.html' },
   { url: '/games/color-zen', file: 'games/color-zen.html' },
   { url: '/games/quick-tap', file: 'games/quick-tap.html' },
+  { url: '/games/belt-sort', file: 'games/belt-sort.html' },
   { url: '/guides/2048-strategy', file: 'guides/2048-strategy.html' },
   { url: '/games-like/block-blast', file: 'games-like/block-blast.html' },
   { url: '/games-like/3d-runner-games', file: 'games-like/3d-runner-games.html' },
   { url: '/games-like/flappy-bird', file: 'games-like/flappy-bird.html' },
+  { url: '/games-like/conveyor-sort', file: 'games-like/conveyor-sort.html' },
 ];
 
 console.log('='.repeat(80));

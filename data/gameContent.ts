@@ -224,4 +224,62 @@ export const GAME_CONTENT_DATA: Record<string, GameContentData> = {
       lastUpdated: 'November 2026',
     },
   },
+
+  'belt-sort': {
+    gameId: 'belt-sort',
+    gameTitle: 'Conveyor Sort Rush',
+    category: 'Casual',
+    canonicalUrl: 'https://tappyard.com/games/belt-sort',
+    introHeading: 'Sort shapes on a high-speed conveyor belt free in your browser',
+    introText:
+      'Conveyor Sort Rush is a fast-paced shape sorting arcade game built for instant one-handed mobile play and crisp desktop keyboard control. As colored geometric pieces glide toward you down a moving factory belt, send the front-most piece into its matching colored bin before it crosses the end line. Hold your nerve until the last 18% golden Perfect Zone to double your points, build huge combo chains to earn Slow-Mo charges, and climb the daily seeded leaderboard with zero downloads or sign-ups.',
+    howToPlay:
+      'Every run starts with three chunky open bins at the bottom of the conveyor belt: Blue Circle, Green Square, and Red Triangle. Wait just an instant or react quickly to tap the bin matching the closest item on the belt. Sorting inside the glowing gold Perfect Zone doubles that item’s points, while chaining consecutive correct sorts increases your score multiplier up to x5 and awards a +50 bonus plus a Slow-Mo charge every 10 sorts. Once you reach 25 sorts in a single run, the fourth Purple Diamond bin slides into action. Hit 60 sorts to unlock glowing Gold Wildcard Stars (matching any bin for x2 points) and Ice Freeze Crystals (pausing the belt and spawner for 3 full seconds on tap). Try Endless Mode to test how long your 3 hearts survive rising speed waves, or switch to the 60-second Daily Run where everyone plays the exact same seeded conveyor sequence every day.',
+    controls: {
+      touch:
+        'Tap any colored bin box directly with your thumb to send the front item into it. Tap Freeze (left) or Slow-Mo (right) when charged.',
+      keyboardMouse:
+        'Click bins directly or press keys 1 / 2 / 3 / 4, A / S / D / F, or Left / Down / Right arrows. Press Q for Freeze, Space or E for Slow-Mo, P to Pause, and M to Mute.',
+    },
+    tips: [
+      'Sort inside the gold Perfect Zone (last 18% of the belt) on slow and medium items to double your points and skyrocket high scores.',
+      'Reach a x10 chain combo as early as possible to pocket +50 bonus points and keep an emergency Slow-Mo charge ready.',
+      'Save Freeze crystals for intense fast spike waves right before losing a heart; remember spike waves are always followed by a breather gap.',
+      'Keep your eyes focused on the front item and watch out for the 4th Purple Diamond bin slide-in after 25 sorts.',
+    ],
+    supportingPageLink: {
+      href: '/games-like/conveyor-sort',
+      label: 'Games Like Conveyor Sort',
+      anchorText: 'Explore Games Like Conveyor Sort: Free Shape & Reflex Sorting Guide',
+    },
+    faqs: [
+      {
+        question: 'How does the Daily Run work in Conveyor Sort Rush?',
+        answer:
+          'Daily Run lasts 60 seconds or until 3 hearts are lost. The item order, wave bursts, and special drops are seeded from today’s local date so every player faces the exact same challenge. After finishing, copy your color emoji grid and streak to share with friends.',
+      },
+      {
+        question: 'What unlocks during a run at 25 and 60 sorts?',
+        answer:
+          'At 25 correct sorts, the fourth Purple Diamond bin slides onto the track. At 60 correct sorts, golden Wildcard stars (any bin, x2 points) and ice Freeze crystals begin appearing on the belt.',
+      },
+      {
+        question: 'How do Slow-Mo and Freeze power-ups work?',
+        answer:
+          'You earn 1 Slow-Mo charge at chain 10 and every 10th chain after that; tapping it slows the belt to 60% speed for 2 seconds. You earn 1 Freeze charge whenever you sort an ice Freeze crystal; tapping it stops both belt movement and new spawns for 3 seconds.',
+      },
+      {
+        question: 'Do I earn TAPPYARD diamonds playing Conveyor Sort Rush?',
+        answer:
+          'Yes! You earn 1 unified TAPPYARD diamond for every 25 points scored plus a +5 diamond bonus when setting a new Daily Best (up to 50 diamonds per run).',
+      },
+    ],
+    about: {
+      genre: 'Fast-Paced Shape Sorting Casual',
+      platform: 'Web browser (Mobile, Tablet, Desktop)',
+      price: 'Free (No In-App Purchases)',
+      developer: 'TAPPYARD',
+      lastUpdated: 'November 2026',
+    },
+  },
 };
