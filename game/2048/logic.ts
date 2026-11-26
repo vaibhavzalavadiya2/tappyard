@@ -241,7 +241,7 @@ export function executeMove(
       const next = filtered[idx + 1];
 
       if (next && current.value === next.value) {
-        // Merge!
+        // Merge! Reuse current.id so CSS left/top transition slides tile into destination
         const mergedValue = current.value * 2;
         scoreDelta += mergedValue;
         mergeCount++;
@@ -250,10 +250,10 @@ export function executeMove(
         }
 
         mergedLine.push({
-          id: nextTileId++,
+          id: current.id,
           value: mergedValue,
-          row: 0,
-          col: 0,
+          row: current.row,
+          col: current.col,
           isMerged: true,
         });
 
@@ -263,23 +263,19 @@ export function executeMove(
       }
     }
 
-    // Reconstruct positions
-    if (isReverse) mergedLine.reverse();
+    // Place collapsed tiles starting from the target edge (pos 0 -> index 0, or index 3 when reversed)
+    for (let pos = 0; pos < mergedLine.length; pos++) {
+      const item = mergedLine[pos];
+      const targetIndex = isReverse ? 3 - pos : pos;
+      const targetR = isHorizontal ? i : targetIndex;
+      const targetC = isHorizontal ? targetIndex : i;
 
-    for (let pos = 0; pos < 4; pos++) {
-      const tile = isReverse ? mergedLine[pos] : mergedLine[pos];
-      const targetR = isHorizontal ? i : pos;
-      const targetC = isHorizontal ? pos : i;
-
-      if (pos < mergedLine.length) {
-        const item = mergedLine[pos];
-        if (item.row !== targetR || item.col !== targetC || item.isMerged) {
-          moved = true;
-        }
-        item.row = targetR;
-        item.col = targetC;
-        newTiles.push(item);
+      if (item.row !== targetR || item.col !== targetC || item.isMerged) {
+        moved = true;
       }
+      item.row = targetR;
+      item.col = targetC;
+      newTiles.push(item);
     }
   }
 
@@ -317,4 +313,112 @@ export function createNewBoard(): BoardTile[] {
   const t2 = spawnRandomTile(tiles);
   if (t2) tiles.push(t2);
   return tiles;
+}
+
+/**
+ * Ensures nextTileId never collides with tiles restored from localStorage.
+ */
+export function syncNextTileId(tiles: ReadonlyArray<BoardTile>): void {
+  let maxId = 0;
+  for (const t of tiles) {
+    if (typeof t.id === 'number' && t.id > maxId) {
+      maxId = t.id;
+    }
+  }
+  if (maxId >= nextTileId) {
+    nextTileId = maxId + 1;
+  }
+}
+
+export interface Persisted2048State {
+  tiles: BoardTile[];
+  score: number;
+  moves: number;
+  history: { tiles: BoardTile[]; score: number }[];
+  hasWon: boolean;
+  keepPlaying: boolean;
+}
+
+function isValidTile(raw: unknown): raw is BoardTile {
+  if (!raw || typeof raw !== 'object') return false;
+  const t = raw as Partial<BoardTile>;
+  return (
+    typeof t.id === 'number' &&
+    Number.isInteger(t.id) &&
+    typeof t.value === 'number' &&
+    t.value >= 2 &&
+    typeof t.row === 'number' &&
+    t.row >= 0 &&
+    t.row <= 3 &&
+    typeof t.col === 'number' &&
+    t.col >= 0 &&
+    t.col <= 3
+  );
+}
+
+export function loadSaved2048State(storageKey: string): Persisted2048State | null {
+  if (typeof window === 'undefined') return null;
+  try {
+    const raw = window.localStorage.getItem(storageKey);
+    if (!raw) return null;
+    const parsed = JSON.parse(raw) as Partial<Persisted2048State>;
+    if (!Array.isArray(parsed.tiles) || parsed.tiles.length === 0) return null;
+
+    const cleanTiles = parsed.tiles.filter(isValidTile);
+    if (cleanTiles.length !== parsed.tiles.length || cleanTiles.length > 16) {
+      return null;
+    }
+
+    // Verify no duplicate cell coordinates
+    const occupied = new Set<string>();
+    for (const t of cleanTiles) {
+      const k = `${t.row},${t.col}`;
+      if (occupied.has(k)) return null;
+      occupied.add(k);
+    }
+
+    syncNextTileId(cleanTiles);
+    const cleanHistory = Array.isArray(parsed.history)
+      ? parsed.history.filter(
+          (h) =>
+            h &&
+            typeof h === 'object' &&
+            Array.isArray(h.tiles) &&
+            h.tiles.every(isValidTile) &&
+            typeof h.score === 'number'
+        )
+      : [];
+    for (const h of cleanHistory) {
+      syncNextTileId(h.tiles);
+    }
+
+    return {
+      tiles: cleanTiles.map((t) => ({ ...t, isNew: false, isMerged: false })),
+      score: typeof parsed.score === 'number' && parsed.score >= 0 ? parsed.score : 0,
+      moves: typeof parsed.moves === 'number' && parsed.moves >= 0 ? parsed.moves : 0,
+      history: cleanHistory,
+      hasWon: Boolean(parsed.hasWon),
+      keepPlaying: Boolean(parsed.keepPlaying),
+    };
+  } catch {
+    return null;
+  }
+}
+
+export function save2048State(storageKey: string, state: Persisted2048State): void {
+  if (typeof window === 'undefined') return;
+  try {
+    window.localStorage.setItem(storageKey, JSON.stringify(state));
+  } catch {
+    // Graceful no-op when storage is unavailable
+  }
+}
+
+export function clearSaved2048State(storageKey: string): void {
+  if (typeof window === 'undefined') return;
+  try {
+    window.localStorage.removeItem(storageKey);
+  } catch {
+    // Ignore storage restriction
+  }
 }

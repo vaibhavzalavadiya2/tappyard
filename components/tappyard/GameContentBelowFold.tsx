@@ -319,7 +319,6 @@ export default function GameContentBelowFold({ data }: GameContentBelowFoldProps
           </div>
         </section>
       </div>
-
       <Footer />
     </div>
   );

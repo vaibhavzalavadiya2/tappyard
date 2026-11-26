@@ -198,10 +198,10 @@ export default function CupcakeContentBelowFold() {
             <div className="p-5 rounded-2xl bg-[#1c0f24] border border-pink-500/20">
               <h3 className="text-base font-bold text-white mb-2 flex items-center gap-2">
                 <span className="w-2 h-2 rounded-full bg-cyan-400" />
-                Keyboard Controls (Desktop &amp; Laptop)
+                Mouse &amp; Keyboard Controls (Desktop &amp; Laptop)
               </h3>
               <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">
-                Use the <strong>Arrow Keys</strong> (↑, ↓, ←, →) or standard gamer keys (<strong>W, A, S, D</strong>). Press <strong>Z</strong> or <strong>U</strong> to quickly activate Undo when you make a misplaced slide.
+                Click and drag across the board with your mouse, use the <strong>Arrow Keys</strong> (↑, ↓, ←, →), or play with <strong>W, A, S, D</strong>. Press <strong>Z</strong> or <strong>U</strong> to quickly activate Undo when you make a misplaced slide.
               </p>
             </div>
           </div>

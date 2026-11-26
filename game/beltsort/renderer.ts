@@ -74,6 +74,8 @@ export interface RenderFrameState {
   showPerfectTag: boolean;
   slowMoActive: boolean;
   freezeActive: boolean;
+  slowMoSecLeft?: number;
+  freezeSecLeft?: number;
   lowPerfMode: boolean;
   customBgImage: HTMLImageElement | null;
   timeSec: number;
@@ -394,18 +396,66 @@ export function renderBeltScene(
     const drawSize = 104 * s;
     const sprite = sprites.items[item.kind];
 
-    // Subtle target ring under front-most active item
-    if (item.id === frontId && t >= 1 - BELT_SORT_CONFIG.SCORING.perfectZoneRatio) {
+    // Clear target reticle under the front-most active item anywhere on the belt
+    if (item.id === frontId) {
+      const inPerfect = t >= 1 - BELT_SORT_CONFIG.SCORING.perfectZoneRatio;
+      const ringPulse = 1 + 0.045 * Math.sin(state.timeSec * 8.5);
+      const rx = 45 * s * ringPulse;
+      const ry = 25 * s * ringPulse;
+
       ctx.save();
-      ctx.strokeStyle = 'rgba(255, 240, 138, 0.85)';
-      ctx.lineWidth = 3 * s;
+      // Contrast halo base
+      ctx.strokeStyle = inPerfect
+        ? 'rgba(245, 158, 11, 0.55)'
+        : 'rgba(11, 18, 51, 0.55)';
+      ctx.lineWidth = (inPerfect ? 7 : 5.5) * s;
       ctx.beginPath();
-      ctx.ellipse(cx, itemY + 6 * s, 44 * s, 26 * s, 0, 0, Math.PI * 2);
+      ctx.ellipse(cx, itemY + 6 * s, rx, ry, 0, 0, Math.PI * 2);
+      ctx.stroke();
+
+      // Primary crisp target ring (gold in Perfect Zone, icy white-cyan before)
+      ctx.strokeStyle = inPerfect
+        ? 'rgba(255, 246, 156, 0.96)'
+        : 'rgba(224, 247, 255, 0.9)';
+      ctx.lineWidth = (inPerfect ? 3.4 : 2.6) * s;
+      ctx.beginPath();
+      ctx.ellipse(cx, itemY + 6 * s, rx, ry, 0, 0, Math.PI * 2);
       ctx.stroke();
       ctx.restore();
     }
 
     ctx.drawImage(sprite, cx - drawSize / 2, itemY - drawSize / 2, drawSize, drawSize);
+  }
+
+  // Active Freeze / Slow-Mo status pill rendered at 60fps directly on canvas
+  if (state.freezeActive || state.slowMoActive) {
+    const isFreeze = state.freezeActive;
+    const secs = isFreeze ? state.freezeSecLeft ?? 0 : state.slowMoSecLeft ?? 0;
+    const label = isFreeze
+      ? `FROZEN${secs > 0.05 ? ` • ${secs.toFixed(1)}s` : ''}`
+      : `SLOW-MO 0.6x${secs > 0.05 ? ` • ${secs.toFixed(1)}s` : ''}`;
+
+    ctx.save();
+    ctx.font = '700 12px var(--font-fredoka), "Fredoka", system-ui, sans-serif';
+    const textW = ctx.measureText(label).width;
+    const pillW = Math.max(122, textW + 24);
+    const pillH = 26;
+    const pillX = cx - pillW / 2;
+    const pillY = beltTopY + 12;
+
+    ctx.fillStyle = isFreeze ? 'rgba(6, 40, 69, 0.9)' : 'rgba(15, 29, 88, 0.9)';
+    ctx.strokeStyle = isFreeze ? '#7dd3fc' : '#60a5fa';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.roundRect(pillX, pillY, pillW, pillH, 13);
+    ctx.fill();
+    ctx.stroke();
+
+    ctx.fillStyle = isFreeze ? '#cffafe' : '#dbeafe';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(label, cx, pillY + pillH / 2 + 0.5);
+    ctx.restore();
   }
 
   // 7. Squash & Drop Items Flying into Target Bins

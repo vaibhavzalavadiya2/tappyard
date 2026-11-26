@@ -228,6 +228,27 @@ canvas {
   }
 }
 
+@keyframes score-float {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, 6px) scale(0.85);
+  }
+
+  20% {
+    opacity: 1;
+    transform: translate(-50%, -4px) scale(1);
+  }
+
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -22px) scale(0.95);
+  }
+}
+
+.animate-score-float {
+  animation: score-float 0.68s ease-out forwards;
+}
+
 /* =============================================
    New Keyframes — Premium Gaming Portal Animations
    ============================================= */

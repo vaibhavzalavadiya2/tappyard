@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { useRef } from 'react';
 import Link from 'next/link';
 import {
   ArrowLeft,
@@ -16,282 +16,44 @@ import {
   Maximize2,
   Minimize2,
 } from 'lucide-react';
-import {
-  BoardTile,
-  Direction,
-  createNewBoard,
-  executeMove,
-  canMakeMove,
-  getTileStyle,
-} from '@/game/2048/logic';
-import { neon2048Audio } from '@/game/2048/audio';
-import { triggerHaptic } from '@/lib/haptics';
-import {
-  getWalletDiamonds,
-  addWalletDiamonds,
-  spendWalletDiamonds,
-  subscribeWallet,
-} from '@/lib/wallet';
-import { shareScoreChallenge } from '@/lib/challenge';
+import { getTileStyle } from '@/game/2048/logic';
+import { UNDO_DIAMOND_COST, use2048Game } from '@/game/2048/use2048Game';
 import ChallengerBanner from '@/components/tappyard/ChallengerBanner';
-import {
-  getGameBestScore,
-  setGameBestScore,
-  incrementGamePlayCount,
-} from '@/lib/highScores';
-import { PROFILE_SYNCED_EVENT } from '@/lib/syncEvents';
-
-const UNDO_COST = 5;
-
-interface HistoryState {
-  tiles: BoardTile[];
-  score: number;
-}
 
 export default function Neon2048Client() {
-  const [tiles, setTiles] = useState<BoardTile[]>([]);
-  const [score, setScore] = useState(0);
-  const [bestScore, setBestScore] = useState(0);
-  const [moves, setMoves] = useState(0);
-  const [history, setHistory] = useState<HistoryState[]>([]);
-  const [isGameOver, setIsGameOver] = useState(false);
-  const [hasWon, setHasWon] = useState(false);
-  const [keepPlaying, setKeepPlaying] = useState(false);
-  const [isMuted, setIsMuted] = useState(false);
-  const [diamonds, setDiamonds] = useState(0);
-  const [floatingNotification, setFloatingNotification] = useState<string | null>(null);
-  const [isFullscreen, setIsFullscreen] = useState(false);
-
-  // Touch tracking refs
-  const touchStartRef = useRef<{ x: number; y: number } | null>(null);
   const boardRef = useRef<HTMLDivElement>(null);
 
-  // Initialize game & wallet on mount
-  useEffect(() => {
-    const syncBest = () => setBestScore(getGameBestScore('2048-puzzle'));
-    syncBest();
-
-    // Set initial audio mute state
-    setIsMuted(neon2048Audio.getMuted());
-
-    // Subscribe to unified diamond wallet
-    const unsub = subscribeWallet((d) => setDiamonds(d));
-    window.addEventListener(PROFILE_SYNCED_EVENT, syncBest);
-
-    // Create fresh board
-    const initialTiles = createNewBoard();
-    setTiles(initialTiles);
-
-    return () => {
-      unsub();
-      window.removeEventListener(PROFILE_SYNCED_EVENT, syncBest);
-    };
-  }, []);
-
-  // Update best score
-  const updateScoreAndBest = useCallback((newScore: number) => {
-    setScore(newScore);
-    setBestScore((prev) => {
-      if (newScore > prev) {
-        return setGameBestScore('2048-puzzle', newScore);
-      }
-      return prev;
-    });
-  }, []);
-
-  // Show temporary pop notification
-  const triggerNotification = useCallback((msg: string) => {
-    setFloatingNotification(msg);
-    setTimeout(() => setFloatingNotification(null), 1800);
-  }, []);
-
-  // Perform a move
-  const handleMove = useCallback(
-    (direction: Direction) => {
-      if (isGameOver || (hasWon && !keepPlaying)) return;
-
-      // Deep copy current state for undo
-      const prevTiles = tiles.map((t) => ({ ...t }));
-      const prevScore = score;
-
-      const result = executeMove(direction, tiles, score);
-
-      if (!result.moved) {
-        return; // Nothing moved
-      }
-
-      // Play audio & haptics
-      if (result.mergeCount > 0) {
-        neon2048Audio.merge(result.highestMerged);
-        triggerHaptic(result.highestMerged >= 128 ? 'success' : 'medium');
-      } else {
-        neon2048Audio.slide();
-        triggerHaptic('light');
-      }
-
-      // Save to undo history (keep last 5 moves)
-      setHistory((prev) => [...prev.slice(-4), { tiles: prevTiles, score: prevScore }]);
-
-      // Update state
-      setTiles(result.tiles);
-      setMoves((m) => m + 1);
-      updateScoreAndBest(result.score);
-
-      // Handle diamond rewards
-      if (result.diamondReward > 0) {
-        addWalletDiamonds(result.diamondReward);
-        triggerNotification(`+${result.diamondReward} 💎 Diamond Bonus!`);
-      }
-
-      // Check win condition (2048)
-      if (!hasWon && !keepPlaying && result.tiles.some((t) => t.value >= 2048)) {
-        setHasWon(true);
-        addWalletDiamonds(50); // Massive win reward!
-        neon2048Audio.win();
-        triggerHaptic('success');
-        return;
-      }
-
-      // Check game over
-      if (!canMakeMove(result.tiles)) {
-        setIsGameOver(true);
-        incrementGamePlayCount('2048-puzzle');
-        neon2048Audio.gameOver();
-        triggerHaptic('warning');
-      }
-    },
-    [isGameOver, hasWon, keepPlaying, tiles, score, updateScoreAndBest, triggerNotification]
-  );
-
-  // Undo move using diamonds
-  const handleUndo = useCallback(() => {
-    if (history.length === 0) return;
-    if (diamonds < UNDO_COST) {
-      triggerNotification(`Need ${UNDO_COST} 💎 Diamonds to Undo!`);
-      return;
-    }
-
-    const success = spendWalletDiamonds(UNDO_COST);
-    if (!success) return;
-
-    neon2048Audio.undo();
-    const last = history[history.length - 1];
-    setTiles(last.tiles);
-    setScore(last.score);
-    setMoves((m) => Math.max(0, m - 1));
-    setHistory((prev) => prev.slice(0, -1));
-    setIsGameOver(false);
-    triggerNotification(`-${UNDO_COST} 💎 Move Undone!`);
-  }, [history, diamonds, triggerNotification]);
-
-  // Restart game
-  const handleRestart = useCallback(() => {
-    const newTiles = createNewBoard();
-    setTiles(newTiles);
-    setScore(0);
-    setMoves(0);
-    setHistory([]);
-    setIsGameOver(false);
-    setHasWon(false);
-    setKeepPlaying(false);
-    neon2048Audio.slide();
-  }, []);
-
-  // Toggle Mute
-  const handleToggleMute = useCallback(() => {
-    const nextMuted = neon2048Audio.toggleMute();
-    setIsMuted(nextMuted);
-  }, []);
-
-  // Fullscreen toggle
-  const toggleFullscreen = useCallback(() => {
-    if (!document.fullscreenElement) {
-      document.documentElement.requestFullscreen().then(() => setIsFullscreen(true)).catch(() => {});
-    } else {
-      document.exitFullscreen().then(() => setIsFullscreen(false)).catch(() => {});
-    }
-  }, []);
-
-  // Share score challenge
-  const handleShare = useCallback(() => {
-    shareScoreChallenge({
-      gameTitle: '2048 Neon Fusion',
-      gameSlug: '2048-puzzle',
-      score,
-      metric: 'pts',
-    });
-  }, [score]);
-
-  // Keyboard navigation
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      // Prevent scrolling on arrow keys
-      if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', ' '].includes(e.key)) {
-        e.preventDefault();
-      }
-
-      switch (e.key) {
-        case 'ArrowUp':
-        case 'w':
-        case 'W':
-          handleMove('up');
-          break;
-        case 'ArrowDown':
-        case 's':
-        case 'S':
-          handleMove('down');
-          break;
-        case 'ArrowLeft':
-        case 'a':
-        case 'A':
-          handleMove('left');
-          break;
-        case 'ArrowRight':
-        case 'd':
-        case 'D':
-          handleMove('right');
-          break;
-        case 'z':
-        case 'Z':
-        case 'u':
-        case 'U':
-          handleUndo();
-          break;
-      }
-    };
-
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [handleMove, handleUndo]);
-
-  // Touch handlers for mobile swipe
-  const onTouchStart = (e: React.TouchEvent) => {
-    if (e.touches.length !== 1) return;
-    touchStartRef.current = {
-      x: e.touches[0].clientX,
-      y: e.touches[0].clientY,
-    };
-  };
-
-  const onTouchEnd = (e: React.TouchEvent) => {
-    if (!touchStartRef.current || e.changedTouches.length !== 1) return;
-    const dx = e.changedTouches[0].clientX - touchStartRef.current.x;
-    const dy = e.changedTouches[0].clientY - touchStartRef.current.y;
-    touchStartRef.current = null;
-
-    const absDx = Math.abs(dx);
-    const absDy = Math.abs(dy);
-
-    if (Math.max(absDx, absDy) < 25) {
-      return; // Ignore tiny micro-taps
-    }
-
-    if (absDx > absDy) {
-      handleMove(dx > 0 ? 'right' : 'left');
-    } else {
-      handleMove(dy > 0 ? 'down' : 'up');
-    }
-  };
+  const {
+    tiles,
+    score,
+    bestScore,
+    moves,
+    history,
+    isGameOver,
+    hasWon,
+    keepPlaying,
+    isMuted,
+    diamonds,
+    floatingNotification,
+    scorePop,
+    confirmNewGameOpen,
+    isFullscreen,
+    boardDragHandlers,
+    handleUndo,
+    handleRestart,
+    requestRestart,
+    cancelRestart,
+    handleKeepPlaying,
+    handleToggleMute,
+    toggleFullscreen,
+    handleShare,
+  } = use2048Game({
+    gameSlug: '2048-puzzle',
+    gameTitle: '2048 Neon Fusion',
+    storageKey: 'tappyard-neon2048-state-v1',
+    maxHistory: 5,
+    winDiamonds: 50,
+  });
 
   return (
     <section className="w-full flex flex-col bg-[#061219] text-white select-none">
@@ -359,15 +121,23 @@ export default function Neon2048Client() {
         {/* Score & Control Row */}
         <div className="w-full grid grid-cols-3 gap-2 sm:gap-2.5 mb-3">
           {/* Current Score */}
-          <div className="bg-[#0b1f2a] rounded-2xl p-2 sm:p-2.5 border border-cyan-500/30 text-center shadow-lg shadow-cyan-950/50 flex flex-col items-center">
+          <div className="relative bg-[#0b1f2a] rounded-2xl p-2 sm:p-2.5 border border-cyan-500/30 text-center shadow-lg shadow-cyan-950/50 flex flex-col items-center">
             <span className="text-[9px] sm:text-[10px] font-black uppercase tracking-widest text-cyan-400">Score</span>
-            <span className="text-lg sm:text-xl font-black text-white">{score}</span>
+            <span className="text-lg sm:text-xl font-black text-white tabular-nums">{score}</span>
+            {scorePop && (
+              <span
+                key={scorePop.key}
+                className="animate-score-float pointer-events-none absolute -top-2 left-1/2 px-2 py-0.5 rounded-full bg-cyan-500 text-slate-950 text-[10px] font-black shadow-md whitespace-nowrap"
+              >
+                +{scorePop.delta}
+              </span>
+            )}
           </div>
 
           {/* Moves */}
           <div className="bg-[#0b1f2a] rounded-2xl p-2 sm:p-2.5 border border-teal-500/30 text-center shadow-lg shadow-teal-950/50 flex flex-col items-center">
             <span className="text-[9px] sm:text-[10px] font-black uppercase tracking-widest text-teal-400">Moves</span>
-            <span className="text-lg sm:text-xl font-black text-white">{moves}</span>
+            <span className="text-lg sm:text-xl font-black text-white tabular-nums">{moves}</span>
           </div>
 
           {/* Best Score */}
@@ -376,7 +146,7 @@ export default function Neon2048Client() {
               <Trophy className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-amber-400" />
               Best
             </span>
-            <span className="text-lg sm:text-xl font-black text-white">{bestScore}</span>
+            <span className="text-lg sm:text-xl font-black text-white tabular-nums">{bestScore}</span>
           </div>
         </div>
 
@@ -385,9 +155,9 @@ export default function Neon2048Client() {
           {/* Undo Button with Diamond Cost */}
           <button
             onClick={handleUndo}
-            disabled={history.length === 0 || diamonds < UNDO_COST}
+            disabled={history.length === 0 || diamonds < UNDO_DIAMOND_COST}
             className={`flex-1 h-10 px-3 rounded-xl font-bold text-xs flex items-center justify-center gap-2 border transition-all cursor-pointer ${
-              history.length > 0 && diamonds >= UNDO_COST
+              history.length > 0 && diamonds >= UNDO_DIAMOND_COST
                 ? 'bg-[#0f2c3a] hover:bg-[#153e52] border-cyan-500/40 text-cyan-200 active:scale-95 shadow-md shadow-cyan-950/40'
                 : 'bg-[#09171f] border-slate-800 text-slate-500 cursor-not-allowed opacity-60'
             }`}
@@ -395,13 +165,13 @@ export default function Neon2048Client() {
             <Undo2 className="w-3.5 h-3.5" />
             <span>Undo Move</span>
             <span className="text-[10px] font-black text-cyan-400 flex items-center gap-0.5">
-              (5 <Gem className="w-2.5 h-2.5" />)
+              ({UNDO_DIAMOND_COST} <Gem className="w-2.5 h-2.5" />)
             </span>
           </button>
 
           {/* Restart Button */}
           <button
-            onClick={handleRestart}
+            onClick={requestRestart}
             className="h-10 px-4 rounded-xl bg-[#0f2c3a] hover:bg-[#153e52] border border-cyan-500/40 text-slate-200 font-bold text-xs flex items-center justify-center gap-1.5 active:scale-95 transition-all cursor-pointer shadow-md shadow-cyan-950/40"
           >
             <RotateCcw className="w-3.5 h-3.5 text-cyan-400" />
@@ -412,9 +182,8 @@ export default function Neon2048Client() {
         {/* 3. The 4x4 Neon Matrix Board */}
         <div
           ref={boardRef}
-          onTouchStart={onTouchStart}
-          onTouchEnd={onTouchEnd}
-          className="relative w-full aspect-square bg-gradient-to-b from-[#081a24] to-[#040e14] rounded-3xl p-3 sm:p-4 border-2 border-cyan-500/40 shadow-2xl shadow-cyan-950/60 overflow-hidden"
+          {...boardDragHandlers}
+          className="relative w-full aspect-square bg-gradient-to-b from-[#081a24] to-[#040e14] rounded-3xl p-3 sm:p-4 border-2 border-cyan-500/40 shadow-2xl shadow-cyan-950/60 overflow-hidden touch-none select-none cursor-grab active:cursor-grabbing"
         >
           {/* Background 4x4 Grid Cells */}
           <div className="w-full h-full grid grid-cols-4 grid-rows-4 gap-2 sm:gap-3">
@@ -432,7 +201,7 @@ export default function Neon2048Client() {
             return (
               <div
                 key={tile.id}
-                className={`absolute p-1 sm:p-1.5 transition-all duration-100 ease-out`}
+                className="absolute p-1 sm:p-1.5 transition-[left,top] duration-100 ease-out"
                 style={{
                   width: '25%',
                   height: '25%',
@@ -452,9 +221,9 @@ export default function Neon2048Client() {
           })}
         </div>
 
-        {/* Mobile Swipe / Controls Helper Note */}
+        {/* Swipe / Mouse / Controls Helper Note */}
         <p className="text-[11px] font-medium text-slate-400 text-center mt-3">
-          Swipe to slide the tiles. Match two equal tiles to merge them and reach 2048.
+          Swipe, drag with mouse, or use Arrow Keys / WASD to slide tiles. Match two equal tiles to merge them and reach 2048.
         </p>
 
         {/* Mobile: unobtrusive link to scroll to below-fold content */}
@@ -490,7 +259,7 @@ export default function Neon2048Client() {
 
             <div className="flex flex-col gap-2.5 w-full pt-2">
               <button
-                onClick={() => setKeepPlaying(true)}
+                onClick={handleKeepPlaying}
                 className="w-full h-11 rounded-2xl bg-gradient-to-r from-amber-400 to-yellow-400 hover:from-amber-300 hover:to-yellow-300 text-amber-950 font-black text-xs transition-all active:scale-95 cursor-pointer shadow-lg"
               >
                 KEEP PLAYING (ENDLESS 4096)
@@ -524,13 +293,13 @@ export default function Neon2048Client() {
 
             <div className="flex flex-col gap-2.5 w-full pt-2">
               {/* Undo Last Move Option if player has diamonds */}
-              {history.length > 0 && diamonds >= UNDO_COST && (
+              {history.length > 0 && diamonds >= UNDO_DIAMOND_COST && (
                 <button
                   onClick={handleUndo}
                   className="w-full h-11 rounded-2xl bg-gradient-to-r from-cyan-500 to-blue-600 text-white font-black text-xs transition-all active:scale-95 cursor-pointer shadow-lg shadow-cyan-500/30 flex items-center justify-center gap-2 border border-cyan-300/40"
                 >
                   <Undo2 className="w-4 h-4" />
-                  <span>USE UNDO (5 💎) & CONTINUE</span>
+                  <span>USE UNDO ({UNDO_DIAMOND_COST} 💎) & CONTINUE</span>
                 </button>
               )}
 
@@ -550,6 +319,32 @@ export default function Neon2048Client() {
               >
                 <Share2 className="w-3.5 h-3.5 text-cyan-300" />
                 <span>Challenge a Friend</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* 6. New Game Confirmation Modal */}
+      {confirmNewGameOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-sm animate-fade-in">
+          <div className="bg-gradient-to-b from-[#0f2c3a] to-[#0a1b24] border border-cyan-500/40 rounded-3xl p-6 max-w-xs w-full text-center shadow-2xl">
+            <h3 className="text-lg font-black text-white mb-1">Start a New Game?</h3>
+            <p className="text-xs text-slate-300 mb-5">
+              Your current score ({score}) will be reset.
+            </p>
+            <div className="flex gap-2.5">
+              <button
+                onClick={cancelRestart}
+                className="flex-1 py-2.5 rounded-xl bg-[#123646] hover:bg-[#184457] border border-cyan-500/30 text-slate-200 font-bold text-xs cursor-pointer active:scale-95 transition-all"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleRestart}
+                className="flex-1 py-2.5 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white font-black text-xs cursor-pointer active:scale-95 transition-all shadow-md"
+              >
+                Start Fresh
               </button>
             </div>
           </div>

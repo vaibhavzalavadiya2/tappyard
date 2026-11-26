@@ -13,8 +13,10 @@ import {
   type WavePatternType,
 } from '@/game/beltsort/config';
 import {
+  advanceBeltItemsInOrder,
   buildDailyShareText,
   calculateAccuracyPercent,
+  canSpawnNextItem,
   computeDiamondsEarned,
   evaluateSort,
   formatDailyEmojiGrid,
@@ -222,6 +224,11 @@ export default function BeltSortClient({ hasCustomBg = false, fontClassName = ''
   const customBgRef = useRef<HTMLImageElement | null>(null);
   const metricsRef = useRef<RenderLayoutMetrics | null>(null);
   const prefersReducedMotionRef = useRef(false);
+  const runsCountRef = useRef(0);
+  const uiTimersRef = useRef<number[]>([]);
+  const lastSlowMoUiRef = useRef(0);
+  const lastFreezeUiRef = useRef(0);
+  const lastScoreSyncMsRef = useRef(0);
 
   // React UI state synced cleanly
   const [phase, setPhase] = useState<PlayPhase>('start');
@@ -346,6 +353,7 @@ export default function BeltSortClient({ hasCustomBg = false, fontClassName = ''
       10
     );
     if (!Number.isNaN(savedRuns) && savedRuns > 0) {
+      runsCountRef.current = savedRuns;
       setRunsCount(savedRuns);
     }
 
@@ -356,7 +364,11 @@ export default function BeltSortClient({ hasCustomBg = false, fontClassName = ''
     }
 
     setIsMuted(beltSortAudio.getMuted());
-    return () => window.removeEventListener(PROFILE_SYNCED_EVENT, onProfileSync);
+    return () => {
+      window.removeEventListener(PROFILE_SYNCED_EVENT, onProfileSync);
+      uiTimersRef.current.forEach((id) => window.clearTimeout(id));
+      uiTimersRef.current = [];
+    };
   }, []);
 
   useEffect(() => {
@@ -371,15 +383,35 @@ export default function BeltSortClient({ hasCustomBg = false, fontClassName = ''
     };
   }, [hasCustomBg]);
 
-  const showToastNotice = useCallback((msg: string) => {
-    setToastMsg(msg);
-    setTimeout(() => setToastMsg((prev) => (prev === msg ? null : prev)), 1400);
+  const clearUiTimers = useCallback(() => {
+    uiTimersRef.current.forEach((id) => window.clearTimeout(id));
+    uiTimersRef.current = [];
   }, []);
 
-  const showUnlockNotice = useCallback((msg: string) => {
-    setUnlockPopupMsg(msg);
-    setTimeout(() => setUnlockPopupMsg((prev) => (prev === msg ? null : prev)), 1200);
+  const scheduleUiTimer = useCallback((fn: () => void, ms: number) => {
+    const id = window.setTimeout(() => {
+      uiTimersRef.current = uiTimersRef.current.filter((t) => t !== id);
+      fn();
+    }, ms);
+    uiTimersRef.current.push(id);
+    return id;
   }, []);
+
+  const showToastNotice = useCallback(
+    (msg: string) => {
+      setToastMsg(msg);
+      scheduleUiTimer(() => setToastMsg((prev) => (prev === msg ? null : prev)), 1400);
+    },
+    [scheduleUiTimer]
+  );
+
+  const showUnlockNotice = useCallback(
+    (msg: string) => {
+      setUnlockPopupMsg(msg);
+      scheduleUiTimer(() => setUnlockPopupMsg((prev) => (prev === msg ? null : prev)), 1200);
+    },
+    [scheduleUiTimer]
+  );
 
   const measureMetrics = useCallback(() => {
     const stage = stageRef.current;
@@ -413,11 +445,13 @@ export default function BeltSortClient({ hasCustomBg = false, fontClassName = ''
       spritesRef.current = createSpriteCache(w, h, blurOn);
     }
 
+    // Use layout offsets relative to binRow so CSS transform animations (slide-in/bounce/shake)
+    // never skew chute divider alignment or dropping item target coordinates.
     const binButtons = Array.from(binRow.querySelectorAll<HTMLButtonElement>('[data-bin-btn]'));
-    const binCentersX = binButtons.map((btn) => {
-      const r = btn.getBoundingClientRect();
-      return r.left - stageRect.left + r.width / 2;
-    });
+    const binRowLeft = binRowRect.left - stageRect.left;
+    const binCentersX = binButtons.map(
+      (btn) => binRowLeft + btn.offsetLeft + btn.offsetWidth / 2
+    );
 
     const beltBottomY = Math.max(180, binRowRect.top - stageRect.top - 4);
     const beltTopY = Math.max(96, beltRect.top - stageRect.top + 8);
@@ -521,13 +555,15 @@ export default function BeltSortClient({ hasCustomBg = false, fontClassName = ''
     incrementGamePlayCount('belt-sort');
     trackGameEvent('run_end', { mode: eng.mode, score: eng.score });
 
-    const nextRuns = runsCount + 1;
+    const nextRuns = runsCountRef.current + 1;
+    runsCountRef.current = nextRuns;
     safeStorageSet(BELT_SORT_CONFIG.STORAGE_KEYS.RUNS_COUNT, String(nextRuns));
     setRunsCount(nextRuns);
-  }, [runsCount]);
+  }, []);
 
   const startRun = useCallback((chosenMode: GameMode) => {
     beltSortAudio.unlockAudio();
+    clearUiTimers();
     const eng = engineRef.current;
     const today = getLocalDateString();
     setDailyDateStr(today);
@@ -575,6 +611,10 @@ export default function BeltSortClient({ hasCustomBg = false, fontClassName = ''
     eng.freezeCharges = 0;
     eng.freezeRemainingSec = 0;
 
+    lastSlowMoUiRef.current = 0;
+    lastFreezeUiRef.current = 0;
+    lastScoreSyncMsRef.current = 0;
+
     setMode(chosenMode);
     setDailyRemainingSec(BELT_SORT_CONFIG.GAMEPLAY.dailyDurationSec);
     setScoreDisplay(0);
@@ -586,6 +626,12 @@ export default function BeltSortClient({ hasCustomBg = false, fontClassName = ''
     setShareText('');
     setShareGrid('');
     setCopyState('idle');
+    setToastMsg(null);
+    setUnlockPopupMsg(null);
+    setBinFeedback({});
+    setPressedBin(null);
+    setStageShake(false);
+    setHeartShakeIdx(null);
     setActiveBinCount(BELT_SORT_CONFIG.GAMEPLAY.initialBinCount);
     setUnlocked4thBin(false);
     setUnlockedSpecials(false);
@@ -599,20 +645,23 @@ export default function BeltSortClient({ hasCustomBg = false, fontClassName = ''
     trackGameEvent('run_start', { mode: chosenMode });
 
     requestAnimationFrame(() => measureMetrics());
-  }, [measureMetrics]);
+  }, [clearUiTimers, measureMetrics]);
 
-  const triggerMistakeFeedback = useCallback((newHearts: number) => {
-    beltSortAudio.mistake();
-    setHeartShakeIdx(newHearts);
-    setTimeout(() => setHeartShakeIdx(null), 420);
+  const triggerMistakeFeedback = useCallback(
+    (newHearts: number) => {
+      beltSortAudio.mistake();
+      setHeartShakeIdx(newHearts);
+      scheduleUiTimer(() => setHeartShakeIdx(null), 420);
 
-    if (!prefersReducedMotionRef.current) {
-      setStageShake(true);
-      setTimeout(() => setStageShake(false), 300);
-    }
+      if (!prefersReducedMotionRef.current) {
+        setStageShake(true);
+        scheduleUiTimer(() => setStageShake(false), 300);
+      }
 
-    triggerHaptic('warning');
-  }, []);
+      triggerHaptic('warning');
+    },
+    [scheduleUiTimer]
+  );
 
   const handleToggleMute = useCallback(() => {
     const nextMuted = beltSortAudio.toggleMute();
@@ -631,6 +680,7 @@ export default function BeltSortClient({ hasCustomBg = false, fontClassName = ''
     }
     eng.slowMoCharges = 0;
     eng.slowMoRemainingSec = BELT_SORT_CONFIG.POWERUPS.slowMoDurationSec;
+    lastSlowMoUiRef.current = 1;
     setSlowMoCharges(0);
     setSlowMoProgress(1);
     beltSortAudio.slowMo();
@@ -649,6 +699,7 @@ export default function BeltSortClient({ hasCustomBg = false, fontClassName = ''
     }
     eng.freezeCharges = 0;
     eng.freezeRemainingSec = BELT_SORT_CONFIG.POWERUPS.freezeDurationSec;
+    lastFreezeUiRef.current = 1;
     setFreezeCharges(0);
     setFreezeProgress(1);
     beltSortAudio.freeze();
@@ -711,8 +762,10 @@ export default function BeltSortClient({ hasCustomBg = false, fontClassName = ''
           if (eng.slowMoCharges < BELT_SORT_CONFIG.POWERUPS.slowMoMaxStored) {
             eng.slowMoCharges = BELT_SORT_CONFIG.POWERUPS.slowMoMaxStored;
             setSlowMoCharges(eng.slowMoCharges);
+            showToastNotice('SLOW-MO READY! (+50)');
+          } else {
+            showToastNotice(`CHAIN ${result.nextChain}! +50 BONUS`);
           }
-          showToastNotice('SLOW-MO READY!');
           beltSortAudio.chainBonus();
           triggerHaptic('success');
         } else if (result.isPerfect || result.isWildcard) {
@@ -742,7 +795,7 @@ export default function BeltSortClient({ hasCustomBg = false, fontClassName = ''
           beltSortAudio.unlock();
           triggerHaptic('success');
           requestAnimationFrame(() => measureMetrics());
-          setTimeout(() => measureMetrics(), 480);
+          scheduleUiTimer(() => measureMetrics(), 480);
         }
 
         // In-run Unlock 2: Wildcard & Freeze at 60 sorts
@@ -754,7 +807,7 @@ export default function BeltSortClient({ hasCustomBg = false, fontClassName = ''
         }
 
         setBinFeedback((prev) => ({ ...prev, [binKind]: 'bounce' }));
-        setTimeout(() => setBinFeedback((prev) => ({ ...prev, [binKind]: null })), 260);
+        scheduleUiTimer(() => setBinFeedback((prev) => ({ ...prev, [binKind]: null })), 260);
 
         eng.droppingItems.push({
           id: frontItem.id,
@@ -810,7 +863,7 @@ export default function BeltSortClient({ hasCustomBg = false, fontClassName = ''
         setHearts(eng.hearts);
 
         setBinFeedback((prev) => ({ ...prev, [binKind]: 'wrong' }));
-        setTimeout(() => setBinFeedback((prev) => ({ ...prev, [binKind]: null })), 340);
+        scheduleUiTimer(() => setBinFeedback((prev) => ({ ...prev, [binKind]: null })), 340);
 
         triggerMistakeFeedback(eng.hearts);
 
@@ -819,12 +872,13 @@ export default function BeltSortClient({ hasCustomBg = false, fontClassName = ''
         }
       }
     },
-    [finishGame, measureMetrics, showToastNotice, showUnlockNotice, triggerMistakeFeedback]
+    [finishGame, measureMetrics, scheduleUiTimer, showToastNotice, showUnlockNotice, triggerMistakeFeedback]
   );
 
   // Keyboard bindings: 1/2/3/4, A/S/D/F, Arrow keys, Q Freeze, E/Space Slow-Mo, P/Esc Pause
   useEffect(() => {
     const onKeyDown = (e: KeyboardEvent) => {
+      if (e.repeat) return;
       if (
         e.target instanceof HTMLInputElement ||
         e.target instanceof HTMLTextAreaElement
@@ -835,7 +889,7 @@ export default function BeltSortClient({ hasCustomBg = false, fontClassName = ''
       const key = e.key.toLowerCase();
       const triggerPressedKeyBin = (kind: ShapeKind) => {
         setPressedBin(kind);
-        setTimeout(() => setPressedBin((prev) => (prev === kind ? null : prev)), 110);
+        scheduleUiTimer(() => setPressedBin((prev) => (prev === kind ? null : prev)), 110);
         handleBinTap(kind);
       };
 
@@ -891,7 +945,7 @@ export default function BeltSortClient({ hasCustomBg = false, fontClassName = ''
 
     window.addEventListener('keydown', onKeyDown);
     return () => window.removeEventListener('keydown', onKeyDown);
-  }, [activateFreeze, activateSlowMo, handleBinTap, handleToggleMute]);
+  }, [activateFreeze, activateSlowMo, handleBinTap, handleToggleMute, scheduleUiTimer]);
 
   // Auto-pause on hidden tab
   useEffect(() => {
@@ -928,7 +982,10 @@ export default function BeltSortClient({ hasCustomBg = false, fontClassName = ''
         const diff = eng.score - eng.displayedScore;
         eng.displayedScore =
           diff <= 2 ? eng.score : eng.displayedScore + Math.ceil(diff * Math.min(1, dt * 16));
-        setScoreDisplay(eng.displayedScore);
+        if (eng.displayedScore === eng.score || now - lastScoreSyncMsRef.current >= 32) {
+          lastScoreSyncMsRef.current = now;
+          setScoreDisplay(eng.displayedScore);
+        }
       }
 
       if (eng.phase === 'playing') {
@@ -947,14 +1004,30 @@ export default function BeltSortClient({ hasCustomBg = false, fontClassName = ''
           }
         }
 
-        // Active power-up timers
+        // Active power-up timers (quantized UI sync prevents 60fps React tree churn)
         if (eng.freezeRemainingSec > 0) {
           eng.freezeRemainingSec = Math.max(0, eng.freezeRemainingSec - dt);
-          setFreezeProgress(eng.freezeRemainingSec / BELT_SORT_CONFIG.POWERUPS.freezeDurationSec);
+          const nextFreezeProg =
+            eng.freezeRemainingSec / BELT_SORT_CONFIG.POWERUPS.freezeDurationSec;
+          if (
+            nextFreezeProg === 0 ||
+            Math.abs(nextFreezeProg - lastFreezeUiRef.current) >= 0.04
+          ) {
+            lastFreezeUiRef.current = nextFreezeProg;
+            setFreezeProgress(nextFreezeProg);
+          }
         }
         if (eng.slowMoRemainingSec > 0) {
           eng.slowMoRemainingSec = Math.max(0, eng.slowMoRemainingSec - dt);
-          setSlowMoProgress(eng.slowMoRemainingSec / BELT_SORT_CONFIG.POWERUPS.slowMoDurationSec);
+          const nextSlowProg =
+            eng.slowMoRemainingSec / BELT_SORT_CONFIG.POWERUPS.slowMoDurationSec;
+          if (
+            nextSlowProg === 0 ||
+            Math.abs(nextSlowProg - lastSlowMoUiRef.current) >= 0.04
+          ) {
+            lastSlowMoUiRef.current = nextSlowProg;
+            setSlowMoProgress(nextSlowProg);
+          }
         }
         if (eng.autoSlowMoRemainingSec > 0) {
           eng.autoSlowMoRemainingSec = Math.max(0, eng.autoSlowMoRemainingSec - dt);
@@ -979,10 +1052,10 @@ export default function BeltSortClient({ hasCustomBg = false, fontClassName = ''
         );
         eng.beltScrollOffset = (eng.beltScrollOffset + effectiveDt / travelSec) % 1;
 
-        // Wave-based spawner (paused completely during Freeze!)
+        // Wave-based spawner (paused during Freeze and gated by minimum spatial headway)
         if (!isFrozen) {
           eng.spawnCooldownSec -= effectiveDt;
-          if (eng.spawnCooldownSec <= 0) {
+          if (eng.spawnCooldownSec <= 0 && canSpawnNextItem(eng.items)) {
             const idx = eng.spawnedCount;
             if (idx < BELT_SORT_CONFIG.GAMEPLAY.guidedSequence.length) {
               // Guided start: Circle -> Square -> Triangle
@@ -1035,16 +1108,11 @@ export default function BeltSortClient({ hasCustomBg = false, fontClassName = ''
           }
         }
 
-        // Advance active items
+        // Advance active items strictly FIFO so trailing pieces never overtake ahead pieces
         if (!isFrozen) {
+          advanceBeltItemsInOrder(eng.items, effectiveDt, eng.elapsedSec);
           for (let i = eng.items.length - 1; i >= 0; i--) {
             const item = eng.items[i];
-            const itemTravelSec = getTravelTimeSec(
-              eng.elapsedSec,
-              item.id <= BELT_SORT_CONFIG.GAMEPLAY.guidedSequence.length
-            );
-            item.yProgress += effectiveDt / itemTravelSec;
-
             if (item.yProgress >= 1.0) {
               eng.sortedIds.add(item.id);
               eng.items.splice(i, 1);
@@ -1120,9 +1188,12 @@ export default function BeltSortClient({ hasCustomBg = false, fontClassName = ''
             particles: eng.particles,
             floatingTexts: eng.floatingTexts,
             perfectBanner: eng.perfectBanner,
-            showPerfectTag: runsCount < BELT_SORT_CONFIG.GAMEPLAY.perfectBannerRunsVisible,
+            showPerfectTag:
+              runsCountRef.current < BELT_SORT_CONFIG.GAMEPLAY.perfectBannerRunsVisible,
             slowMoActive: eng.slowMoRemainingSec > 0 || eng.autoSlowMoRemainingSec > 0,
             freezeActive: eng.freezeRemainingSec > 0,
+            slowMoSecLeft: eng.slowMoRemainingSec,
+            freezeSecLeft: eng.freezeRemainingSec,
             lowPerfMode: eng.lowPerfMode,
             customBgImage: customBgRef.current,
             timeSec: eng.timeSec,
@@ -1136,7 +1207,7 @@ export default function BeltSortClient({ hasCustomBg = false, fontClassName = ''
 
     rafId = requestAnimationFrame(step);
     return () => cancelAnimationFrame(rafId);
-  }, [finishGame, measureMetrics, runsCount, triggerMistakeFeedback]);
+  }, [finishGame, measureMetrics, triggerMistakeFeedback]);
 
   const activeBins = BELT_SORT_CONFIG.BINS.slice(0, activeBinCount);
   const nextTarget = getNextChainTarget(chain);
@@ -1169,6 +1240,25 @@ export default function BeltSortClient({ hasCustomBg = false, fontClassName = ''
         title="Conveyor Sort Rush"
         category="Casual"
         icon={<Gem className="w-4 h-4 text-cyan-300" />}
+        disableFullscreenShortcut
+        rightActions={
+          <button
+            type="button"
+            onClick={(e) => {
+              e.currentTarget.blur();
+              handleToggleMute();
+            }}
+            aria-label={isMuted ? 'Unmute sound' : 'Mute sound'}
+            title={isMuted ? 'Unmute sound (M)' : 'Mute sound (M)'}
+            className="typo-button shrink-0 h-8 sm:h-9 w-8 sm:w-9 rounded-xl text-slate-300 hover:text-white bg-slate-900/90 border border-slate-800 hover:border-slate-700 transition-colors flex items-center justify-center cursor-pointer active:scale-95"
+          >
+            {isMuted ? (
+              <VolumeX className="w-3.5 h-3.5 text-rose-400" />
+            ) : (
+              <Volume2 className="w-3.5 h-3.5 text-emerald-300" />
+            )}
+          </button>
+        }
       />
 
       <main
@@ -1216,12 +1306,15 @@ export default function BeltSortClient({ hasCustomBg = false, fontClassName = ''
                 </span>
               </div>
 
-              <div className="bs-panel rounded-2xl px-1.5 sm:px-2.5 py-1 min-w-[44px] sm:min-w-[60px] flex flex-col items-center justify-center leading-none shrink-0">
+              <div className="bs-panel rounded-2xl px-1.5 sm:px-2.5 py-1 min-w-[48px] sm:min-w-[64px] flex flex-col items-center justify-center leading-none shrink-0">
                 <span className="text-[9px] sm:text-[11px] font-bold text-white/95 tracking-wide mb-0.5 bs-text-stroke">
                   Chain
                 </span>
                 <span className="bs-font-display bs-outline-num text-lg sm:text-2xl leading-none tabular-nums">
                   x{currentMultiplier}
+                </span>
+                <span className="text-[8px] sm:text-[9px] font-bold text-sky-200 mt-0.5 tabular-nums whitespace-nowrap">
+                  {chain} hit{chain === 1 ? '' : 's'}
                 </span>
               </div>
 
@@ -1314,8 +1407,9 @@ export default function BeltSortClient({ hasCustomBg = false, fontClassName = ''
                   </span>
                 </div>
               </div>
-              <span className="text-[11px] sm:text-xs font-bold text-white bs-text-stroke -mt-1 tracking-wide">
-                Next: Slow-Mo + Bonus
+              <span className="text-[11px] sm:text-xs font-bold text-white bs-text-stroke -mt-1 tracking-wide tabular-nums">
+                Chain {chain}/{nextTarget} • +50
+                {slowMoCharges < BELT_SORT_CONFIG.POWERUPS.slowMoMaxStored ? ' + Slow-Mo' : ''}
               </span>
             </div>
           </div>
@@ -1388,7 +1482,7 @@ export default function BeltSortClient({ hasCustomBg = false, fontClassName = ''
           <div className="flex flex-col gap-3 shrink-0 pt-1">
             <div
               ref={binRowRef}
-              className={`flex items-stretch ${activeBinCount === 4 ? 'gap-1.5 sm:gap-2.5' : 'gap-2 sm:gap-3'} w-full px-0.5 transition-all duration-300`}
+              className={`relative flex items-stretch ${activeBinCount === 4 ? 'gap-1.5 sm:gap-2.5' : 'gap-2 sm:gap-3'} w-full px-0.5 transition-all duration-300`}
             >
               {activeBins.map((bin) => {
                 const fb = binFeedback[bin.id];
@@ -1399,9 +1493,12 @@ export default function BeltSortClient({ hasCustomBg = false, fontClassName = ''
                     type="button"
                     data-bin-btn={bin.id}
                     data-shape={bin.id}
-                    onClick={() => handleBinTap(bin.id)}
+                    onClick={(e) => {
+                      e.currentTarget.blur();
+                      handleBinTap(bin.id);
+                    }}
                     aria-label={`Sort into ${bin.label} bin (Keys ${bin.keyHint} or ${bin.altKeyHint})`}
-                    className={`bs-bin-btn flex-1 min-w-0 flex flex-col justify-between pb-2.5 pt-1 cursor-pointer focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-white sm:min-h-[96px] transition-[flex-basis,width,transform,box-shadow,filter] duration-300 ease-out ${
+                    className={`bs-bin-btn flex-1 min-w-0 flex flex-col justify-between pb-2.5 pt-1 cursor-pointer focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-white sm:min-h-[96px] transition-[transform,box-shadow,filter] duration-200 ease-out ${
                       pressedBin === bin.id ? 'bs-bin-pressed ' : ''
                     }${
                       fb === 'bounce'
@@ -1421,6 +1518,9 @@ export default function BeltSortClient({ hasCustomBg = false, fontClassName = ''
                         className="w-7 h-7 sm:w-10 sm:h-10 drop-shadow-[0_2px_2px_rgba(0,0,0,0.3)]"
                       />
                     </div>
+                    <kbd className="hidden sm:inline-block absolute bottom-1 right-1.5 z-[3] text-[9px] font-bold px-1.5 py-0.5 rounded bg-black/30 text-white/90 border border-white/20 leading-none pointer-events-none">
+                      {bin.keyHint}/{bin.altKeyHint}
+                    </kbd>
                   </button>
                 );
               })}
@@ -1431,7 +1531,10 @@ export default function BeltSortClient({ hasCustomBg = false, fontClassName = ''
               {/* Freeze Button */}
               <button
                 type="button"
-                onClick={activateFreeze}
+                onClick={(e) => {
+                  e.currentTarget.blur();
+                  activateFreeze();
+                }}
                 disabled={phase !== 'playing' || (freezeCharges <= 0 && !freezeActiveNow)}
                 aria-label={
                   freezeActiveNow
@@ -1458,6 +1561,9 @@ export default function BeltSortClient({ hasCustomBg = false, fontClassName = ''
                 >
                   Freeze
                 </span>
+                <kbd className="hidden sm:inline-block text-[9px] font-bold px-1 py-0.5 rounded bg-black/25 text-white/85 border border-white/20 leading-none">
+                  Q
+                </kbd>
               </button>
 
               {showHintPill ? (
@@ -1482,7 +1588,10 @@ export default function BeltSortClient({ hasCustomBg = false, fontClassName = ''
               {/* Slow-Mo Button */}
               <button
                 type="button"
-                onClick={activateSlowMo}
+                onClick={(e) => {
+                  e.currentTarget.blur();
+                  activateSlowMo();
+                }}
                 disabled={phase !== 'playing' || (slowMoCharges <= 0 && !slowMoActiveNow)}
                 aria-label={
                   slowMoActiveNow
@@ -1507,6 +1616,9 @@ export default function BeltSortClient({ hasCustomBg = false, fontClassName = ''
                 <span className="bs-font-display text-xs sm:text-base tracking-wide bs-text-stroke">
                   Slow-Mo
                 </span>
+                <kbd className="hidden sm:inline-block text-[9px] font-bold px-1 py-0.5 rounded bg-black/25 text-white/85 border border-white/20 leading-none">
+                  E
+                </kbd>
               </button>
             </div>
           </div>
@@ -1520,7 +1632,7 @@ export default function BeltSortClient({ hasCustomBg = false, fontClassName = ''
                 Conveyor Sort Rush
               </h2>
               <p className="text-xs sm:text-sm text-sky-100/90 leading-relaxed">
-                Send each falling shape to its matching bin before it passes the end line! Sort in the gold zone for x2 Points.
+                Sort each oncoming shape into its matching bin before it crosses the end line! Hit the gold zone for x2 Points.
               </p>
 
               {/* Endless Mode CTA */}
@@ -1635,7 +1747,12 @@ export default function BeltSortClient({ hasCustomBg = false, fontClassName = ''
               <div className="grid grid-cols-3 gap-2 text-xs">
                 <div className="p-2 rounded-xl bg-[#09102e]/70 border border-sky-400/20">
                   <div className="text-[10px] text-sky-200">Best Chain</div>
-                  <div className="font-bold text-amber-300">x{bestChainRun}</div>
+                  <div className="font-bold text-amber-300 tabular-nums">
+                    {bestChainRun}{' '}
+                    <span className="text-[10px] text-amber-200/80 font-semibold">
+                      (x{getChainMultiplier(bestChainRun)})
+                    </span>
+                  </div>
                 </div>
                 <div className="p-2 rounded-xl bg-[#09102e]/70 border border-sky-400/20">
                   <div className="text-[10px] text-sky-200">Accuracy</div>

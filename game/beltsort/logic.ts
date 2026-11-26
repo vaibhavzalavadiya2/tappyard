@@ -124,6 +124,60 @@ export function getSpawnGapSec(elapsedSec: number): number {
   );
 }
 
+/**
+ * Ensures newly spawned items never visually overlap or stack directly onto the
+ * trailing item on the conveyor belt at slow/medium speeds or pair bursts.
+ */
+export function canSpawnNextItem(
+  items: ReadonlyArray<{ yProgress: number }>,
+  minSpawnGap = BELT_SORT_CONFIG.DIFFICULTY.minSpawnProgressGap
+): boolean {
+  if (items.length === 0) return true;
+  let newestProgress = Infinity;
+  for (let i = 0; i < items.length; i++) {
+    if (items[i].yProgress < newestProgress) {
+      newestProgress = items[i].yProgress;
+    }
+  }
+  return newestProgress >= minSpawnGap;
+}
+
+/**
+ * Advances active items along the belt in strict FIFO order so faster later items
+ * can never overtake or visually clip into slower items ahead of them.
+ */
+export function advanceBeltItemsInOrder<T extends { id: number; yProgress: number }>(
+  items: T[],
+  effectiveDt: number,
+  elapsedSec: number,
+  guidedCount = BELT_SORT_CONFIG.GAMEPLAY.guidedSequence.length,
+  minItemGap = BELT_SORT_CONFIG.DIFFICULTY.minItemProgressGap
+): void {
+  if (items.length === 0 || effectiveDt <= 0) return;
+
+  for (let i = 0; i < items.length; i++) {
+    const item = items[i];
+    const itemTravelSec = getTravelTimeSec(elapsedSec, item.id <= guidedCount);
+    item.yProgress += effectiveDt / itemTravelSec;
+  }
+
+  // Sort strictly front-to-back (higher yProgress first, then older id) before clamping headway
+  items.sort((a, b) => {
+    const diff = b.yProgress - a.yProgress;
+    if (Math.abs(diff) > 1e-6) return diff;
+    return a.id - b.id;
+  });
+
+  for (let i = 1; i < items.length; i++) {
+    const ahead = items[i - 1];
+    const trailing = items[i];
+    const maxAllowed = ahead.yProgress - minItemGap;
+    if (trailing.yProgress > maxAllowed) {
+      trailing.yProgress = Math.max(0, maxAllowed);
+    }
+  }
+}
+
 export function pickNextItemKind(
   rng: () => number,
   activeBinCount: number,

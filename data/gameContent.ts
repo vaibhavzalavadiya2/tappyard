@@ -13,7 +13,7 @@ export const GAME_CONTENT_DATA: Record<string, GameContentData> = {
       'Slide tiles across the 4x4 matrix by swiping on touchscreens or using keyboard arrow keys. When two equal numbers collide, they merge into a single tile with double the value (2 + 2 = 4, 4 + 4 = 8, up to 2048 and beyond). A new tile appears after every move. Keep merging to prevent the grid from filling completely.',
     controls: {
       touch: 'Swipe up, down, left, or right anywhere across the board to slide tiles.',
-      keyboardMouse: 'Press Arrow Keys (↑, ↓, ←, →) or W, A, S, D to slide tiles in that direction.',
+      keyboardMouse: 'Click and drag across the board with your mouse, or press Arrow Keys (↑, ↓, ←, →) or W, A, S, D.',
     },
     tips: [
       'Keep your largest tile locked into a single corner (the bottom-left or top-left corner works best).',

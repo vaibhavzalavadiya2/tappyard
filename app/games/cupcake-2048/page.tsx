@@ -1,11 +1,7 @@
 import type { Metadata } from 'next';
-import dynamic from 'next/dynamic';
+import Cupcake2048Client from '@/components/games/Cupcake2048/Cupcake2048Client';
 import CupcakeContentBelowFold from '@/components/games/Cupcake2048/CupcakeContentBelowFold';
 import { SITE_URL } from '@/data/homeFaqs';
-
-const Cupcake2048Client = dynamic(
-  () => import('@/components/games/Cupcake2048/Cupcake2048Client')
-);
 
 const GAME_URL = `${SITE_URL}/games/cupcake-2048`;
 const PAGE_DESC =

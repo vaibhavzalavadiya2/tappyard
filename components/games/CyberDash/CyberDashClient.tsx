@@ -17,6 +17,9 @@ import {
   Minimize2,
 } from 'lucide-react';
 import {
+  CYBER_DASH_TUNING,
+  createNextLaserGate,
+  getGateHorizontalSpacing,
   LaserGate,
   Particle,
   FloatingText,
@@ -45,6 +48,7 @@ export default function CyberDashClient() {
 
   // React State for HUD & Modals
   const [gameState, setGameState] = useState<'idle' | 'playing' | 'gameover'>('idle');
+  const gameStateRef = useRef<'idle' | 'playing' | 'gameover'>('idle');
   const [score, setScore] = useState(0);
   const [bestScore, setBestScore] = useState(0);
   const [diamonds, setDiamonds] = useState(0);
@@ -53,6 +57,11 @@ export default function CyberDashClient() {
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [streak, setStreak] = useState(0);
   const [floatingNotice, setFloatingNotice] = useState<string | null>(null);
+
+  const setPhase = useCallback((next: 'idle' | 'playing' | 'gameover') => {
+    gameStateRef.current = next;
+    setGameState(next);
+  }, []);
 
   // Engine Refs (runs independently of React renders for 60fps buttery smoothness)
   const engineRef = useRef({
@@ -68,7 +77,7 @@ export default function CyberDashClient() {
     particles: [] as Particle[],
     floatingTexts: [] as FloatingText[],
     stars: [] as { x: number; y: number; size: number; speed: number; alpha: number }[],
-    speed: 220,
+    speed: CYBER_DASH_TUNING.baseSpeed as number,
     nextGateX: 400,
     gateIdCounter: 1,
     textIdCounter: 1,
@@ -108,21 +117,22 @@ export default function CyberDashClient() {
 
   // Flap / Boost impulse
   const handleFlap = useCallback(() => {
-    if (gameState === 'idle') {
-      setGameState('playing');
+    const phase = gameStateRef.current;
+    if (phase === 'idle') {
+      setPhase('playing');
       setHasRevived(false);
       const eng = engineRef.current;
-      eng.player.vy = -380;
-      eng.launchTimer = 1.2;
+      eng.player.vy = CYBER_DASH_TUNING.launchFlapVy;
+      eng.launchTimer = CYBER_DASH_TUNING.launchDurationSec;
       eng.grazeStreak = 0;
       cyberDashAudio.flap();
       triggerHaptic('light');
       return;
     }
 
-    if (gameState === 'playing') {
+    if (phase === 'playing') {
       const eng = engineRef.current;
-      eng.player.vy = -410;
+      eng.player.vy = CYBER_DASH_TUNING.flapVy;
       cyberDashAudio.flap();
       triggerHaptic('light');
 
@@ -140,16 +150,17 @@ export default function CyberDashClient() {
         });
       }
     }
-  }, [gameState]);
+  }, [setPhase]);
 
-  // Restart run
+  // Restart run (uses CSS layout coordinates so HiDPI displays position accurately)
   const handleRestart = useCallback(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
 
+    const rect = canvas.getBoundingClientRect();
     const eng = engineRef.current;
-    eng.player.x = canvas.width * 0.24;
-    eng.player.y = canvas.height * 0.5;
+    eng.player.x = rect.width * 0.24;
+    eng.player.y = rect.height * 0.5;
     eng.player.vy = 0;
     eng.player.angle = 0;
     eng.player.shieldTime = 0;
@@ -158,8 +169,8 @@ export default function CyberDashClient() {
     eng.gates = [];
     eng.particles = [];
     eng.floatingTexts = [];
-    eng.speed = 220;
-    eng.nextGateX = canvas.width + 120;
+    eng.speed = CYBER_DASH_TUNING.baseSpeed;
+    eng.nextGateX = rect.width + 120;
     eng.score = 0;
     eng.streak = 0;
     eng.screenShake = 0;
@@ -167,8 +178,8 @@ export default function CyberDashClient() {
     setScore(0);
     setStreak(0);
     setHasRevived(false);
-    setGameState('idle');
-  }, []);
+    setPhase('idle');
+  }, [setPhase]);
 
   // Revive run with diamonds
   const handleRevive = useCallback(() => {
@@ -186,7 +197,8 @@ export default function CyberDashClient() {
     const canvas = canvasRef.current;
     const eng = engineRef.current;
     if (canvas) {
-      eng.player.y = canvas.height * 0.5;
+      const rect = canvas.getBoundingClientRect();
+      eng.player.y = rect.height * 0.5;
       eng.player.vy = -180;
     }
     eng.player.shieldTime = 2.2; // 2.2 seconds invulnerability
@@ -197,9 +209,9 @@ export default function CyberDashClient() {
     // Clear gates dangerously close to player
     eng.gates = eng.gates.filter((g) => g.x > eng.player.x + 140 || g.x + g.width < eng.player.x - 40);
 
-    setGameState('playing');
+    setPhase('playing');
     showNotice(`-${REVIVE_COST} 💎 Revived with Shield!`);
-  }, [hasRevived, diamonds, showNotice]);
+  }, [hasRevived, diamonds, setPhase, showNotice]);
 
   // Mute toggle
   const handleToggleMute = useCallback(() => {
@@ -226,9 +238,10 @@ export default function CyberDashClient() {
     });
   }, [score]);
 
-  // Keyboard navigation
+  // Keyboard navigation (ignore held-key auto-repeat spikes)
   useEffect(() => {
     const onKeyDown = (e: KeyboardEvent) => {
+      if (e.repeat) return;
       if ([' ', 'ArrowUp', 'w', 'W'].includes(e.key)) {
         e.preventDefault();
         handleFlap();
@@ -238,20 +251,21 @@ export default function CyberDashClient() {
     return () => window.removeEventListener('keydown', onKeyDown);
   }, [handleFlap]);
 
-  // 60FPS Game Loop
+  // 60FPS Game Loop (runs continuously without tearing down on state transitions)
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
-    // Resize canvas to full viewport
+    // Resize canvas cleanly using setTransform so DPR scaling never accumulates
     const handleResize = () => {
       const rect = canvas.getBoundingClientRect();
       const dpr = Math.min(window.devicePixelRatio || 1, 2);
-      canvas.width = rect.width * dpr;
-      canvas.height = rect.height * dpr;
-      ctx.scale(dpr, dpr);
+      canvas.width = Math.round(rect.width * dpr);
+      canvas.height = Math.round(rect.height * dpr);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      engineRef.current.player.x = rect.width * 0.24;
 
       // Populate background stars
       if (engineRef.current.stars.length === 0) {
@@ -282,24 +296,28 @@ export default function CyberDashClient() {
       const dt = Math.min((now - eng.lastTime) / 1000, 0.05); // Cap delta to prevent huge jumps
       eng.lastTime = now;
 
-      const w = canvas.getBoundingClientRect().width;
-      const h = canvas.getBoundingClientRect().height;
+      const canvasRect = canvas.getBoundingClientRect();
+      const w = canvasRect.width;
+      const h = canvasRect.height;
+      const activePhase = gameStateRef.current;
 
       // 1. UPDATE PHYSICS (if playing)
-      if (gameState === 'playing') {
+      if (activePhase === 'playing') {
         const theme = getThemeForScore(eng.score);
 
-        // Player Gravity with launch glide (softer 820 px/s² during opening 1.2s to prevent sub-3s novice deaths)
+        // Player Gravity with launch glide
         if (eng.launchTimer > 0) {
           eng.launchTimer -= dt;
         }
-        const isLaunchPhase = eng.launchTimer > 0 || (eng.score === 0 && eng.gates.length > 0 && eng.gates[0].x > eng.player.x + 80);
-        const gravity = isLaunchPhase ? 820 : 1320;
-        eng.player.vy += gravity * dt;
+        const isLaunchPhase =
+          eng.launchTimer > 0 ||
+          (eng.score === 0 && eng.gates.length > 0 && eng.gates[0].x > eng.player.x + 80);
+        const gravity = isLaunchPhase ? CYBER_DASH_TUNING.launchGravity : CYBER_DASH_TUNING.gravity;
+        eng.player.vy = Math.min(CYBER_DASH_TUNING.maxFallSpeed, eng.player.vy + gravity * dt);
         eng.player.y += eng.player.vy * dt;
 
         // Player Tilt
-        const targetAngle = Math.max(-0.45, Math.min(1.1, eng.player.vy * 0.002));
+        const targetAngle = Math.max(-0.45, Math.min(1.05, eng.player.vy * 0.002));
         eng.player.angle += (targetAngle - eng.player.angle) * 12 * dt;
 
         // Shield countdown
@@ -307,8 +325,11 @@ export default function CyberDashClient() {
           eng.player.shieldTime -= dt;
         }
 
-        // Speed ramp
-        eng.speed = Math.min(340, 220 + eng.score * 2.5);
+        // Smooth speed ramp
+        eng.speed = Math.min(
+          CYBER_DASH_TUNING.maxSpeed,
+          CYBER_DASH_TUNING.baseSpeed + eng.score * CYBER_DASH_TUNING.speedPerGate
+        );
 
         // Emit trail particles
         if (Math.random() < 0.85) {
@@ -324,24 +345,13 @@ export default function CyberDashClient() {
           });
         }
 
-        // Spawn Laser Gates
-        if (eng.gates.length === 0 || eng.gates[eng.gates.length - 1].x < w - 210) {
-          const gapHeight = Math.max(140, 168 - eng.score * 0.6);
-          const margin = 70;
-          const gapY = margin + gapHeight * 0.5 + Math.random() * (h - margin * 2 - gapHeight);
-          const gateW = 50;
-
-          eng.gates.push({
-            id: eng.gateIdCounter++,
-            x: w + 40,
-            width: gateW,
-            topHeight: gapY - gapHeight * 0.5,
-            bottomY: gapY + gapHeight * 0.5,
-            gapY,
-            gapHeight,
-            passed: false,
-            grazed: false,
-          });
+        // Spawn Laser Gates with balanced horizontal spacing and reachable vertical steps
+        const lastGate = eng.gates[eng.gates.length - 1];
+        const gateSpacing = getGateHorizontalSpacing(w, eng.score);
+        if (!lastGate || lastGate.x <= w + 40 - gateSpacing) {
+          eng.gates.push(
+            createNextLaserGate(eng.gateIdCounter++, w, h, eng.score, lastGate)
+          );
         }
 
         // Move Gates & Check Collisions
@@ -424,19 +434,19 @@ export default function CyberDashClient() {
             cyberDashAudio.score(eng.streak);
           }
 
-          // Check Collision with Pillars (if shield not active)
+          // Check Collision with Pillars (core hitbox inset prevents unfair glow-edge hits)
           if (p.shieldTime <= 0) {
-            // Check top pillar
-            const inGateX = p.x + p.radius > gate.x + 4 && p.x - p.radius < gate.x + gate.width - 4;
-            const hitTop = inGateX && p.y - p.radius < gate.topHeight;
-            const hitBottom = inGateX && p.y + p.radius > gate.bottomY;
+            const hitRadius = p.radius - CYBER_DASH_TUNING.hitboxInsetPx;
+            const inGateX = p.x + hitRadius > gate.x + 4 && p.x - hitRadius < gate.x + gate.width - 4;
+            const hitTop = inGateX && p.y - hitRadius < gate.topHeight;
+            const hitBottom = inGateX && p.y + hitRadius > gate.bottomY;
 
             if (hitTop || hitBottom) {
               cyberDashAudio.crash();
               triggerHaptic('warning');
               eng.screenShake = 16;
               incrementGamePlayCount('quick-tap');
-              setGameState('gameover');
+              setPhase('gameover');
             }
           }
 
@@ -453,7 +463,8 @@ export default function CyberDashClient() {
             cyberDashAudio.crash();
             triggerHaptic('warning');
             eng.screenShake = 16;
-            setGameState('gameover');
+            incrementGamePlayCount('quick-tap');
+            setPhase('gameover');
           }
         }
         if (eng.player.y - eng.player.radius < 12) {
@@ -485,7 +496,7 @@ export default function CyberDashClient() {
 
       // Update Background Stars
       eng.stars.forEach((s) => {
-        s.x -= s.speed * (gameState === 'playing' ? dt * 1.5 : dt * 0.5);
+        s.x -= s.speed * (activePhase === 'playing' ? dt * 1.5 : dt * 0.5);
         if (s.x < 0) s.x = w;
       });
 
@@ -628,8 +639,11 @@ export default function CyberDashClient() {
     };
 
     eng.animFrameId = requestAnimationFrame(loop);
-    return () => cancelAnimationFrame(eng.animFrameId);
-  }, [gameState]);
+    return () => {
+      cancelAnimationFrame(eng.animFrameId);
+      window.removeEventListener('resize', handleResize);
+    };
+  }, [setPhase]);
 
   return (
     <section className="w-full flex flex-col bg-[#040e14] text-white select-none">

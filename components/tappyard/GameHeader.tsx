@@ -11,6 +11,8 @@ interface GameHeaderProps {
   category: string;
   icon?: ReactNode;
   onToggleFullscreen?: () => void;
+  disableFullscreenShortcut?: boolean;
+  rightActions?: ReactNode;
 }
 
 export default function GameHeader({
@@ -18,6 +20,8 @@ export default function GameHeader({
   category,
   icon,
   onToggleFullscreen,
+  disableFullscreenShortcut = false,
+  rightActions,
 }: GameHeaderProps) {
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [supportsFullscreen, setSupportsFullscreen] = useState(true);
@@ -130,9 +134,11 @@ export default function GameHeader({
     if (onToggleFullscreen) onToggleFullscreen();
   }, [onToggleFullscreen]);
 
-  // Press 'F' on keyboard for instant desktop fullscreen toggle
+  // Press 'F' on keyboard for instant desktop fullscreen toggle (disabled on games using F keybind)
   useEffect(() => {
+    if (disableFullscreenShortcut) return;
     const onKeyDown = (e: KeyboardEvent) => {
+      if (e.defaultPrevented || e.repeat) return;
       if (
         e.target instanceof HTMLInputElement ||
         e.target instanceof HTMLTextAreaElement
@@ -144,7 +150,7 @@ export default function GameHeader({
     };
     window.addEventListener('keydown', onKeyDown);
     return () => window.removeEventListener('keydown', onKeyDown);
-  }, [handleFullscreen]);
+  }, [disableFullscreenShortcut, handleFullscreen]);
 
   return (
     <header className="w-full max-w-full overflow-hidden h-12 sm:h-14 bg-[#090d16]/85 backdrop-blur-xl border-b border-slate-800/80 px-2.5 sm:px-4 flex items-center justify-between gap-2 z-30 shrink-0 select-none safe-top relative after:absolute after:bottom-0 after:inset-x-0 after:h-[1px] after:bg-gradient-to-r after:from-transparent after:via-pink-500/30 after:to-transparent">
@@ -176,6 +182,8 @@ export default function GameHeader({
 
       {/* Right Controls */}
       <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
+        {rightActions}
+
         {/* Diamond Counter */}
         {diamonds !== null && diamonds > 0 && (
           <div className="typo-button shrink-0 whitespace-nowrap flex items-center gap-1 sm:gap-1.5 px-2 sm:px-2.5 py-1 rounded-full bg-cyan-950/40 border border-cyan-500/30 text-cyan-300 text-xs tabular-nums shadow-xs">
@@ -189,7 +197,7 @@ export default function GameHeader({
           <button
             onClick={handleFullscreen}
             className="typo-button shrink-0 h-8 sm:h-9 px-2 sm:px-3 rounded-xl text-xs text-slate-300 hover:text-white bg-slate-900/90 border border-slate-800 hover:border-slate-700 transition-colors flex items-center gap-1.5 cursor-pointer active:scale-95"
-            title="Toggle Fullscreen (F)"
+            title={disableFullscreenShortcut ? 'Toggle Fullscreen' : 'Toggle Fullscreen (F)'}
             aria-label="Toggle Fullscreen"
           >
             {isFullscreen ? (
@@ -200,9 +208,11 @@ export default function GameHeader({
             <span className="hidden md:inline">
               {isFullscreen ? 'Exit Fullscreen' : 'Fullscreen'}
             </span>
-            <kbd className="hidden lg:inline-block text-[9px] px-1.5 py-0.2 rounded bg-slate-800 text-slate-400 border border-slate-700">
-              F
-            </kbd>
+            {!disableFullscreenShortcut && (
+              <kbd className="hidden lg:inline-block text-[9px] px-1.5 py-0.2 rounded bg-slate-800 text-slate-400 border border-slate-700">
+                F
+              </kbd>
+            )}
           </button>
         )}
       </div>

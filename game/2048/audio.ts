@@ -7,8 +7,12 @@ class Neon2048Audio {
 
   constructor() {
     if (typeof window !== 'undefined') {
-      const saved = localStorage.getItem('tappyard-2048-mute');
-      this.isMuted = saved === 'true';
+      try {
+        const saved = localStorage.getItem('tappyard-2048-mute');
+        this.isMuted = saved === 'true';
+      } catch {
+        this.isMuted = false;
+      }
     }
   }
 
@@ -17,11 +21,15 @@ class Neon2048Audio {
     if (!this.ctx) {
       const AudioCtxClass = window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
       if (AudioCtxClass) {
-        this.ctx = new AudioCtxClass();
+        try {
+          this.ctx = new AudioCtxClass();
+        } catch {
+          return null;
+        }
       }
     }
     if (this.ctx && this.ctx.state === 'suspended') {
-      this.ctx.resume();
+      this.ctx.resume().catch(() => {});
     }
     return this.ctx;
   }
@@ -33,7 +41,11 @@ class Neon2048Audio {
   public setMuted(muted: boolean): void {
     this.isMuted = muted;
     if (typeof window !== 'undefined') {
-      localStorage.setItem('tappyard-2048-mute', String(muted));
+      try {
+        localStorage.setItem('tappyard-2048-mute', String(muted));
+      } catch {
+        // ignore storage quota/privacy block
+      }
     }
   }
 

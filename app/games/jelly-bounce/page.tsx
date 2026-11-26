@@ -1,12 +1,8 @@
 import type { Metadata } from 'next';
-import dynamic from 'next/dynamic';
+import JellyBounceClient from '@/components/tappyard/JellyBounceClient';
 import GameContentBelowFold from '@/components/tappyard/GameContentBelowFold';
 import { GAME_CONTENT_DATA } from '@/data/gameContent';
 import { SITE_URL } from '@/data/homeFaqs';
-
-const JellyBounceClient = dynamic(
-  () => import('@/components/tappyard/JellyBounceClient')
-);
 
 const GAME_URL = `${SITE_URL}/games/jelly-bounce`;
 const PAGE_DESC =

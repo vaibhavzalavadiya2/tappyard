@@ -190,6 +190,28 @@ test('Difficulty ramp, ceiling safety, wave rules (spike -> breather), and guide
   assert.equal(logic.getWaveSpawnIntervalSec(breather, 120), 1.2);
 });
 
+test('Conveyor item spawn headway and non-overtaking FIFO invariants', () => {
+  assert.equal(logic.canSpawnNextItem([]), true);
+  assert.equal(logic.canSpawnNextItem([{ yProgress: 0.05 }]), false);
+  assert.equal(
+    logic.canSpawnNextItem([{ yProgress: BELT_SORT_CONFIG.DIFFICULTY.minSpawnProgressGap }]),
+    true
+  );
+
+  // Item #4 (standard 5.0s speed) trailing close behind guided item #3 (5.4s speed) must never overtake #3
+  const items = [
+    { id: 3, yProgress: 0.4 },
+    { id: 4, yProgress: 0.39 },
+  ];
+  logic.advanceBeltItemsInOrder(items, 0.25, 0);
+  assert.equal(items[0].id, 3);
+  assert.equal(items[1].id, 4);
+  assert.ok(
+    items[0].yProgress - items[1].yProgress >= BELT_SORT_CONFIG.DIFFICULTY.minItemProgressGap - 1e-9,
+    'Trailing item must keep minimum spacing behind front item'
+  );
+});
+
 test('Accuracy, rewards cap, formatting, daily share emoji grid, and streak continuity', () => {
   assert.equal(logic.calculateAccuracyPercent(0, 0, 0), 100);
   assert.equal(logic.calculateAccuracyPercent(9, 1, 0), 90);

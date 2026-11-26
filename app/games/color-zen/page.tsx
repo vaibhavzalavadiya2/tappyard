@@ -1,12 +1,8 @@
 import type { Metadata } from 'next';
-import dynamic from 'next/dynamic';
+import BlockZenClient from '@/components/games/BlockZen/BlockZenClient';
 import GameContentBelowFold from '@/components/tappyard/GameContentBelowFold';
 import { GAME_CONTENT_DATA } from '@/data/gameContent';
 import { SITE_URL } from '@/data/homeFaqs';
-
-const BlockZenClient = dynamic(
-  () => import('@/components/games/BlockZen/BlockZenClient')
-);
 
 const GAME_URL = `${SITE_URL}/games/color-zen`;
 const PAGE_DESC =

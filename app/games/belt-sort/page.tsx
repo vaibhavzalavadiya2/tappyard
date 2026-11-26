@@ -1,15 +1,11 @@
 import fs from 'fs';
 import path from 'path';
 import type { Metadata } from 'next';
-import dynamic from 'next/dynamic';
 import localFont from 'next/font/local';
+import BeltSortClient from '@/components/games/BeltSort/BeltSortClient';
 import GameContentBelowFold from '@/components/tappyard/GameContentBelowFold';
 import { GAME_CONTENT_DATA } from '@/data/gameContent';
 import { SITE_URL } from '@/data/homeFaqs';
-
-const BeltSortClient = dynamic(
-  () => import('@/components/games/BeltSort/BeltSortClient')
-);
 
 const lilitaOne = localFont({
   src: '../../../public/fonts/LilitaOne-Regular.woff2',

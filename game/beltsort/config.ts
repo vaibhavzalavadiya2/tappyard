@@ -178,6 +178,8 @@ export const BELT_SORT_CONFIG = {
     spawnGapStartSec: 1.0,
     spawnGapMinSec: 0.35, // <= ~2.85 items/s (fair ceiling)
     spawnGapRampDurationSec: 90.0,
+    minSpawnProgressGap: 0.155, // Minimum belt progress headway before spawning next item
+    minItemProgressGap: 0.12, // Minimum gap between consecutive active items (never overtake)
   },
 
   // Wave Patterns Table (Rule: spike is always followed by breather)

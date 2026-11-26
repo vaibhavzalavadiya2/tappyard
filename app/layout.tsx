@@ -141,20 +141,6 @@ export default function RootLayout({ children }: LayoutProps<'/'>) {
       data-scroll-behavior="smooth"
     >
       <head>
-        <link
-          rel="preload"
-          href="/fonts/SpaceGrotesk-Variable.woff2"
-          as="font"
-          type="font/woff2"
-          crossOrigin="anonymous"
-        />
-        <link
-          rel="preload"
-          href="/fonts/Inter-Variable.woff2"
-          as="font"
-          type="font/woff2"
-          crossOrigin="anonymous"
-        />
         <link rel="alternate" type="text/plain" href="/llms.txt" title="LLM Documentation" />
       </head>
       <body className="min-h-full bg-[#090d16] font-sans text-slate-100 antialiased selection:bg-pink-500 selection:text-white flex flex-col overscroll-none">

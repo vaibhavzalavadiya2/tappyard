@@ -85,3 +85,84 @@ export function getThemeForScore(score: number): CyberTheme {
   if (score >= 10) return CYBER_THEMES[1];
   return CYBER_THEMES[0];
 }
+
+export const CYBER_DASH_TUNING = {
+  baseSpeed: 210,
+  maxSpeed: 330,
+  speedPerGate: 2.2,
+  launchFlapVy: -360,
+  flapVy: -375,
+  launchGravity: 780,
+  gravity: 1140,
+  maxFallSpeed: 540,
+  launchDurationSec: 1.4,
+  hitboxInsetPx: 3,
+  gateWidth: 50,
+  startGapHeight: 198,
+  minGapHeight: 152,
+  gapShrinkPerGate: 0.65,
+  desktopStartSpacingPx: 350,
+  mobileStartSpacingPx: 300,
+  minSpacingPx: 255,
+  spacingShrinkPerGate: 1.4,
+} as const;
+
+export function getGateHorizontalSpacing(viewportWidth: number, score: number): number {
+  const startSpacing =
+    viewportWidth >= 768
+      ? CYBER_DASH_TUNING.desktopStartSpacingPx
+      : CYBER_DASH_TUNING.mobileStartSpacingPx;
+  return Math.max(
+    CYBER_DASH_TUNING.minSpacingPx,
+    startSpacing - score * CYBER_DASH_TUNING.spacingShrinkPerGate
+  );
+}
+
+/**
+ * Generates the next laser gate with bounded consecutive gap vertical delta so
+ * openings stay physically reachable across both narrow phones and tall desktop monitors.
+ */
+export function createNextLaserGate(
+  id: number,
+  viewportWidth: number,
+  viewportHeight: number,
+  score: number,
+  lastGate?: LaserGate
+): LaserGate {
+  const gapHeight = Math.max(
+    CYBER_DASH_TUNING.minGapHeight,
+    CYBER_DASH_TUNING.startGapHeight - score * CYBER_DASH_TUNING.gapShrinkPerGate
+  );
+  const margin = Math.max(76, Math.min(110, viewportHeight * 0.12));
+  const minGapY = margin + gapHeight * 0.5;
+  const maxGapY = Math.max(minGapY + 20, viewportHeight - margin - gapHeight * 0.5);
+
+  let gapY: number;
+  if (!lastGate) {
+    const centerSpread = Math.min(90, (maxGapY - minGapY) * 0.3);
+    gapY = viewportHeight * 0.5 + (Math.random() - 0.5) * 2 * centerSpread;
+  } else {
+    const maxStepY = Math.min(
+      Math.max(150, viewportHeight * 0.28),
+      180 + Math.min(70, score * 1.5)
+    );
+    const low = Math.max(minGapY, lastGate.gapY - maxStepY);
+    const high = Math.min(maxGapY, lastGate.gapY + maxStepY);
+    gapY = low + Math.random() * (high - low);
+  }
+
+  gapY = Math.max(minGapY, Math.min(maxGapY, gapY));
+  const gateW = CYBER_DASH_TUNING.gateWidth;
+
+  return {
+    id,
+    x: viewportWidth + 40,
+    width: gateW,
+    topHeight: gapY - gapHeight * 0.5,
+    bottomY: gapY + gapHeight * 0.5,
+    gapY,
+    gapHeight,
+    passed: false,
+    grazed: false,
+  };
+}

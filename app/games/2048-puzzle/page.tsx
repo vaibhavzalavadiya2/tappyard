@@ -1,12 +1,8 @@
 import type { Metadata } from 'next';
-import dynamic from 'next/dynamic';
+import Neon2048Client from '@/components/games/Neon2048/Neon2048Client';
 import GameContentBelowFold from '@/components/tappyard/GameContentBelowFold';
 import { GAME_CONTENT_DATA } from '@/data/gameContent';
 import { SITE_URL } from '@/data/homeFaqs';
-
-const Neon2048Client = dynamic(
-  () => import('@/components/games/Neon2048/Neon2048Client')
-);
 
 const GAME_URL = `${SITE_URL}/games/2048-puzzle`;
 const PAGE_DESC =

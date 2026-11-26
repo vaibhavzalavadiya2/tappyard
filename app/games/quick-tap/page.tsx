@@ -1,12 +1,8 @@
 import type { Metadata } from 'next';
-import dynamic from 'next/dynamic';
+import CyberDashClient from '@/components/games/CyberDash/CyberDashClient';
 import GameContentBelowFold from '@/components/tappyard/GameContentBelowFold';
 import { GAME_CONTENT_DATA } from '@/data/gameContent';
 import { SITE_URL } from '@/data/homeFaqs';
-
-const CyberDashClient = dynamic(
-  () => import('@/components/games/CyberDash/CyberDashClient')
-);
 
 const GAME_URL = `${SITE_URL}/games/quick-tap`;
 const PAGE_DESC =
