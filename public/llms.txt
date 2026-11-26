@@ -17,6 +17,12 @@
   - Key Mechanics: Steer horizontally, land on forward speed chevron pads, authorization-based jump physics over gaps, collectible diamonds, unlockable skins.
   - Target URL: https://tappyard.com/games/jelly-bounce
 
+- [Conveyor Sort Rush](https://tappyard.com/games/belt-sort): Fast-paced perspective shape sorting arcade game with Endless & 60s seeded Daily Run modes.
+  - Genre: Casual, Shape Sorting, Reflex Arcade
+  - Controls: Tap colored shape bins (1/2/3/4, A/S/D/F, Arrow keys); Q Freeze, Space/E Slow-Mo
+  - Key Mechanics: Perspective conveyor belt, x2 Perfect Zone timing, up to x5 chain multipliers, 4th Diamond bin unlock at 25 sorts, Wildcard stars and Freeze crystals at 60 sorts, seeded Daily Run with emoji share grid.
+  - Target URL: https://tappyard.com/games/belt-sort
+
 - [2048 Neon Fusion](https://tappyard.com/games/2048-puzzle): Buttery-smooth sliding tile puzzle featuring glowing neon number tiles, harmonic merge chimes, and diamond undos.
   - Genre: Puzzle, Brain Teaser, Math Strategy
   - Controls: Touch swipe (up/down/left/right) or Arrow Keys / WASD
@@ -35,15 +41,9 @@
   - Key Mechanics: Flap/thrust upward to navigate through pulsing laser gates, near-miss edge graze multipliers for bonus diamonds, sub-bass graze audio, diamond revive shields, high-score challenge sharing.
   - Target URL: https://tappyard.com/games/quick-tap
 
-- [Conveyor Sort Rush](https://tappyard.com/games/belt-sort): Fast-paced perspective shape sorting arcade game with Endless & 60s seeded Daily Run modes.
-  - Genre: Casual, Shape Sorting, Reflex Arcade
-  - Controls: Tap colored shape bins (1/2/3/4, A/S/D/F, Arrow keys); Q Freeze, Space/E Slow-Mo
-  - Key Mechanics: Perspective conveyor belt, x2 Perfect Zone timing, up to x5 chain multipliers, 4th Diamond bin unlock at 25 sorts, Wildcard stars and Freeze crystals at 60 sorts, seeded Daily Run with emoji share grid.
-  - Target URL: https://tappyard.com/games/belt-sort
-
 ## Technology & Engineering Architecture
 - **Framework**: Next.js 16 (Turbopack, App Router, React 19, Tailwind CSS v4)
-- **Rendering Engines**: Phaser 3D WebGL, procedural 2D Canvas
+- **Rendering Engines**: Phaser WebGL & HTML5 2D Canvas
 - **Sound Synthesis**: Web Audio API (real-time procedural sine, triangle, and FM oscillators)
 - **State & Economy**: Reactive observer pattern in TypeScript (lib/wallet.ts)
 - **SEO & Discoverability**: Semantic HTML5, Schema.org VideoGame & FAQPage JSON-LD, BreadcrumbList, dynamic sitemaps

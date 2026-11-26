@@ -1,39 +1,26 @@
 import type { Metadata } from 'next';
-import BlockZenClient from '@/components/games/BlockZen/BlockZenClient';
+import dynamic from 'next/dynamic';
 import GameContentBelowFold from '@/components/tappyard/GameContentBelowFold';
 import { GAME_CONTENT_DATA } from '@/data/gameContent';
+import { SITE_URL } from '@/data/homeFaqs';
 
-const SITE_URL = 'https://tappyard.com';
+const BlockZenClient = dynamic(
+  () => import('@/components/games/BlockZen/BlockZenClient')
+);
+
 const GAME_URL = `${SITE_URL}/games/color-zen`;
+const PAGE_DESC =
+  'Drag geometric blocks onto a soothing 10x10 grid and clear lines with relaxing chimes in Block Grid Zen. Play timer-free puzzles in your browser.';
 
 export const metadata: Metadata = {
   title: 'Block Grid Zen - Free 10x10 Block Puzzle Games',
-  description:
-    'Drag shapes onto a 10x10 grid and clear full lines in Block Grid Zen, a free, relaxing block puzzle. Play in your browser, no download.',
-  keywords: [
-    'free puzzle games',
-    'puzzle games',
-    'block game',
-    'block puzzle',
-    'block puzzle game',
-    'block puzzle online',
-    'free block puzzle',
-    '10x10 block puzzle',
-    'grid puzzle game',
-    'relaxing puzzle games',
-    'zen puzzle game',
-    'puzzle game no time limit',
-    'line clear puzzle',
-    'drag and drop block puzzle',
-    'TAPPYARD',
-  ],
+  description: PAGE_DESC,
   alternates: {
     canonical: GAME_URL,
   },
   openGraph: {
     title: 'Block Grid Zen - Free 10x10 Block Puzzle Games | TAPPYARD',
-    description:
-      'Drag shapes onto a 10x10 grid and clear full lines in Block Grid Zen, a free, relaxing block puzzle. Play in your browser, no download.',
+    description: PAGE_DESC,
     url: GAME_URL,
     type: 'website',
     images: [
@@ -48,8 +35,7 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary_large_image',
     title: 'Block Grid Zen - Free 10x10 Block Puzzle Games',
-    description:
-      'Drag shapes onto a 10x10 grid and clear full lines in Block Grid Zen, a free, relaxing block puzzle. Play in your browser, no download.',
+    description: PAGE_DESC,
     images: ['/og/color-zen-og.png'],
   },
 };

@@ -13,9 +13,11 @@ import Footer from '@/components/tappyard/Footer';
 import {
   GAMES_CATALOGUE,
   GAME_CATEGORIES,
+  getGamesByCategory,
   searchGames,
   type GameCategory,
 } from '@/data/games';
+import { HOME_FAQS } from '@/data/homeFaqs';
 import {
   Gamepad2,
   SearchX,
@@ -205,127 +207,116 @@ export default function HomeClient() {
                   <p className="typo-body text-xs sm:text-sm text-slate-300 leading-relaxed">
                     Welcome to TAPPYARD, the destination for free browser games you can enjoy instantly on any device.
                     If you are looking for fun games to play online without downloading software or installing apps, our
-                    library runs natively in your browser using modern WebGL and HTML5 technology. Jump into fast-paced
-                    online arcade games like our 3D runner Jump Jelly Jump! and 1-tap reflex flyer Cyber Dash, or challenge
-                    your mind with classic number merge and block placement puzzles like 2048 Neon Fusion and Block Grid Zen.
-                    Every title delivers smooth 60fps performance across mobile browser games on iOS and Android as well as
-                    desktop computers. Experience truly instant play games with zero waiting time, zero storage footprint,
-                    and complete freedom to play anytime. Explore our four main game genres below:
+                    library runs natively in your browser using HTML5 Canvas and WebGL technology. Jump into fast-paced
+                    arcade runners, 1-tap reflex games, number merges, shape sorting, and spatial puzzles across mobile
+                    browsers on iOS and Android as well as desktop computers. Experience instant play with zero waiting
+                    time, zero storage footprint, and complete freedom to play anytime. Explore all {GAMES_CATALOGUE.length} original browser games across our {GAME_CATEGORIES.length} genres below:
                   </p>
                 </div>
 
-                {/* In-page Genre Sections with IDs and H2s */}
+                {/* In-page Genre Sections driven directly from catalogue data */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
-                  {/* Genre 1: 3D Arcade Runners */}
-                  <article id="arcade-runners" className="scroll-mt-24 flex flex-col gap-2 p-4 rounded-xl bg-slate-950/50 border border-slate-800/60 hover:border-cyan-500/40 transition-colors">
-                    <div className="flex items-center justify-between">
-                      <h2 className="typo-section-heading text-sm sm:text-base text-cyan-300">
-                        3D Arcade Runners
-                      </h2>
-                      <span className="typo-label text-[10px] text-cyan-400 bg-cyan-950/60 px-2 py-0.5 rounded-full border border-cyan-500/30">
-                        Arcade
-                      </span>
-                    </div>
-                    <p className="typo-body text-slate-300 text-xs leading-relaxed">
-                      Steer along suspended runways, collect diamonds, and hit booster pads to clear endless chasms across dynamic environmental zones.
-                    </p>
-                    <div className="pt-2 mt-auto flex items-center justify-between">
-                      <Link
-                        href="/games/jelly-bounce"
-                        className="typo-button text-xs text-white bg-cyan-500/20 hover:bg-cyan-500/30 border border-cyan-400/40 px-3 py-1.5 rounded-lg inline-flex items-center gap-1.5 transition-colors"
+                  {GAME_CATEGORIES.map((category) => {
+                    const gamesInGenre = getGamesByCategory(category);
+                    const meta: Record<
+                      GameCategory,
+                      {
+                        id: string;
+                        heading: string;
+                        description: string;
+                        titleClass: string;
+                        borderClass: string;
+                        badgeClass: string;
+                        btnClass: string;
+                      }
+                    > = {
+                      Arcade: {
+                        id: 'arcade-runners',
+                        heading: '3D Arcade Runners',
+                        description:
+                          'Steer along suspended runways, collect cyan diamonds, and hit booster pads to clear endless chasms across dynamic environmental zones.',
+                        titleClass: 'text-cyan-300',
+                        borderClass: 'hover:border-cyan-500/40',
+                        badgeClass: 'text-cyan-400 bg-cyan-950/60 border-cyan-500/30',
+                        btnClass: 'bg-cyan-500/20 hover:bg-cyan-500/30 border-cyan-400/40',
+                      },
+                      Puzzle: {
+                        id: 'puzzle-games',
+                        heading: 'Brain & Math Puzzles',
+                        description:
+                          'Slide matching number and dessert tiles across 4x4 matrices, listen to harmonic merge chimes, and plan ahead to reach 2048.',
+                        titleClass: 'text-amber-300',
+                        borderClass: 'hover:border-amber-500/40',
+                        badgeClass: 'text-amber-400 bg-amber-950/60 border-amber-500/30',
+                        btnClass: 'bg-amber-500/20 hover:bg-amber-500/30 border-amber-400/40',
+                      },
+                      Relaxing: {
+                        id: 'relaxing-games',
+                        heading: 'Relaxing Stress Relief Games',
+                        description:
+                          'Enjoy soothing 10x10 geometric polyomino block puzzles with zero timers, acoustic chimes, and satisfying full line clears.',
+                        titleClass: 'text-teal-300',
+                        borderClass: 'hover:border-teal-500/40',
+                        badgeClass: 'text-teal-400 bg-teal-950/60 border-teal-500/30',
+                        btnClass: 'bg-teal-500/20 hover:bg-teal-500/30 border-teal-400/40',
+                      },
+                      Casual: {
+                        id: 'reflex-games',
+                        heading: '1-Tap Reflex & Sorting Games',
+                        description:
+                          'Test your timing in rapid conveyor belt shape sorting or neon tunnel flight! Chain Perfect Zone combos or dodge laser gates.',
+                        titleClass: 'text-purple-300',
+                        borderClass: 'hover:border-purple-500/40',
+                        badgeClass: 'text-purple-400 bg-purple-950/60 border-purple-500/30',
+                        btnClass: 'bg-purple-500/20 hover:bg-purple-500/30 border-purple-400/40',
+                      },
+                    };
+                    const m = meta[category];
+                    return (
+                      <article
+                        key={category}
+                        id={m.id}
+                        className={`scroll-mt-24 flex flex-col gap-2 p-4 rounded-xl bg-slate-950/50 border border-slate-800/60 ${m.borderClass} transition-colors`}
                       >
-                        <span>Jump Jelly Jump! - 3D endless runner</span>
-                        <ArrowRight className="w-3.5 h-3.5 text-cyan-400" />
-                      </Link>
-                    </div>
-                  </article>
-
-                  {/* Genre 2: Brain & Math Puzzles */}
-                  <article id="puzzle-games" className="scroll-mt-24 flex flex-col gap-2 p-4 rounded-xl bg-slate-950/50 border border-slate-800/60 hover:border-amber-500/40 transition-colors">
-                    <div className="flex items-center justify-between">
-                      <h2 className="typo-section-heading text-sm sm:text-base text-amber-300">
-                        Brain & Math Puzzles
-                      </h2>
-                      <span className="typo-label text-[10px] text-amber-400 bg-amber-950/60 px-2 py-0.5 rounded-full border border-amber-500/30">
-                        Puzzle
-                      </span>
-                    </div>
-                    <p className="typo-body text-slate-300 text-xs leading-relaxed">
-                      Slide matching number tiles across a 4x4 matrix, listen to harmonic merge chimes, and plan moves carefully to reach the 2048 tile with diamond undos.
-                    </p>
-                    <div className="pt-2 mt-auto flex items-center justify-between">
-                      <Link
-                        href="/games/2048-puzzle"
-                        className="typo-button text-xs text-white bg-amber-500/20 hover:bg-amber-500/30 border border-amber-400/40 px-3 py-1.5 rounded-lg inline-flex items-center gap-1.5 transition-colors"
-                      >
-                        <span>2048 Neon Fusion - 2048 number puzzle</span>
-                        <ArrowRight className="w-3.5 h-3.5 text-amber-400" />
-                      </Link>
-                    </div>
-                  </article>
-
-                  {/* Genre 3: Relaxing Stress Relief Games */}
-                  <article id="relaxing-games" className="scroll-mt-24 flex flex-col gap-2 p-4 rounded-xl bg-slate-950/50 border border-slate-800/60 hover:border-teal-500/40 transition-colors">
-                    <div className="flex items-center justify-between">
-                      <h2 className="typo-section-heading text-sm sm:text-base text-teal-300">
-                        Relaxing Stress Relief Games
-                      </h2>
-                      <span className="typo-label text-[10px] text-teal-400 bg-teal-950/60 px-2 py-0.5 rounded-full border border-teal-500/30">
-                        Relaxing
-                      </span>
-                    </div>
-                    <p className="typo-body text-slate-300 text-xs leading-relaxed">
-                      Enjoy soothing 10x10 geometric polyomino block puzzles with zero timers, relaxing chime synthesis, and satisfying full line clears.
-                    </p>
-                    <div className="pt-2 mt-auto flex items-center justify-between">
-                      <Link
-                        href="/games/color-zen"
-                        className="typo-button text-xs text-white bg-teal-500/20 hover:bg-teal-500/30 border border-teal-400/40 px-3 py-1.5 rounded-lg inline-flex items-center gap-1.5 transition-colors"
-                      >
-                        <span>Block Grid Zen - 10x10 block puzzle</span>
-                        <ArrowRight className="w-3.5 h-3.5 text-teal-400" />
-                      </Link>
-                    </div>
-                  </article>
-
-                  {/* Genre 4: 1-Tap Reflex & Rhythm Games */}
-                  <article id="reflex-games" className="scroll-mt-24 flex flex-col gap-2 p-4 rounded-xl bg-slate-950/50 border border-slate-800/60 hover:border-purple-500/40 transition-colors">
-                    <div className="flex items-center justify-between">
-                      <h2 className="typo-section-heading text-sm sm:text-base text-purple-300">
-                        1-Tap Reflex & Rhythm Games
-                      </h2>
-                      <span className="typo-label text-[10px] text-purple-400 bg-purple-950/60 px-2 py-0.5 rounded-full border border-purple-500/30">
-                        Casual
-                      </span>
-                    </div>
-                    <p className="typo-body text-slate-300 text-xs leading-relaxed">
-                      Test your timing in fast-paced neon flight or rapid shape sorting! Dodge laser gates in Cyber Dash, or rush matching shapes down the factory belt in Conveyor Sort Rush.
-                    </p>
-                    <div className="pt-2 mt-auto flex flex-wrap items-center gap-2">
-                      <Link
-                        href="/games/quick-tap"
-                        className="typo-button text-xs text-white bg-purple-500/20 hover:bg-purple-500/30 border border-purple-400/40 px-3 py-1.5 rounded-lg inline-flex items-center gap-1.5 transition-colors"
-                      >
-                        <span>Cyber Dash - 1-tap reflex flyer</span>
-                        <ArrowRight className="w-3.5 h-3.5 text-purple-400" />
-                      </Link>
-                      <Link
-                        href="/games/belt-sort"
-                        className="typo-button text-xs text-white bg-sky-500/20 hover:bg-sky-500/30 border border-sky-400/40 px-3 py-1.5 rounded-lg inline-flex items-center gap-1.5 transition-colors"
-                      >
-                        <span>Conveyor Sort Rush - shape sorting arcade</span>
-                        <ArrowRight className="w-3.5 h-3.5 text-sky-400" />
-                      </Link>
-                    </div>
-                  </article>
+                        <div className="flex items-center justify-between gap-2">
+                          <Link href={`/category/${category.toLowerCase()}`}>
+                            <h2 className={`typo-section-heading text-sm sm:text-base ${m.titleClass} hover:underline`}>
+                              {m.heading}
+                            </h2>
+                          </Link>
+                          <Link
+                            href={`/category/${category.toLowerCase()}`}
+                            className={`typo-label text-[10px] px-2 py-0.5 rounded-full border ${m.badgeClass}`}
+                          >
+                            {category}
+                          </Link>
+                        </div>
+                        <p className="typo-body text-slate-300 text-xs leading-relaxed">
+                          {m.description}
+                        </p>
+                        <div className="pt-2 mt-auto flex flex-wrap items-center gap-2">
+                          {gamesInGenre.map((game) => (
+                            <Link
+                              key={game.id}
+                              href={game.route}
+                              className={`typo-button text-xs text-white border px-3 py-1.5 rounded-lg inline-flex items-center gap-1.5 transition-colors ${m.btnClass}`}
+                            >
+                              <span>{game.title}</span>
+                              <ArrowRight className="w-3.5 h-3.5" />
+                            </Link>
+                          ))}
+                        </div>
+                      </article>
+                    );
+                  })}
                 </div>
 
-                {/* Game Guides & Comparative Articles Section */}
+                {/* Game Guides & Similar Games Section */}
                 <div className="pt-4 border-t border-slate-800/80 flex flex-col gap-3">
                   <h3 className="typo-section-heading text-sm sm:text-base text-white">
-                    Game Strategy Guides & Similar Games
+                    Game Strategy Guides &amp; Similar Games
                   </h3>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2.5 text-xs">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5 text-xs">
                     <Link
                       href="/guides/2048-strategy"
                       className="p-3 rounded-xl bg-slate-950/40 border border-slate-800/80 hover:border-amber-500/40 text-slate-300 hover:text-white transition-colors"
@@ -334,18 +325,53 @@ export default function HomeClient() {
                       <span className="text-[11px] text-slate-400">Tips, tricks, and the corner strategy to win 2048 →</span>
                     </Link>
                     <Link
+                      href="/guides/conveyor-sort-tips"
+                      className="p-3 rounded-xl bg-slate-950/40 border border-slate-800/80 hover:border-sky-500/40 text-slate-300 hover:text-white transition-colors"
+                    >
+                      <span className="font-semibold text-sky-300 block mb-0.5">Conveyor Sort Tips</span>
+                      <span className="text-[11px] text-slate-400">Perfect Zone combos, waves &amp; Daily Run mastery →</span>
+                    </Link>
+                    <Link
+                      href="/guides/cupcake-2048-strategy"
+                      className="p-3 rounded-xl bg-slate-950/40 border border-slate-800/80 hover:border-pink-500/40 text-slate-300 hover:text-white transition-colors"
+                    >
+                      <span className="font-semibold text-pink-300 block mb-0.5">Cupcake 2048 Strategy</span>
+                      <span className="text-[11px] text-slate-400">Reach the Diamond Crown Cupcake faster →</span>
+                    </Link>
+                    <Link
+                      href="/games-like/2048"
+                      className="p-3 rounded-xl bg-slate-950/40 border border-slate-800/80 hover:border-amber-500/40 text-slate-300 hover:text-white transition-colors"
+                    >
+                      <span className="font-semibold text-amber-300 block mb-0.5">Games Like 2048</span>
+                      <span className="text-[11px] text-slate-400">Free Neon &amp; Cupcake 2048 puzzle editions →</span>
+                    </Link>
+                    <Link
+                      href="/games-like/conveyor-sort"
+                      className="p-3 rounded-xl bg-slate-950/40 border border-slate-800/80 hover:border-sky-500/40 text-slate-300 hover:text-white transition-colors"
+                    >
+                      <span className="font-semibold text-sky-300 block mb-0.5">Games Like Conveyor Sort</span>
+                      <span className="text-[11px] text-slate-400">Fast shape sorting arcade with combos &amp; daily runs →</span>
+                    </Link>
+                    <Link
+                      href="/games-like/slope"
+                      className="p-3 rounded-xl bg-slate-950/40 border border-slate-800/80 hover:border-cyan-500/40 text-slate-300 hover:text-white transition-colors"
+                    >
+                      <span className="font-semibold text-cyan-300 block mb-0.5">Games Like Slope</span>
+                      <span className="text-[11px] text-slate-400">Fast 3D browser runners with zero downloads →</span>
+                    </Link>
+                    <Link
+                      href="/games-like/tetris"
+                      className="p-3 rounded-xl bg-slate-950/40 border border-slate-800/80 hover:border-teal-500/40 text-slate-300 hover:text-white transition-colors"
+                    >
+                      <span className="font-semibold text-teal-300 block mb-0.5">Games Like Tetris</span>
+                      <span className="text-[11px] text-slate-400">Shape placement &amp; line-clearing brain teasers →</span>
+                    </Link>
+                    <Link
                       href="/games-like/block-blast"
                       className="p-3 rounded-xl bg-slate-950/40 border border-slate-800/80 hover:border-teal-500/40 text-slate-300 hover:text-white transition-colors"
                     >
                       <span className="font-semibold text-teal-300 block mb-0.5">Games Like Block Blast</span>
                       <span className="text-[11px] text-slate-400">Free 10x10 block puzzle browser alternative →</span>
-                    </Link>
-                    <Link
-                      href="/games-like/3d-runner-games"
-                      className="p-3 rounded-xl bg-slate-950/40 border border-slate-800/80 hover:border-cyan-500/40 text-slate-300 hover:text-white transition-colors"
-                    >
-                      <span className="font-semibold text-cyan-300 block mb-0.5">Games Like Run 3 & Slope</span>
-                      <span className="text-[11px] text-slate-400">Free 3D endless runners with chasms & speed pads →</span>
                     </Link>
                     <Link
                       href="/games-like/flappy-bird"
@@ -363,54 +389,16 @@ export default function HomeClient() {
                   <span>Frequently Asked Questions</span>
                 </h2>
                 <div className="space-y-3">
-                  <div className="p-4 rounded-xl bg-slate-950/50 border border-slate-800/50">
-                    <h3 className="typo-section-heading text-white text-xs sm:text-sm">
-                      Are all games on TAPPYARD completely free to play?
-                    </h3>
-                    <p className="mt-1.5 text-slate-400 text-xs leading-relaxed">
-                      Yes. Every game on TAPPYARD is 100% free to play directly in your web browser with no paywalls, hidden in-app purchases, or subscription fees.
-                    </p>
-                  </div>
-                  <div className="p-4 rounded-xl bg-slate-950/50 border border-slate-800/50">
-                    <h3 className="typo-section-heading text-white text-xs sm:text-sm">
-                      Do I need to download or install any files to play?
-                    </h3>
-                    <p className="mt-1.5 text-slate-400 text-xs leading-relaxed">
-                      No download, install, or registration is required. All games run instantly using modern HTML5, Canvas, and WebGL technology in Chrome, Safari, Firefox, Edge, and mobile browsers.
-                    </p>
-                  </div>
-                  <div className="p-4 rounded-xl bg-slate-950/50 border border-slate-800/50">
-                    <h3 className="typo-section-heading text-white text-xs sm:text-sm">
-                      Can I play TAPPYARD games on mobile phones and tablets?
-                    </h3>
-                    <p className="mt-1.5 text-slate-400 text-xs leading-relaxed">
-                      Yes. All TAPPYARD games are built mobile-first with responsive touch controls, full-screen support, and zero horizontal scrolling on iPhone, iPad, Android phones, and tablets.
-                    </p>
-                  </div>
-                  <div className="p-4 rounded-xl bg-slate-950/50 border border-slate-800/50">
-                    <h3 className="typo-section-heading text-white text-xs sm:text-sm">
-                      Do I need an account to play?
-                    </h3>
-                    <p className="mt-1.5 text-slate-400 text-xs leading-relaxed">
-                      No account, sign-up, or registration is required to play. Your highest scores, unlocked character skins, and diamond rewards save automatically to your local browser storage.
-                    </p>
-                  </div>
-                  <div className="p-4 rounded-xl bg-slate-950/50 border border-slate-800/50">
-                    <h3 className="typo-section-heading text-white text-xs sm:text-sm">
-                      Are the games unblocked at school or work?
-                    </h3>
-                    <p className="mt-1.5 text-slate-400 text-xs leading-relaxed">
-                      Yes. TAPPYARD games run safely over standard secure HTTPS in your browser with zero executable downloads, making them accessible for casual gaming breaks on school and work networks.
-                    </p>
-                  </div>
-                  <div className="p-4 rounded-xl bg-slate-950/50 border border-slate-800/50">
-                    <h3 className="typo-section-heading text-white text-xs sm:text-sm">
-                      What are good quick games to play when bored?
-                    </h3>
-                    <p className="mt-1.5 text-slate-400 text-xs leading-relaxed">
-                      For fast reflex fun, try Conveyor Sort Rush (shape sorting arcade), Cyber Dash (1-tap flight), or Jump Jelly Jump! (3D speed runner). If you want mental stimulation, play 2048 Neon Fusion, Cupcake 2048, or Block Grid Zen (10x10 spatial block puzzle). Every TAPPYARD game starts in under a second.
-                    </p>
-                  </div>
+                  {HOME_FAQS.map((faq, idx) => (
+                    <div key={idx} className="p-4 rounded-xl bg-slate-950/50 border border-slate-800/50">
+                      <h3 className="typo-section-heading text-white text-xs sm:text-sm">
+                        {faq.question}
+                      </h3>
+                      <p className="mt-1.5 text-slate-400 text-xs leading-relaxed">
+                        {faq.answer}
+                      </p>
+                    </div>
+                  ))}
                 </div>
               </div>
             </div>

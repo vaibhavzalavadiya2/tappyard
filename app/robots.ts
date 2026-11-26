@@ -1,6 +1,5 @@
 import type { MetadataRoute } from 'next';
-
-const SITE_URL = 'https://tappyard.com';
+import { SITE_URL } from '@/data/homeFaqs';
 
 export default function robots(): MetadataRoute.Robots {
   return {
@@ -8,7 +7,7 @@ export default function robots(): MetadataRoute.Robots {
       {
         userAgent: '*',
         allow: ['/', '/llms.txt', '/llms-full.txt'],
-        disallow: ['/api/', '/_next/'],
+        disallow: ['/api/'],
       },
       {
         userAgent: [
@@ -24,7 +23,7 @@ export default function robots(): MetadataRoute.Robots {
           'meta-externalagent',
         ],
         allow: ['/', '/llms.txt', '/llms-full.txt'],
-        disallow: ['/api/', '/_next/'],
+        disallow: ['/api/'],
       },
     ],
     sitemap: `${SITE_URL}/sitemap.xml`,

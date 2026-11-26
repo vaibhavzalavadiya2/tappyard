@@ -13,16 +13,6 @@ export const metadata: Metadata = {
   title: 'Games Like Flappy Bird - Free 1-Tap Games Online',
   description:
     'Looking for games like Flappy Bird? Play Cyber Dash free in your browser. 1-tap neon flight, laser gate dodging, and bonus diamonds with no download.',
-  keywords: [
-    'games like flappy bird',
-    'flappy bird alternative',
-    'flappy bird style game',
-    'one tap games',
-    'tap to fly game',
-    'reflex games',
-    'one tap flying game',
-    'TAPPYARD',
-  ],
   alternates: {
     canonical: PAGE_URL,
   },
@@ -57,8 +47,8 @@ export default function GamesLikeFlappyBirdPage() {
       {
         '@type': 'ListItem',
         position: 2,
-        name: 'Similar Games',
-        item: `${SITE_URL}/#catalogue`,
+        name: 'Casual',
+        item: `${SITE_URL}/category/casual`,
       },
       {
         '@type': 'ListItem',

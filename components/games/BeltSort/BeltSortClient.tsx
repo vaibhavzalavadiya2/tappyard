@@ -1388,7 +1388,7 @@ export default function BeltSortClient({ hasCustomBg = false, fontClassName = ''
           <div className="flex flex-col gap-3 shrink-0 pt-1">
             <div
               ref={binRowRef}
-              className={`grid ${activeBinCount === 4 ? 'grid-cols-4 gap-1.5 sm:gap-2.5' : 'grid-cols-3 gap-2 sm:gap-3'} w-full px-0.5 transition-all duration-300`}
+              className={`flex items-stretch ${activeBinCount === 4 ? 'gap-1.5 sm:gap-2.5' : 'gap-2 sm:gap-3'} w-full px-0.5 transition-all duration-300`}
             >
               {activeBins.map((bin) => {
                 const fb = binFeedback[bin.id];
@@ -1401,7 +1401,7 @@ export default function BeltSortClient({ hasCustomBg = false, fontClassName = ''
                     data-shape={bin.id}
                     onClick={() => handleBinTap(bin.id)}
                     aria-label={`Sort into ${bin.label} bin (Keys ${bin.keyHint} or ${bin.altKeyHint})`}
-                    className={`bs-bin-btn flex flex-col justify-between pb-2.5 pt-1 cursor-pointer focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-white sm:min-h-[96px] ${
+                    className={`bs-bin-btn flex-1 min-w-0 flex flex-col justify-between pb-2.5 pt-1 cursor-pointer focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-white sm:min-h-[96px] transition-[flex-basis,width,transform,box-shadow,filter] duration-300 ease-out ${
                       pressedBin === bin.id ? 'bs-bin-pressed ' : ''
                     }${
                       fb === 'bounce'

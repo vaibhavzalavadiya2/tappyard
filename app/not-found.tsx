@@ -41,27 +41,42 @@ export default function NotFound() {
           </p>
         </div>
 
-        {/* 4 Featured Games */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 w-full">
+        {/* Featured Games Directory */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 w-full">
           {GAMES_CATALOGUE.map((game) => (
             <Link
               key={game.id}
               href={game.route}
               className="group p-3.5 rounded-2xl bg-slate-900/60 hover:bg-slate-900 border border-slate-800 hover:border-pink-500/40 transition-all flex flex-col gap-2.5 text-left shadow-md"
             >
-              <div className="w-full aspect-square rounded-xl overflow-hidden bg-slate-950 relative">
+              <div className="w-full aspect-4/3 rounded-xl overflow-hidden bg-slate-950 relative">
                 <GameThumbnail id={game.thumbnail} title={game.title} />
               </div>
               <div>
                 <span className="typo-label text-[10px] text-purple-300 uppercase tracking-wider block">
                   {game.category}
                 </span>
-                <h3 className="typo-game-title text-sm text-white group-hover:text-pink-300 transition-colors mt-0.5 font-semibold">
+                <h2 className="typo-game-title text-sm text-white group-hover:text-pink-300 transition-colors mt-0.5 font-semibold">
                   {game.title}
-                </h3>
+                </h2>
               </div>
             </Link>
           ))}
+        </div>
+
+        <div className="flex flex-wrap items-center justify-center gap-2 pt-2">
+          <Link href="/category/arcade" className="px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-800 hover:border-cyan-400/40 text-xs text-slate-300 hover:text-white">
+            Arcade
+          </Link>
+          <Link href="/category/puzzle" className="px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-800 hover:border-amber-400/40 text-xs text-slate-300 hover:text-white">
+            Puzzle
+          </Link>
+          <Link href="/category/relaxing" className="px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-800 hover:border-teal-400/40 text-xs text-slate-300 hover:text-white">
+            Relaxing
+          </Link>
+          <Link href="/category/casual" className="px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-800 hover:border-sky-400/40 text-xs text-slate-300 hover:text-white">
+            Casual
+          </Link>
         </div>
 
         <div className="pt-2">

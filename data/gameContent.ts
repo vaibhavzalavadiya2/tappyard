@@ -22,9 +22,9 @@ export const GAME_CONTENT_DATA: Record<string, GameContentData> = {
       'Save your unified diamonds for crucial Undo moves (5 diamonds per undo) when the board gets crowded.',
     ],
     supportingPageLink: {
-      href: '/guides/2048-strategy',
-      label: '2048 Strategy Guide',
-      anchorText: 'Read our 2048 Strategy Guide: How to Win 2048 with Corner Strategy & Tips',
+      href: '/games-like/2048',
+      label: 'Games Like 2048',
+      anchorText: 'Explore Games Like 2048: Free Browser Tile & Merge Alternatives',
     },
     faqs: [
       {
@@ -234,7 +234,7 @@ export const GAME_CONTENT_DATA: Record<string, GameContentData> = {
     introText:
       'Conveyor Sort Rush is a fast-paced shape sorting arcade game built for instant one-handed mobile play and crisp desktop keyboard control. As colored geometric pieces glide toward you down a moving factory belt, send the front-most piece into its matching colored bin before it crosses the end line. Hold your nerve until the last 18% golden Perfect Zone to double your points, build huge combo chains to earn Slow-Mo charges, and climb the daily seeded leaderboard with zero downloads or sign-ups.',
     howToPlay:
-      'Every run starts with three chunky open bins at the bottom of the conveyor belt: Blue Circle, Green Square, and Red Triangle. Wait just an instant or react quickly to tap the bin matching the closest item on the belt. Sorting inside the glowing gold Perfect Zone doubles that item’s points, while chaining consecutive correct sorts increases your score multiplier up to x5 and awards a +50 bonus plus a Slow-Mo charge every 10 sorts. Once you reach 25 sorts in a single run, the fourth Purple Diamond bin slides into action. Hit 60 sorts to unlock glowing Gold Wildcard Stars (matching any bin for x2 points) and Ice Freeze Crystals (pausing the belt and spawner for 3 full seconds on tap). Try Endless Mode to test how long your 3 hearts survive rising speed waves, or switch to the 60-second Daily Run where everyone plays the exact same seeded conveyor sequence every day.',
+      'Every run starts with three chunky open bins at the bottom of the conveyor belt: Blue Circle, Green Square, and Red Triangle. Wait just an instant or react quickly to tap the bin matching the closest item on the belt. Sorting inside the glowing gold Perfect Zone doubles that item’s points, while chaining consecutive correct sorts increases your score multiplier up to x5 and awards a +50 bonus plus a Slow-Mo charge every 10 sorts. Once you reach 25 sorts in a single run, the fourth Purple Diamond bin slides into action. Hit 60 sorts to unlock glowing Gold Wildcard Stars (matching any bin for x2 points) and Ice Freeze Crystals (pausing the belt and spawner for 3 full seconds on tap). Try Endless Mode to test how long your 3 hearts survive rising speed waves, or switch to the 60-second Daily Run where everyone experiences the exact same seeded conveyor sequence every day.',
     controls: {
       touch:
         'Tap any colored bin box directly with your thumb to send the front item into it. Tap Freeze (left) or Slow-Mo (right) when charged.',

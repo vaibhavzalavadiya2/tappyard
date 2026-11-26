@@ -13,15 +13,6 @@ export const metadata: Metadata = {
   title: 'Games Like Conveyor Sort - Free Shape Sorting',
   description:
     'Looking for games like Conveyor Sort? Play Conveyor Sort Rush free in your browser with fast shape sorting, x2 Perfect Zones, and Daily Runs.',
-  keywords: [
-    'games like conveyor sort',
-    'conveyor belt sorting game',
-    'shape sorting game online',
-    'factory sorting arcade game',
-    'fast reflex sorting game',
-    'conveyor sort rush',
-    'TAPPYARD',
-  ],
   alternates: {
     canonical: PAGE_URL,
   },
@@ -56,8 +47,8 @@ export default function GamesLikeConveyorSortPage() {
       {
         '@type': 'ListItem',
         position: 2,
-        name: 'Similar Games',
-        item: `${SITE_URL}/#catalogue`,
+        name: 'Casual',
+        item: `${SITE_URL}/category/casual`,
       },
       {
         '@type': 'ListItem',

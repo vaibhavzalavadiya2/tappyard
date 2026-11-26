@@ -1,10 +1,15 @@
 import fs from 'fs';
 import path from 'path';
 import type { Metadata } from 'next';
+import dynamic from 'next/dynamic';
 import localFont from 'next/font/local';
-import BeltSortClient from '@/components/games/BeltSort/BeltSortClient';
 import GameContentBelowFold from '@/components/tappyard/GameContentBelowFold';
 import { GAME_CONTENT_DATA } from '@/data/gameContent';
+import { SITE_URL } from '@/data/homeFaqs';
+
+const BeltSortClient = dynamic(
+  () => import('@/components/games/BeltSort/BeltSortClient')
+);
 
 const lilitaOne = localFont({
   src: '../../../public/fonts/LilitaOne-Regular.woff2',
@@ -22,20 +27,19 @@ const fredoka = localFont({
   fallback: ['system-ui', '-apple-system', 'Segoe UI', 'sans-serif'],
 });
 
-const SITE_URL = 'https://tappyard.com';
 const GAME_URL = `${SITE_URL}/games/belt-sort`;
+const PAGE_DESC =
+  'Sort fast-moving colored shapes on a perspective factory belt into matching bins, chain x2 Perfect Zones, and beat Daily Runs free in your browser.';
 
 export const metadata: Metadata = {
   title: 'Conveyor Sort Rush - Free Shape Sorting Game',
-  description:
-    'Play Conveyor Sort Rush free online in your browser. Sort fast-moving shapes on the conveyor belt into matching bins, chain combos, and play Daily Runs.',
+  description: PAGE_DESC,
   alternates: {
     canonical: GAME_URL,
   },
   openGraph: {
     title: 'Conveyor Sort Rush - Free Shape Sorting Game | TAPPYARD',
-    description:
-      'Play Conveyor Sort Rush free online in your browser. Sort fast-moving shapes on the conveyor belt into matching bins, chain combos, and play Daily Runs.',
+    description: PAGE_DESC,
     url: GAME_URL,
     type: 'website',
     images: [
@@ -50,8 +54,7 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary_large_image',
     title: 'Conveyor Sort Rush - Free Shape Sorting Game',
-    description:
-      'Play Conveyor Sort Rush free online in your browser. Sort fast-moving shapes on the conveyor belt into matching bins, chain combos, and play Daily Runs.',
+    description: PAGE_DESC,
     images: ['/og/belt-sort-og.png'],
   },
 };

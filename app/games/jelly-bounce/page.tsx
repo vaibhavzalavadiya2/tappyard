@@ -1,37 +1,26 @@
 import type { Metadata } from 'next';
-import JellyBounceClient from '@/components/tappyard/JellyBounceClient';
+import dynamic from 'next/dynamic';
 import GameContentBelowFold from '@/components/tappyard/GameContentBelowFold';
 import { GAME_CONTENT_DATA } from '@/data/gameContent';
+import { SITE_URL } from '@/data/homeFaqs';
 
-const SITE_URL = 'https://tappyard.com';
+const JellyBounceClient = dynamic(
+  () => import('@/components/tappyard/JellyBounceClient')
+);
+
 const GAME_URL = `${SITE_URL}/games/jelly-bounce`;
+const PAGE_DESC =
+  'Steer a jelly cube along floating neon tracks, grab cyan diamonds, and hit speed pads to cross chasms. Play Jump Jelly Jump! free online today.';
 
 export const metadata: Metadata = {
   title: 'Jump Jelly Jump! - Free 3D Endless Runner Game',
-  description:
-    'Steer a jelly cube over neon runways, grab diamonds and hit booster pads to cross chasms. Free 3D endless runner, no download.',
-  keywords: [
-    'running games',
-    '3D runner game',
-    '3D endless runner',
-    'endless runner online',
-    'cube runner game',
-    'jelly runner game',
-    'jelly cube game',
-    '3D running game',
-    'runner game online',
-    'free 3D games online',
-    '3D browser games',
-    'html5 3D games',
-    'TAPPYARD',
-  ],
+  description: PAGE_DESC,
   alternates: {
     canonical: GAME_URL,
   },
   openGraph: {
     title: 'Jump Jelly Jump! - Free 3D Endless Runner Game | TAPPYARD',
-    description:
-      'Steer a jelly cube over neon runways, grab diamonds and hit booster pads to cross chasms. Free 3D endless runner, no download.',
+    description: PAGE_DESC,
     url: GAME_URL,
     type: 'website',
     images: [
@@ -39,15 +28,14 @@ export const metadata: Metadata = {
         url: '/og/jelly-bounce-og.png',
         width: 1200,
         height: 630,
-        alt: 'Jump Jelly Jump! 3D Browser Runner Game',
+        alt: 'Jump Jelly Jump! Browser Runner Game on TAPPYARD',
       },
     ],
   },
   twitter: {
     card: 'summary_large_image',
     title: 'Jump Jelly Jump! - Free 3D Endless Runner Game',
-    description:
-      'Steer a jelly cube over neon runways, grab diamonds and hit booster pads to cross chasms. Free 3D endless runner, no download.',
+    description: PAGE_DESC,
     images: ['/og/jelly-bounce-og.png'],
   },
 };

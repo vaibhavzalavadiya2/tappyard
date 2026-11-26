@@ -203,8 +203,8 @@ export default function MobileDrawer({
                     <h4 className="typo-game-title text-xs text-white truncate group-hover:text-pink-300 transition-colors">
                       {game.title}
                     </h4>
-                    <span className="typo-meta text-[10px] text-slate-400 block mt-0.5 tabular-nums">
-                      {game.category} • ★ {game.rating.toFixed(1)}
+                    <span className="typo-meta text-[10px] text-slate-400 block mt-0.5">
+                      {game.category} • {game.badge === 'NEW' ? 'NEW' : 'Original'}
                     </span>
                   </div>
                   <div className="w-7 h-7 rounded-lg bg-slate-800 flex items-center justify-center text-slate-400 group-hover:bg-pink-500 group-hover:text-white transition-colors shrink-0">

@@ -43,30 +43,7 @@ export const metadata: Metadata = {
     template: '%s | TAPPYARD',
   },
   description:
-    'Play free online browser games with no downloads or installs. Enjoy instant 3D arcade runners, 2048 number puzzles, 10x10 block grid zen, and rhythm reflex games on mobile, tablet, and desktop.',
-
-  keywords: [
-    'free online games',
-    'play games online',
-    'browser games no download',
-    'unblocked games',
-    'free browser games',
-    'instant games online',
-    'HTML5 games',
-    'WebGL games',
-    'mobile browser games',
-    'casual games free',
-    'arcade games online',
-    '2048 game online',
-    'block puzzle online',
-    '3D runner game online',
-    'Jump Jelly Jump',
-    'Cyber Dash',
-    'Block Grid Zen',
-    'TAPPYARD',
-    'play free games without downloading',
-    'mini games for school and work',
-  ],
+    'Play free online browser games with no downloads or installs. Enjoy arcade runners, 2048 puzzles, conveyor sorting, and block zen anytime.',
 
   authors: [{ name: 'TAPPYARD', url: SITE_URL }],
   creator: 'TAPPYARD',
@@ -156,33 +133,6 @@ export const metadata: Metadata = {
   },
 };
 
-// JSON-LD Structured Data for the whole site
-const jsonLd = {
-  '@context': 'https://schema.org',
-  '@type': 'WebSite',
-  name: SITE_NAME,
-  url: SITE_URL,
-  description:
-    'Play free instant browser games online — arcade runners, puzzles, and casual games. No downloads.',
-  potentialAction: {
-    '@type': 'SearchAction',
-    target: {
-      '@type': 'EntryPoint',
-      urlTemplate: `${SITE_URL}/?q={search_term_string}`,
-    },
-    'query-input': 'required name=search_term_string',
-  },
-  publisher: {
-    '@type': 'Organization',
-    name: SITE_NAME,
-    url: SITE_URL,
-    logo: {
-      '@type': 'ImageObject',
-      url: `${SITE_URL}/icons/icon-512.png`,
-    },
-  },
-};
-
 export default function RootLayout({ children }: LayoutProps<'/'>) {
   return (
     <html
@@ -206,10 +156,6 @@ export default function RootLayout({ children }: LayoutProps<'/'>) {
           crossOrigin="anonymous"
         />
         <link rel="alternate" type="text/plain" href="/llms.txt" title="LLM Documentation" />
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-        />
       </head>
       <body className="min-h-full bg-[#090d16] font-sans text-slate-100 antialiased selection:bg-pink-500 selection:text-white flex flex-col overscroll-none">
         {children}

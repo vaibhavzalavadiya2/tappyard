@@ -1,34 +1,25 @@
 import type { Metadata } from 'next';
-import Cupcake2048Client from '@/components/games/Cupcake2048/Cupcake2048Client';
+import dynamic from 'next/dynamic';
 import CupcakeContentBelowFold from '@/components/games/Cupcake2048/CupcakeContentBelowFold';
+import { SITE_URL } from '@/data/homeFaqs';
 
-const SITE_URL = 'https://tappyard.com';
+const Cupcake2048Client = dynamic(
+  () => import('@/components/games/Cupcake2048/Cupcake2048Client')
+);
+
 const GAME_URL = `${SITE_URL}/games/cupcake-2048`;
+const PAGE_DESC =
+  'Play Cupcake 2048 free online in your browser. Merge delicious cupcake tiles to reach the 2048 Diamond Cupcake with undo support and no downloads needed.';
 
 export const metadata: Metadata = {
   title: 'Cupcake 2048 - Play 2048 Cupcakes Online Free',
-  description:
-    'Play Cupcake 2048 free online in your browser. Merge delicious cupcake tiles to reach the 2048 Diamond Cupcake with undo support and no downloads needed.',
-  keywords: [
-    'cupcake 2048',
-    '2048 cupcakes',
-    'cupcakes 2048',
-    '2048 cupcake game',
-    'cupcake 2048 unblocked',
-    'play cupcake 2048',
-    '2048 with cupcakes',
-    '2048 with undo',
-    'free online puzzle',
-    'merge cupcakes',
-    'TAPPYARD',
-  ],
+  description: PAGE_DESC,
   alternates: {
     canonical: GAME_URL,
   },
   openGraph: {
     title: 'Cupcake 2048 - Play 2048 Cupcakes Online Free | TAPPYARD',
-    description:
-      'Play Cupcake 2048 free online in your browser. Merge delicious cupcake tiles to reach the 2048 Diamond Cupcake with undo support and no downloads needed.',
+    description: PAGE_DESC,
     url: GAME_URL,
     type: 'website',
     images: [
@@ -43,8 +34,7 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary_large_image',
     title: 'Cupcake 2048 - Play 2048 Cupcakes Online Free',
-    description:
-      'Play Cupcake 2048 free online in your browser. Merge delicious cupcake tiles to reach the 2048 Diamond Cupcake with undo support and no downloads needed.',
+    description: PAGE_DESC,
     images: ['/og/cupcake-2048-og.png'],
   },
 };

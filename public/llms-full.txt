@@ -19,7 +19,7 @@
 ### Game 1: Jump Jelly Jump! (3D Endless Speed Runner)
 - **URL**: https://tappyard.com/games/jelly-bounce
 - **Category**: Arcade / 3D Runner / Platformer
-- **Engine**: Phaser 3D WebGL Engine
+- **Engine**: Phaser WebGL Engine & 3D Perspective Projection
 - **Gameplay Overview**:
   A forward-moving 3D speed runner where players navigate an adorable squishy jelly cube across floating runways suspended in a futuristic neon canyon. The runway procedurally alternates between solid platforms, chevron booster pads, collectible cyan diamonds, and hazardous chasms.
 - **Controls**:
@@ -35,7 +35,25 @@
 
 ---
 
-### Game 2: 2048 Neon Fusion (Sliding Number Tile Puzzle)
+### Game 2: Conveyor Sort Rush (Shape Sorting Arcade)
+- **URL**: https://tappyard.com/games/belt-sort
+- **Category**: Casual / Shape Sorting / Reflex Arcade
+- **Engine**: Native Canvas 2D Perspective Renderer + CSS 3D Depth UI
+- **Gameplay Overview**:
+  A bright casual-mobile perspective conveyor sorting game where players match incoming colored shapes (blue circle, green square, red triangle, and unlockable purple diamond) into matching open bins before reaching the end line. Supports both rising-speed Endless Mode and a 60-second seeded Daily Run with emoji share grids.
+- **Controls**:
+  - Touch: Tap colored shape bins one-handed; tap Freeze (left) or Slow-Mo (right) when charged.
+  - Desktop: Keys 1/2/3/4, A/S/D/F, or ArrowLeft/Down/Right; Q Freeze, Space/E Slow-Mo, P/Esc Pause, M Mute.
+- **Core Rules & Mechanics**:
+  - Perfect Zone: Sorting within the final 18% gold zone doubles item points.
+  - Chain Combos: Builds up to x5 score multiplier (`1 + floor(chain / 5)`) and awards +50 bonus plus a Slow-Mo charge every 10th chain.
+  - Mid-Run Unlocks: 4th Purple Diamond bin slides in at 25 sorts; Wildcard stars (any bin, x2) and Freeze crystals (3s belt freeze) unlock at 60 sorts.
+- **Audio Design**:
+  - Procedural Web Audio synthesizer: rising pentatonic sort chimes, mistake low buzz, milestone arpeggios, and unlock/power-up effects.
+
+---
+
+### Game 3: 2048 Neon Fusion (Sliding Number Tile Puzzle)
 - **URL**: https://tappyard.com/games/2048-puzzle
 - **Category**: Puzzle / Brain Teaser / Math Strategy
 - **Engine**: Native React 19 + 60fps CSS GPU-accelerated Matrix
@@ -60,7 +78,7 @@
 
 ---
 
-### Game 3: Block Grid Zen (10x10 Spatial Block Puzzle)
+### Game 4: Block Grid Zen (10x10 Spatial Block Puzzle)
 - **URL**: https://tappyard.com/games/color-zen
 - **Category**: Relaxing / Spatial Puzzle / Mindful Flow
 - **Engine**: Native Canvas 2D + Touch Offset Drag-and-Drop
@@ -80,7 +98,7 @@
 
 ---
 
-### Game 4: Cyber Dash (1-Tap Neon Reflex Flight Runner)
+### Game 5: Cyber Dash (1-Tap Neon Reflex Flight Runner)
 - **URL**: https://tappyard.com/games/quick-tap
 - **Category**: Casual / 1-Tap Reflex / Rhythm Flight
 - **Engine**: 60fps HTML5 Canvas Engine with Continuous Physics
@@ -105,6 +123,7 @@ All games share a unified currency system powered by `lib/wallet.ts`:
 - **Currency Name**: TapYard Diamonds (💎)
 - **Earning Channels**:
   - Collecting cyan diamonds on Jump Jelly Jump runways
+  - Sorting shapes & setting Daily Bests in Conveyor Sort Rush (1 per 25 pts, +5 daily best, max 50/run)
   - Merging high-value numbers (128 to 2048) in 2048 Neon Fusion
   - Completing simultaneous row/column combos in Block Grid Zen
   - Grazing laser gate borders in Cyber Dash

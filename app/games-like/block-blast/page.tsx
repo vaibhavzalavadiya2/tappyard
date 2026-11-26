@@ -13,16 +13,6 @@ export const metadata: Metadata = {
   title: 'Games Like Block Blast - Free Block Puzzle Games',
   description:
     'Looking for games like Block Blast? Play Block Grid Zen free in your browser with no download. 10x10 grid placement, relaxing chimes, and zero timers.',
-  keywords: [
-    'games like block blast',
-    'block blast alternative',
-    'block puzzle like block blast',
-    '10x10 block puzzle',
-    'free block puzzle',
-    'relaxing puzzle games',
-    'free puzzle games',
-    'TAPPYARD',
-  ],
   alternates: {
     canonical: PAGE_URL,
   },
@@ -57,8 +47,8 @@ export default function GamesLikeBlockBlastPage() {
       {
         '@type': 'ListItem',
         position: 2,
-        name: 'Similar Games',
-        item: `${SITE_URL}/#catalogue`,
+        name: 'Relaxing',
+        item: `${SITE_URL}/category/relaxing`,
       },
       {
         '@type': 'ListItem',

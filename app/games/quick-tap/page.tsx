@@ -1,38 +1,26 @@
 import type { Metadata } from 'next';
-import CyberDashClient from '@/components/games/CyberDash/CyberDashClient';
+import dynamic from 'next/dynamic';
 import GameContentBelowFold from '@/components/tappyard/GameContentBelowFold';
 import { GAME_CONTENT_DATA } from '@/data/gameContent';
+import { SITE_URL } from '@/data/homeFaqs';
 
-const SITE_URL = 'https://tappyard.com';
+const CyberDashClient = dynamic(
+  () => import('@/components/games/CyberDash/CyberDashClient')
+);
+
 const GAME_URL = `${SITE_URL}/games/quick-tap`;
+const PAGE_DESC =
+  'Tap to fly a neon cyber craft and dodge laser gates in Cyber Dash. Graze tight pillars to earn bonus diamonds and play this 1-tap reflex game free.';
 
 export const metadata: Metadata = {
   title: 'Cyber Dash - Free 1-Tap Neon Reflex Game',
-  description:
-    'Tap to fly and dodge pulsing laser gates in Cyber Dash, a free 1-tap neon reflex game. Graze gates for bonus diamonds. No download.',
-  keywords: [
-    'one tap games',
-    'one tap game online',
-    'one button games',
-    'tap to fly game',
-    'one tap flying game',
-    'reflex games',
-    'reflex games online',
-    'reaction games',
-    'neon reflex game',
-    'dodge game',
-    'laser dodge game',
-    'obstacle dodging game',
-    'hard one tap games',
-    'TAPPYARD',
-  ],
+  description: PAGE_DESC,
   alternates: {
     canonical: GAME_URL,
   },
   openGraph: {
     title: 'Cyber Dash - Free 1-Tap Neon Reflex Game | TAPPYARD',
-    description:
-      'Tap to fly and dodge pulsing laser gates in Cyber Dash, a free 1-tap neon reflex game. Graze gates for bonus diamonds. No download.',
+    description: PAGE_DESC,
     url: GAME_URL,
     type: 'website',
     images: [
@@ -47,8 +35,7 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary_large_image',
     title: 'Cyber Dash - Free 1-Tap Neon Reflex Game',
-    description:
-      'Tap to fly and dodge pulsing laser gates in Cyber Dash, a free 1-tap neon reflex game. Graze gates for bonus diamonds. No download.',
+    description: PAGE_DESC,
     images: ['/og/quick-tap-og.png'],
   },
 };

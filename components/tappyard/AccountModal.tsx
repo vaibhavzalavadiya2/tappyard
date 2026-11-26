@@ -53,11 +53,11 @@ type EmailAuthMode = 'password' | 'signup' | 'otp';
 function readInitialBestScores(): Record<GameStatId, number> {
   const scores: Record<GameStatId, number> = {
     'jelly-bounce': 0,
+    'belt-sort': 0,
     '2048-puzzle': 0,
     'cupcake-2048': 0,
     'color-zen': 0,
     'quick-tap': 0,
-    'belt-sort': 0,
   };
   if (typeof window === 'undefined') return scores;
   GAME_STAT_DEFINITIONS.forEach((def) => {
@@ -483,6 +483,8 @@ export default function AccountModal({ isOpen, onClose }: AccountModalProps) {
                   <img
                     src={authState.user.avatarUrl}
                     alt={displayTitle}
+                    width={40}
+                    height={40}
                     className="w-10 h-10 rounded-lg object-cover border border-pink-500/40 shadow-lg shrink-0"
                     referrerPolicy="no-referrer"
                   />
@@ -607,7 +609,7 @@ export default function AccountModal({ isOpen, onClose }: AccountModalProps) {
             </span>
           </div>
 
-          {/* All 5 Games Personal Best Records */}
+          {/* All 6 Games Personal Best Records */}
           <div className="p-3.5 rounded-xl bg-slate-900/70 border border-slate-800 flex flex-col gap-2">
             <span className="typo-label text-[10px] text-amber-400 uppercase tracking-wider flex items-center gap-1">
               <Trophy className="w-3 h-3 text-amber-400" />

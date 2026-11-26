@@ -13,19 +13,6 @@ export const metadata: Metadata = {
   title: 'Games Like Run 3, Slope & Subway Surfers',
   description:
     'Looking for games like Run 3, Slope or Subway Surfers? Play Jump Jelly Jump! free in your browser. 3D endless runner with booster pads and no downloads.',
-  keywords: [
-    'games like run 3',
-    'games like slope',
-    'games like subway surfers',
-    'games like temple run',
-    'games like going balls',
-    'run 3 alternative',
-    'slope alternative',
-    '3D endless runner',
-    '3D runner game',
-    'running games',
-    'TAPPYARD',
-  ],
   alternates: {
     canonical: PAGE_URL,
   },
@@ -60,8 +47,8 @@ export default function GamesLike3DRunnersPage() {
       {
         '@type': 'ListItem',
         position: 2,
-        name: 'Similar Games',
-        item: `${SITE_URL}/#catalogue`,
+        name: 'Arcade',
+        item: `${SITE_URL}/category/arcade`,
       },
       {
         '@type': 'ListItem',

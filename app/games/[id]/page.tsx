@@ -1,14 +1,14 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { getGameById, GAMES_CATALOGUE } from '@/data/games';
+import { SITE_NAME, SITE_URL } from '@/data/homeFaqs';
+import { buildBreadcrumbJsonLd, buildVideoGameJsonLd } from '@/lib/structuredData';
 import ClientGameViewer from '@/components/tappyard/ClientGameViewer';
 import GameContentBelowFold from '@/components/tappyard/GameContentBelowFold';
 import GameThumbnail from '@/components/tappyard/GameThumbnail';
 import Footer from '@/components/tappyard/Footer';
 import { GAME_CONTENT_DATA } from '@/data/gameContent';
 import { Gamepad2, ArrowLeft } from 'lucide-react';
-
-const SITE_URL = 'https://tappyard.com';
 
 export function generateStaticParams() {
   return GAMES_CATALOGUE.map((game) => ({ id: game.id }));
@@ -24,33 +24,25 @@ export async function generateMetadata({
 
   if (!game) {
     return {
-      title: 'Game Retired',
-      description: 'This game is no longer available on TAPPYARD. Play our other free online browser games.',
+      title: 'Game No Longer Available - Play Instant Games',
+      description:
+        'This browser game is no longer available on TAPPYARD. Browse and play our free instant HTML5 arcade, puzzle, and sorting games online today.',
+      robots: { index: false, follow: true },
     };
   }
 
   const gameUrl = `${SITE_URL}${game.route}`;
+  const desc = game.description.slice(0, 155);
 
   return {
-    title: `${game.title} - Free Online Browser Game`,
-    description: `${game.description} Play free directly in your browser on mobile, tablet, and PC. No downloads or installs needed.`,
-    keywords: [
-      game.title,
-      `${game.title} online`,
-      'free online games',
-      'browser games no download',
-      'unblocked games',
-      'play games online',
-      game.category,
-      ...game.tags,
-      'TAPPYARD',
-    ],
+    title: `${game.title} - Free Browser Game Online`,
+    description: desc,
     alternates: {
       canonical: gameUrl,
     },
     openGraph: {
-      title: `${game.title} - Free Online Browser Game | TAPPYARD`,
-      description: game.description,
+      title: `${game.title} - Free Browser Game Online | TAPPYARD`,
+      description: desc,
       url: gameUrl,
       type: 'website',
       images: [
@@ -64,8 +56,8 @@ export async function generateMetadata({
     },
     twitter: {
       card: 'summary_large_image',
-      title: `${game.title} - Free Online Browser Game`,
-      description: game.description,
+      title: `${game.title} - Free Browser Game Online`,
+      description: desc,
       images: [`/og/${game.id}-og.png`],
     },
   };
@@ -79,7 +71,6 @@ export default async function GameDetailPage({
   const { id } = await params;
   const game = getGameById(id);
 
-  // Retired / missing game handling (Returns 200 with recommended game per CrazyGames pattern)
   if (!game) {
     const recommended = GAMES_CATALOGUE[0];
     return (
@@ -102,7 +93,7 @@ export default async function GameDetailPage({
             <span className="typo-label text-[11px] uppercase tracking-wider text-pink-400 font-semibold">Game Update</span>
             <h1 className="typo-h1 text-2xl sm:text-3xl text-white font-bold mt-1">This Game is No Longer Available</h1>
             <p className="typo-body text-xs sm:text-sm text-slate-400 mt-2 max-w-sm mx-auto leading-relaxed">
-              This title has been retired or updated. We recommend checking out our flagship 3D speed runner:
+              This title has been retired or updated. Try one of our featured free browser games instead:
             </p>
           </div>
 
@@ -131,30 +122,18 @@ export default async function GameDetailPage({
   }
 
   const gameUrl = `${SITE_URL}${game.route}`;
-
-  const jsonLd = {
-    '@context': 'https://schema.org',
-    '@type': 'VideoGame',
+  const videoGameJsonLd = buildVideoGameJsonLd({
     name: game.title,
     description: game.description,
     url: gameUrl,
     genre: game.category,
-    keywords: game.tags.join(', '),
-    gamePlatform: ['Web Browser', 'Mobile Browser', 'Desktop Browser'],
-    applicationCategory: 'Game',
-    operatingSystem: 'Any',
-    offers: {
-      '@type': 'Offer',
-      price: '0',
-      priceCurrency: 'USD',
-      availability: 'https://schema.org/InStock',
-    },
-    publisher: {
-      '@type': 'Organization',
-      name: 'TAPPYARD',
-      url: SITE_URL,
-    },
-  };
+    image: `${SITE_URL}/og/${game.id}-og.png`,
+  });
+  const breadcrumbJsonLd = buildBreadcrumbJsonLd([
+    { name: SITE_NAME, url: SITE_URL },
+    { name: game.category, url: `${SITE_URL}/category/${game.category.toLowerCase()}` },
+    { name: game.title, url: gameUrl },
+  ]);
 
   const contentData = GAME_CONTENT_DATA[id];
 
@@ -162,10 +141,14 @@ export default async function GameDetailPage({
     <div className="min-h-screen flex flex-col bg-[#090d16] text-slate-100 overflow-x-hidden">
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(videoGameJsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
       />
       <ClientGameViewer game={game} />
-      {contentData && <GameContentBelowFold data={contentData} />}
+      {contentData ? <GameContentBelowFold data={contentData} /> : <Footer />}
     </div>
   );
 }

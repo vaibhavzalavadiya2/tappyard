@@ -6,11 +6,11 @@ import { notifyLocalDataChanged } from '@/lib/syncEvents';
 
 export type GameStatId =
   | 'jelly-bounce'
+  | 'belt-sort'
   | '2048-puzzle'
   | 'cupcake-2048'
   | 'color-zen'
-  | 'quick-tap'
-  | 'belt-sort';
+  | 'quick-tap';
 
 export interface GameStatMeta {
   id: GameStatId;
@@ -21,11 +21,11 @@ export interface GameStatMeta {
 
 export const GAME_STAT_DEFINITIONS: GameStatMeta[] = [
   { id: 'jelly-bounce', title: 'Jump Jelly Jump!', unit: 'm' },
+  { id: 'belt-sort', title: 'Conveyor Sort Rush', unit: 'pts', storageKey: 'tappyard-beltsort-best' },
   { id: '2048-puzzle', title: '2048 Neon Fusion', unit: 'pts', storageKey: 'tappyard-2048-best' },
   { id: 'cupcake-2048', title: 'Cupcake 2048', unit: 'pts', storageKey: 'tappyard-cupcake-2048-best' },
   { id: 'color-zen', title: 'Block Grid Zen', unit: 'pts', storageKey: 'tappyard-blockzen-best' },
   { id: 'quick-tap', title: 'Cyber Dash', unit: 'pts', storageKey: 'tappyard-cyberdash-best' },
-  { id: 'belt-sort', title: 'Conveyor Sort Rush', unit: 'pts', storageKey: 'tappyard-beltsort-best' },
 ];
 
 export interface LocalGameStat {

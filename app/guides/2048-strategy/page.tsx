@@ -13,18 +13,6 @@ export const metadata: Metadata = {
   title: '2048 Strategy: How to Win 2048 - Tips and Tricks',
   description:
     'Master 2048 with the corner strategy, chain building, and tile management. Practical tips and tricks to reach the 2048 tile and higher scores.',
-  keywords: [
-    '2048 strategy',
-    'how to win 2048',
-    '2048 tips and tricks',
-    '2048 corner strategy',
-    'what happens after 2048',
-    'how to play 2048',
-    '2048 rules',
-    '2048 with undo',
-    'number merge game',
-    'TAPPYARD',
-  ],
   alternates: {
     canonical: PAGE_URL,
   },
@@ -59,8 +47,8 @@ export default function Strategy2048Page() {
       {
         '@type': 'ListItem',
         position: 2,
-        name: 'Game Guides',
-        item: `${SITE_URL}/#catalogue`,
+        name: 'Puzzle',
+        item: `${SITE_URL}/category/puzzle`,
       },
       {
         '@type': 'ListItem',

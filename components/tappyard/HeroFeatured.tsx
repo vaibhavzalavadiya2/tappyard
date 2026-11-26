@@ -8,7 +8,6 @@ import { PROFILE_SYNCED_EVENT } from '@/lib/syncEvents';
 import { GAMES_CATALOGUE, type GameItem } from '@/data/games';
 import GameThumbnail from './GameThumbnail';
 import {
-  Star,
   Gem,
   Zap,
   Play,
@@ -295,9 +294,8 @@ export default function HeroFeatured() {
                 {currentGame.category}
               </span>
             </div>
-            <span className="typo-button text-xs text-amber-400 tabular-nums flex items-center gap-1">
-              <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-400" />
-              <span>{currentGame.rating.toFixed(1)}</span>
+            <span className="typo-label text-[10px] text-slate-300 px-2 py-0.5 rounded-full bg-white/5 border border-white/10">
+              {currentGame.badge || 'Original'}
             </span>
           </div>
 
@@ -380,10 +378,8 @@ export default function HeroFeatured() {
               <span className="typo-label px-3 py-1 rounded-full text-xs tracking-normal bg-slate-900/90 text-slate-200 border border-slate-700">
                 {currentGame.category}
               </span>
-              <span className="typo-button text-xs text-amber-400 tabular-nums flex items-center gap-1 bg-black/40 px-3 py-1 rounded-full border border-amber-400/30 backdrop-blur-md">
-                <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-400 drop-shadow-[0_0_4px_rgba(251,191,36,0.8)]" />
-                <span>{currentGame.rating.toFixed(1)}</span>
-                <span className="typo-meta text-slate-400">({currentGame.playsCount} plays)</span>
+              <span className="typo-label text-xs text-slate-200 bg-black/40 px-3 py-1 rounded-full border border-white/15 backdrop-blur-md">
+                {currentGame.badge || 'Original'}
               </span>
             </div>
 
@@ -401,7 +397,7 @@ export default function HeroFeatured() {
             <div className="typo-label flex items-center gap-2.5 text-xs tracking-normal text-slate-300 flex-wrap">
               <span className="flex items-center gap-1 bg-white/10 px-3 py-1 rounded-lg border border-white/15">
                 <Zap className="w-3.5 h-3.5 text-amber-400" />
-                Instant 60fps WebGL
+                Instant 60fps HTML5 &amp; WebGL
               </span>
               <span className="flex items-center gap-1 bg-white/10 px-3 py-1 rounded-lg border border-white/15">
                 <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
