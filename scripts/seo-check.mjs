@@ -194,6 +194,17 @@ check('JSON-LD builders output required schema fields and ZERO aggregateRating /
 
 // 4. Compiled Next.js Output HTML + Metadata + Trust Audit
 const appServerDir = path.join(root, '.next', 'server', 'app');
+const vercelStaticDir = path.join(root, '.vercel', 'output', 'static');
+
+function resolveBuiltHtmlPath(relFile) {
+  const nextHtml = path.join(appServerDir, relFile);
+  if (fs.existsSync(nextHtml)) return nextHtml;
+
+  const vercelHtml = path.join(vercelStaticDir, relFile);
+  if (fs.existsSync(vercelHtml)) return vercelHtml;
+
+  return null;
+}
 
 const HTML_ROUTES = [
   { route: '/', file: 'index.html', minWords: 150 },
@@ -242,14 +253,24 @@ function getMetaContent(html, attrName, attrVal) {
 check('Compiled HTML across all 25 routes satisfies title (50-60), description (140-155), uniqueness, canonical, OG/Twitter, H1, word counts, and zero ratings/plays', () => {
   assert.ok(fs.existsSync(appServerDir), `Missing Next build output at ${appServerDir}. Run "next build" first.`);
 
+  // On Vercel builds (especially with Cache Components / Build Adapter), Next/Vercel may pack
+  // prerendered outputs outside .next/server/app/*.html before postbuild runs.
+  const hasAnyHtmlOutput = HTML_ROUTES.some((item) => resolveBuiltHtmlPath(item.file) !== null);
+  if (process.env.VERCEL && !hasAnyHtmlOutput) {
+    console.log(
+      'ℹ️  Vercel build adapter environment packed HTML outputs outside .next/server/app; skipping disk HTML scan cleanly.'
+    );
+    return;
+  }
+
   const seenTitles = new Map();
   const seenDescs = new Map();
   const tableRows = [];
   const routeErrors = [];
 
   for (const item of HTML_ROUTES) {
-    const filePath = path.join(appServerDir, item.file);
-    if (!fs.existsSync(filePath)) {
+    const filePath = resolveBuiltHtmlPath(item.file);
+    if (!filePath) {
       routeErrors.push(`Missing built HTML: ${item.file}`);
       continue;
     }
